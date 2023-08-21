@@ -1,9 +1,7 @@
 //! EIR/AD/SRD/ACAD/OOB data type module.
 
-use crate::vec_converter::VecConverter;
-
 /// Trait for EIR/AD/SRD/ACAD/OOB data type.
-pub trait DataType<T>: VecConverter<T> {
+pub trait DataType {
     /// Get EIR/AD/SRD/ACAD/OOB data type
     ///
     /// # Examples

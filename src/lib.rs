@@ -1,7 +1,4 @@
 //! BLE data class.
-
-pub mod vec_converter;
-
 pub mod data_types {
     //! EIR/AD/SRD/ACAD/OOB module.
     pub mod complete_local_name;

@@ -1,7 +1,6 @@
 //! Complete Local Name (Data Type Value: 0x09) module.
 
 use crate::data_types::data_type::DataType;
-use crate::vec_converter::VecConverter;
 
 /// Complete Local Name.
 pub struct CompleteLocalName {
@@ -11,8 +10,6 @@ pub struct CompleteLocalName {
     /// Complete Local Name
     pub complete_local_name: String,
 }
-
-const DATA_TYPE: u8 = 0x08;
 
 impl CompleteLocalName {
     /// Create [CompleteLocalName] from `utf8`.
@@ -27,50 +24,19 @@ impl CompleteLocalName {
     /// assert_eq!(name.as_bytes().len() as u8 + 1, result.length);
     /// assert_eq!(name, result.complete_local_name);
     /// ```
-    pub fn new(complete_local_name: &String) -> CompleteLocalName {
-        CompleteLocalName {
+    pub fn new(complete_local_name: &String) -> Self {
+        Self {
             length: complete_local_name.as_bytes().len() as u8 + 1,
             complete_local_name: complete_local_name.to_string(),
         }
     }
-}
 
-impl VecConverter<CompleteLocalName> for CompleteLocalName {
-    /// Create [Vec`<u8>`].
+    /// Create [CompleteLocalName] from `Vec<u8>` with offset.
     ///
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::vec_converter::VecConverter;
-    /// use ble_data_class::data_types::complete_local_name::CompleteLocalName;
-    /// use ble_data_class::data_types::data_type::DataType;
-    ///
-    /// let name = "complete_local_name".to_string();
-    /// let result1 = CompleteLocalName::new(&name);
-    ///
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(name.as_bytes().len() as u8 + 1);
-    /// data.push(CompleteLocalName::data_type());
-    /// data.append(&mut name.to_string().into_bytes());
-    ///
-    /// assert_eq!(data, result1.into_bytes());
-    /// ```
-    fn into_bytes(&self) -> Vec<u8> {
-        let mut data: Vec<u8> = Vec::new();
-        data.push(self.length);
-        data.push(DATA_TYPE);
-        data.append(&mut self.complete_local_name.clone().into_bytes());
-        return data;
-    }
-
-    /// Create [[CompleteLocalName] from [Vec`<u8>`].
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_class::vec_converter::VecConverter;
-    /// use ble_data_class::data_types::complete_local_name::CompleteLocalName;
-    /// use ble_data_class::data_types::data_type::DataType;
+    /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
     ///
     /// let name = "complete_local_name".to_string();
     /// let length = name.as_bytes().len() as u8 + 1;
@@ -78,44 +44,105 @@ impl VecConverter<CompleteLocalName> for CompleteLocalName {
     /// data.push(length);
     /// data.push(CompleteLocalName::data_type());
     /// data.append(&mut name.to_string().into_bytes());
-    /// let result = CompleteLocalName::from_vec(&data);
+    ///
+    /// let result = CompleteLocalName::from_with_offset(&data, 0);
+    /// assert_eq!(length, result.length);
+    /// assert_eq!(name, result.complete_local_name);
+    ///
+    /// data = Vec::new();
+    /// data.push(0);
+    /// data.push(length);
+    /// data.push(CompleteLocalName::data_type());
+    /// data.append(&mut name.to_string().into_bytes());
+    /// let result = CompleteLocalName::from_with_offset(&data, 1);
     /// assert_eq!(length, result.length);
     /// assert_eq!(name, result.complete_local_name);
     /// ```
-    fn from_vec(data: &Vec<u8>) -> CompleteLocalName {
-        let length = data[0];
-        CompleteLocalName {
+    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
+        let length = data[offset];
+        Self {
             length,
-            complete_local_name: String::from_utf8(data[2..1 + usize::from(length)].to_vec())
-                .unwrap(),
+            complete_local_name: String::from_utf8(
+                data[2 + offset..1 + offset + usize::from(length)].to_vec(),
+            )
+            .unwrap(),
         }
     }
 }
 
-impl DataType<CompleteLocalName> for CompleteLocalName {
+impl From<&Vec<u8>> for CompleteLocalName {
+    /// Create [CompleteLocalName] from `Vec<u8>`.
+    ///
+    /// [`CompleteLocalName::from_with_offset`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
+    ///
+    /// let name = "complete_local_name".to_string();
+    /// let length = name.as_bytes().len() as u8 + 1;
+    /// let mut data: Vec<u8> = Vec::new();
+    /// data.push(length);
+    /// data.push(CompleteLocalName::data_type());
+    /// data.append(&mut name.to_string().into_bytes());
+    /// let result = CompleteLocalName::from(&data);
+    /// assert_eq!(length, result.length);
+    /// assert_eq!(name, result.complete_local_name);
+    /// ```
+    fn from(data: &Vec<u8>) -> Self {
+        Self::from_with_offset(data, 0)
+    }
+}
+
+impl Into<Vec<u8>> for CompleteLocalName {
+    /// Create `Vec<u8>` from [CompleteLocalName].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
+    ///
+    /// let name = "complete_local_name".to_string();
+    /// let result1 = CompleteLocalName::new(&name);
+    /// 
+    /// let mut data: Vec<u8> = Vec::new();
+    /// data.push(name.as_bytes().len() as u8 + 1);
+    /// data.push(CompleteLocalName::data_type());
+    /// data.append(&mut name.to_string().into_bytes());
+    /// 
+    /// let into_data: Vec<u8> = result1.into();
+    /// assert_eq!(data, into_data);
+    /// ```
+    fn into(self) -> Vec<u8> {
+        let mut data: Vec<u8> = Vec::new();
+        data.push(self.length);
+        data.push(CompleteLocalName::data_type());
+        data.append(&mut self.complete_local_name.clone().into_bytes());
+        return data;
+    }
+}
+
+impl DataType for CompleteLocalName {
     /// return `0x08`.
     ///
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::complete_local_name::CompleteLocalName;
-    /// use ble_data_class::data_types::data_type::DataType;
+    /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
     ///
     /// assert_eq!(0x08, CompleteLocalName::data_type());
     /// ```
     fn data_type() -> u8 {
-        DATA_TYPE
+        0x08
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        data_types::{
-            complete_local_name::{CompleteLocalName, DATA_TYPE},
-            data_type::DataType,
-        },
-        vec_converter::VecConverter,
+    use crate::data_types::{
+        complete_local_name::CompleteLocalName,
+        data_type::DataType,
     };
 
     #[test]
@@ -127,36 +154,61 @@ mod tests {
     }
 
     #[test]
-    fn test_from_vec() {
+    fn test_from_with_offset() {
         let name = "complete_local_name".to_string();
         let length = name.as_bytes().len() as u8 + 1;
         let mut data: Vec<u8> = Vec::new();
         data.push(length);
-        data.push(DATA_TYPE);
+        data.push(CompleteLocalName::data_type());
         data.append(&mut name.to_string().into_bytes());
-        let result = CompleteLocalName::from_vec(&data);
+
+        let result = CompleteLocalName::from_with_offset(&data, 0);
+        assert_eq!(length, result.length);
+        assert_eq!(name, result.complete_local_name);
+
+        data = Vec::new();
+        data.push(0);
+        data.push(length);
+        data.push(CompleteLocalName::data_type());
+        data.append(&mut name.to_string().into_bytes());
+        let result = CompleteLocalName::from_with_offset(&data, 1);
         assert_eq!(length, result.length);
         assert_eq!(name, result.complete_local_name);
     }
 
     #[test]
-    fn test_to_vec() {
+    fn test_from() {
+        let name = "complete_local_name".to_string();
+        let length = name.as_bytes().len() as u8 + 1;
+        let mut data: Vec<u8> = Vec::new();
+        data.push(length);
+        data.push(CompleteLocalName::data_type());
+        data.append(&mut name.to_string().into_bytes());
+        let result = CompleteLocalName::from(&data);
+        assert_eq!(length, result.length);
+        assert_eq!(name, result.complete_local_name);
+    }
+
+    #[test]
+    fn test_into() {
         let name = "complete_local_name".to_string();
         let result1 = CompleteLocalName::new(&name);
 
         let mut data: Vec<u8> = Vec::new();
         data.push(name.as_bytes().len() as u8 + 1);
-        data.push(DATA_TYPE);
+        data.push(CompleteLocalName::data_type());
         data.append(&mut name.to_string().into_bytes());
 
-        assert_eq!(data, result1.into_bytes());
+        let into_data: Vec<u8> = result1.into();
+        assert_eq!(data, into_data);
 
-        let result2 = CompleteLocalName::from_vec(&data);
-        assert_eq!(data, result2.into_bytes());
+        let result2 = CompleteLocalName::from(&data);
+        let into_data: Vec<u8> = result2.into();
+        assert_eq!(data, into_data);
     }
 
     #[test]
     fn test_data_type() {
-        assert_eq!(DATA_TYPE, CompleteLocalName::data_type());
+        assert_eq!(CompleteLocalName::data_type(), CompleteLocalName::data_type());
     }
 }
