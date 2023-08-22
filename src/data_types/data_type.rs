@@ -1,6 +1,6 @@
 //! EIR/AD/SRD/ACAD/OOB data type module.
 
-use crate::{AdvertisingInterval, CompleteLocalName};
+use crate::{AdvertisingInterval, Appearance, CompleteLocalName};
 
 use super::advertising_interval_long::AdvertisingIntervalLong;
 
@@ -58,11 +58,27 @@ pub fn is_advertising_interval_long(data_type: u8) -> bool {
     AdvertisingIntervalLong::data_type() == data_type
 }
 
+/// check `Appearance` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::is_appearance;
+/// use ble_data_class::data_types::appearance::Appearance;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_appearance(0x19));
+/// assert!(!is_appearance(0x00));
+/// ```
+pub fn is_appearance(data_type: u8) -> bool {
+    Appearance::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{
         data_types::data_type::{is_advertising_interval, is_advertising_interval_long},
-        is_complete_local_name,
+        is_appearance, is_complete_local_name,
     };
 
     #[test]
@@ -81,5 +97,11 @@ mod tests {
     fn test_is_advertising_interval_long() {
         assert!(is_advertising_interval_long(0x2f));
         assert!(!is_advertising_interval_long(0x00));
+    }
+
+    #[test]
+    fn test_is_appearance() {
+        assert!(is_appearance(0x19));
+        assert!(!is_appearance(0x00));
     }
 }
