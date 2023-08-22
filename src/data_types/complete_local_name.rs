@@ -131,10 +131,10 @@ impl DataType for CompleteLocalName {
     /// ```
     /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
     ///
-    /// assert_eq!(0x08, CompleteLocalName::data_type());
+    /// assert_eq!(0x09, CompleteLocalName::data_type());
     /// ```
     fn data_type() -> u8 {
-        0x08
+        0x09
     }
 }
 
