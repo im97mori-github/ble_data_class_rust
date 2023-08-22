@@ -209,6 +209,6 @@ mod tests {
 
     #[test]
     fn test_data_type() {
-        assert_eq!(CompleteLocalName::data_type(), CompleteLocalName::data_type());
+        assert_eq!(0x09, CompleteLocalName::data_type());
     }
 }
