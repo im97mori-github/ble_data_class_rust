@@ -4,10 +4,13 @@ pub mod data_types {
     pub mod data_type;
     pub mod complete_local_name;
     pub mod advertising_interval;
+    pub mod advertising_interval_long;
 }
 
 pub use data_types::data_type::DataType;
 pub use data_types::data_type::is_advertising_interval;
+pub use data_types::data_type::is_advertising_interval_long;
 pub use data_types::data_type::is_complete_local_name;
 pub use data_types::complete_local_name::CompleteLocalName;
 pub use data_types::advertising_interval::AdvertisingInterval;
+pub use data_types::advertising_interval_long::AdvertisingIntervalLong;

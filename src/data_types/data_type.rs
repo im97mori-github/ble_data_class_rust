@@ -2,6 +2,8 @@
 
 use crate::{AdvertisingInterval, CompleteLocalName};
 
+use super::advertising_interval_long::AdvertisingIntervalLong;
+
 /// Trait for EIR/AD/SRD/ACAD/OOB data type.
 pub trait DataType {
     /// Get EIR/AD/SRD/ACAD/OOB data type
@@ -40,10 +42,26 @@ pub fn is_advertising_interval(data_type: u8) -> bool {
     AdvertisingInterval::data_type() == data_type
 }
 
+/// check `Advertising Interval - long` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::is_advertising_interval_long;
+/// use ble_data_class::data_types::advertising_interval_long::AdvertisingIntervalLong;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_advertising_interval_long(0x2f));
+/// assert!(!is_advertising_interval_long(0x00));
+/// ```
+pub fn is_advertising_interval_long(data_type: u8) -> bool {
+    AdvertisingIntervalLong::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{
-        data_types::data_type::is_advertising_interval,
+        data_types::data_type::{is_advertising_interval, is_advertising_interval_long},
         is_complete_local_name,
     };
 
@@ -57,5 +75,11 @@ mod tests {
     fn test_is_advertising_interval() {
         assert!(is_advertising_interval(0x1a));
         assert!(!is_advertising_interval(0x00));
+    }
+
+    #[test]
+    fn test_is_advertising_interval_long() {
+        assert!(is_advertising_interval_long(0x2f));
+        assert!(!is_advertising_interval_long(0x00));
     }
 }
