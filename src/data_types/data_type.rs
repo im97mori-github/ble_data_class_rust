@@ -1,6 +1,6 @@
 //! EIR/AD/SRD/ACAD/OOB data type module.
 
-use crate::{AdvertisingInterval, Appearance, CompleteLocalName};
+use crate::{AdvertisingInterval, Appearance, CompleteLocalName, BigInfo};
 
 use super::{advertising_interval_long::AdvertisingIntervalLong, channel_map_update_indication::ChannelMapUpdateIndication};
 
@@ -79,7 +79,7 @@ pub fn is_appearance(data_type: u8) -> bool {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::is_appearance;
+/// use ble_data_class::is_channel_map_update_indication;
 /// use ble_data_class::data_types::channel_map_update_indication::ChannelMapUpdateIndication;
 /// use ble_data_class::data_types::data_type::DataType;
 ///
@@ -90,12 +90,27 @@ pub fn is_channel_map_update_indication(data_type: u8) -> bool {
     ChannelMapUpdateIndication::data_type() == data_type
 }
 
+/// check `Channel Map Update Indication` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::is_big_info;
+/// use ble_data_class::data_types::big_info::BigInfo;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_big_info(0x2c));
+/// assert!(!is_big_info(0x00));
+/// ```
+pub fn is_big_info(data_type: u8) -> bool {
+    BigInfo::data_type() == data_type
+}
 
 #[cfg(test)]
 mod tests {
     use crate::{
         data_types::data_type::{is_advertising_interval, is_advertising_interval_long, is_channel_map_update_indication},
-        is_appearance, is_complete_local_name,
+        is_appearance, is_complete_local_name, is_big_info,
     };
 
     #[test]
@@ -126,5 +141,11 @@ mod tests {
     fn test_is_channel_map_update_indication() {
         assert!(is_channel_map_update_indication(0x28));
         assert!(!is_channel_map_update_indication(0x00));
+    }
+
+    #[test]
+    fn test_is_big_info() {
+        assert!(is_big_info(0x2c));
+        assert!(!is_big_info(0x00));
     }
 }

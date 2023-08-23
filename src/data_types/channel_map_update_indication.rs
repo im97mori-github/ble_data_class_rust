@@ -234,7 +234,7 @@ impl Into<Vec<u8>> for ChannelMapUpdateIndication {
     fn into(self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
         data.push(self.length);
-        data.push(ChannelMapUpdateIndication::data_type());
+        data.push(Self::data_type());
         let mut ch_m = [0u8; 5];
         for (i, element) in self.ch_m.iter().enumerate() {
             if *element {

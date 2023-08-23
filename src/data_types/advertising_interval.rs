@@ -59,12 +59,11 @@ impl AdvertisingInterval {
     /// assert_eq!(advertising_interval, result.advertising_interval);
     /// ```
     pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let length = data[offset];
+        let data = data[offset..].to_vec();
+        let length = data[0];
         Self {
             length,
-            advertising_interval: u16::from_le_bytes(
-                data.split_at(2 + offset).1.try_into().unwrap(),
-            ),
+            advertising_interval: u16::from_le_bytes(data[2..4].try_into().unwrap()),
         }
     }
 
@@ -116,7 +115,7 @@ impl From<&Vec<u8>> for AdvertisingInterval {
 }
 
 /// Units: 0.625 ms
-/// 
+///
 /// advInterval value
 pub const ADVINTERVAL_VALUE: f32 = 0.625;
 
@@ -130,15 +129,15 @@ impl Into<Vec<u8>> for AdvertisingInterval {
     ///
     /// let advertising_interval: u16 = 0x01;
     /// let result1 = AdvertisingInterval::new(advertising_interval);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(3);
     /// data.push(AdvertisingInterval::data_type());
     /// data.append(&mut advertising_interval.to_le_bytes().to_vec());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = AdvertisingInterval::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);
@@ -146,7 +145,7 @@ impl Into<Vec<u8>> for AdvertisingInterval {
     fn into(self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
         data.push(self.length);
-        data.push(AdvertisingInterval::data_type());
+        data.push(Self::data_type());
         data.append(&mut self.advertising_interval.to_le_bytes().to_vec());
         return data;
     }

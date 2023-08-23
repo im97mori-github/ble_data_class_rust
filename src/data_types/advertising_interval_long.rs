@@ -101,8 +101,8 @@ impl AdvertisingIntervalLong {
     /// );
     /// ```
     pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let mut data = data.clone();
-        let length = data[offset];
+        let mut data = data[offset..].to_vec();
+        let length = data[0];
         let is_u32 = length == 5;
         if !is_u32 {
             data.push(0x00);
@@ -110,9 +110,7 @@ impl AdvertisingIntervalLong {
         Self {
             length,
             is_u32,
-            advertising_interval_long: u32::from_le_bytes(
-                data.split_at(2 + offset).1.try_into().unwrap(),
-            ),
+            advertising_interval_long: u32::from_le_bytes(data[2..6].try_into().unwrap()),
         }
     }
 
@@ -226,7 +224,7 @@ impl Into<Vec<u8>> for AdvertisingIntervalLong {
     fn into(self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
         data.push(self.length);
-        data.push(AdvertisingIntervalLong::data_type());
+        data.push(Self::data_type());
         if self.is_u32 {
             data.append(&mut self.advertising_interval_long.to_le_bytes().to_vec());
         } else {

@@ -59,10 +59,11 @@ impl Appearance {
     /// assert_eq!(appearance, result.appearance);
     /// ```
     pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let length = data[offset];
+        let data = data[offset..].to_vec();
+        let length = data[0];
         Self {
             length,
-            appearance: u16::from_le_bytes(data.split_at(2 + offset).1.try_into().unwrap()),
+            appearance: u16::from_le_bytes(data[2..4].try_into().unwrap()),
         }
     }
 
@@ -144,15 +145,15 @@ impl Into<Vec<u8>> for Appearance {
     ///
     /// let appearance: u16 = 0x1444;
     /// let result1 = Appearance::new(appearance);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(3);
     /// data.push(Appearance::data_type());
     /// data.append(&mut appearance.to_le_bytes().to_vec());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = Appearance::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);
@@ -160,7 +161,7 @@ impl Into<Vec<u8>> for Appearance {
     fn into(self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
         data.push(self.length);
-        data.push(Appearance::data_type());
+        data.push(Self::data_type());
         data.append(&mut self.appearance.to_le_bytes().to_vec());
         return data;
     }

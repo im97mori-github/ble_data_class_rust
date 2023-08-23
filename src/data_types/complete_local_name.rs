@@ -117,7 +117,7 @@ impl Into<Vec<u8>> for CompleteLocalName {
     fn into(self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
         data.push(self.length);
-        data.push(CompleteLocalName::data_type());
+        data.push(Self::data_type());
         data.append(&mut self.complete_local_name.clone().into_bytes());
         return data;
     }
