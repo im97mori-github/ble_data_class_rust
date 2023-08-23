@@ -59,13 +59,12 @@ impl CompleteLocalName {
     /// assert_eq!(name, result.complete_local_name);
     /// ```
     pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let length = data[offset];
+        let data = data[offset..].to_vec();
+        let length = data[0];
         Self {
             length,
-            complete_local_name: String::from_utf8(
-                data[2 + offset..1 + offset + usize::from(length)].to_vec(),
-            )
-            .unwrap(),
+            complete_local_name: String::from_utf8(data[2..1 + usize::from(length)].to_vec())
+                .unwrap(),
         }
     }
 }
@@ -105,12 +104,12 @@ impl Into<Vec<u8>> for CompleteLocalName {
     ///
     /// let name = "complete_local_name".to_string();
     /// let result1 = CompleteLocalName::new(&name);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(name.as_bytes().len() as u8 + 1);
     /// data.push(CompleteLocalName::data_type());
     /// data.append(&mut name.to_string().into_bytes());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     /// ```
@@ -140,10 +139,7 @@ impl DataType for CompleteLocalName {
 
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{
-        complete_local_name::CompleteLocalName,
-        data_type::DataType,
-    };
+    use crate::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
 
     #[test]
     fn test_new() {
