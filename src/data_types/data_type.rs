@@ -1,8 +1,9 @@
 //! EIR/AD/SRD/ACAD/OOB data type module.
 
-use crate::{AdvertisingInterval, Appearance, CompleteLocalName, BigInfo, CompleteListOf16BitServiceUuids};
-
-use super::{advertising_interval_long::AdvertisingIntervalLong, channel_map_update_indication::ChannelMapUpdateIndication};
+use crate::{
+    AdvertisingInterval, AdvertisingIntervalLong, Appearance, BigInfo, ChannelMapUpdateIndication,
+    CompleteListOf16BitServiceUuids, CompleteListOf32BitServiceUuids, CompleteLocalName,
+};
 
 /// Trait for EIR/AD/SRD/ACAD/OOB data type.
 pub trait DataType {
@@ -122,11 +123,30 @@ pub fn is_complete_list_of_16bit_service_uuids(data_type: u8) -> bool {
     CompleteListOf16BitServiceUuids::data_type() == data_type
 }
 
+/// check `Complete List of 32-bit Service Class UUIDs.` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::is_complete_list_of_32bit_service_uuids;
+/// use ble_data_class::data_types::complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_complete_list_of_32bit_service_uuids(0x05));
+/// assert!(!is_complete_list_of_32bit_service_uuids(0x00));
+/// ```
+pub fn is_complete_list_of_32bit_service_uuids(data_type: u8) -> bool {
+    CompleteListOf32BitServiceUuids::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{
-        data_types::data_type::{is_advertising_interval, is_advertising_interval_long, is_channel_map_update_indication},
-        is_appearance, is_complete_local_name, is_big_info, is_complete_list_of_16bit_service_uuids,
+        data_types::data_type::{
+            is_advertising_interval, is_advertising_interval_long, is_channel_map_update_indication,
+        },
+        is_appearance, is_big_info, is_complete_list_of_16bit_service_uuids,
+        is_complete_list_of_32bit_service_uuids, is_complete_local_name,
     };
 
     #[test]
@@ -169,5 +189,11 @@ mod tests {
     fn test_is_complete_list_of_16bit_service_uuids() {
         assert!(is_complete_list_of_16bit_service_uuids(0x03));
         assert!(!is_complete_list_of_16bit_service_uuids(0x00));
+    }
+
+    #[test]
+    fn test_is_complete_list_of_32bit_service_uuids() {
+        assert!(is_complete_list_of_32bit_service_uuids(0x05));
+        assert!(!is_complete_list_of_32bit_service_uuids(0x00));
     }
 }
