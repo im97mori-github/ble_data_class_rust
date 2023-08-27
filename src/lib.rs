@@ -34,7 +34,7 @@ pub mod data_types {
     // pub mod service_data_16bit_uuid;
     // pub mod service_data_32bit_uuid;
     pub mod shortened_local_name;
-    // pub mod tx_power_level;
+    pub mod tx_power_level;
     // pub mod uniform_resource_identifier;
     pub mod data_type;
 }
