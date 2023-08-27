@@ -10,6 +10,7 @@ pub mod data_types {
     pub mod complete_list_of_16bit_service_uuids;
     pub mod complete_list_of_32bit_service_uuids;
     pub mod incomplete_list_of_16bit_service_uuids;
+    pub mod incomplete_list_of_32bit_service_uuids;
     pub mod complete_local_name;
     pub mod data_type;
 }
