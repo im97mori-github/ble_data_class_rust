@@ -221,12 +221,7 @@ pub fn is_list_of_128bit_service_solicitation_uuids(data_type: u8) -> bool {
 mod tests {
     use uuid::{uuid, Uuid};
 
-    use crate::data_types::{
-        list_of_128bit_service_solicitation_uuids::{
-            is_list_of_128bit_service_solicitation_uuids, ListOf128BitServiceSolicitationUUIDs,
-        },
-        data_type::DataType,
-    };
+    use crate::data_types::{data_type::DataType, list_of_128bit_service_solicitation_uuids::*};
 
     #[test]
     fn test_new() {

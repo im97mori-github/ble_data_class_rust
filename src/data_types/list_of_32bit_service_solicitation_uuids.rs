@@ -226,10 +226,7 @@ mod tests {
     use uuid::{uuid, Uuid};
 
     use crate::{
-        data_types::{
-            list_of_32bit_service_solicitation_uuids::{ListOf32BitServiceSolicitationUUIDs, is_list_of_32bit_service_solicitation_uuids},
-            data_type::DataType,
-        },
+        data_types::{data_type::DataType, list_of_32bit_service_solicitation_uuids::*},
         BASE_UUID,
     };
 
@@ -341,7 +338,7 @@ mod tests {
     fn test_data_type() {
         assert_eq!(0x1f, ListOf32BitServiceSolicitationUUIDs::data_type());
     }
-    
+
     #[test]
     fn test_is_list_of_32bit_service_solicitation_uuids() {
         assert!(is_list_of_32bit_service_solicitation_uuids(0x1f));

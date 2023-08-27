@@ -183,10 +183,7 @@ pub fn is_advertising_interval(data_type: u8) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{
-        advertising_interval::{AdvertisingInterval, ADVINTERVAL_VALUE, is_advertising_interval},
-        data_type::DataType,
-    };
+    use crate::data_types::{advertising_interval::*, data_type::DataType};
 
     #[test]
     fn test_new() {
@@ -265,7 +262,6 @@ mod tests {
         assert_eq!(0x1a, AdvertisingInterval::data_type());
     }
 
-    
     #[test]
     fn test_is_advertising_interval() {
         assert!(is_advertising_interval(0x1a));

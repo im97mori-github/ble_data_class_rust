@@ -249,7 +249,6 @@ impl DataType for AdvertisingIntervalLong {
     }
 }
 
-
 /// check `Advertising Interval - long` data type.
 ///
 /// # Examples
@@ -267,10 +266,7 @@ pub fn is_advertising_interval_long(data_type: u8) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{
-        advertising_interval_long::{AdvertisingIntervalLong, ADVINTERVAL_VALUE, is_advertising_interval_long},
-        data_type::DataType,
-    };
+    use crate::data_types::{advertising_interval_long::*, data_type::DataType};
 
     #[test]
     fn test_new() {
@@ -412,11 +408,10 @@ mod tests {
     fn test_data_type() {
         assert_eq!(0x2f, AdvertisingIntervalLong::data_type());
     }
-    
+
     #[test]
     fn test_is_advertising_interval_long() {
         assert!(is_advertising_interval_long(0x2f));
         assert!(!is_advertising_interval_long(0x00));
     }
-
 }

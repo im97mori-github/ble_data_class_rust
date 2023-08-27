@@ -221,12 +221,7 @@ pub fn is_incomplete_list_of_128bit_service_uuids(data_type: u8) -> bool {
 mod tests {
     use uuid::{uuid, Uuid};
 
-    use crate::data_types::{
-        incomplete_list_of_128bit_service_uuids::{
-            is_incomplete_list_of_128bit_service_uuids, IncompleteListOf128BitServiceUuids,
-        },
-        data_type::DataType,
-    };
+    use crate::data_types::{data_type::DataType, incomplete_list_of_128bit_service_uuids::*};
 
     #[test]
     fn test_new() {

@@ -221,10 +221,7 @@ mod tests {
     use uuid::{uuid, Uuid};
 
     use crate::{
-        data_types::{
-            list_of_16bit_service_solicitation_uuids::{ListOf16BitServiceSolicitationUUIDs, is_list_of_16bit_service_solicitation_uuids},
-            data_type::DataType,
-        },
+        data_types::{data_type::DataType, list_of_16bit_service_solicitation_uuids::*},
         BASE_UUID,
     };
 

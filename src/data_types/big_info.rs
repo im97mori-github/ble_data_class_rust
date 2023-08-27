@@ -922,7 +922,7 @@ pub fn is_big_info(data_type: u8) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{big_info::{BigInfo, is_big_info}, data_type::DataType};
+    use crate::data_types::{big_info::*, data_type::DataType};
 
     #[test]
     fn test_new() {
@@ -1506,7 +1506,7 @@ mod tests {
     fn test_data_type() {
         assert_eq!(0x2c, BigInfo::data_type());
     }
-    
+
     #[test]
     fn test_is_big_info() {
         assert!(is_big_info(0x2c));

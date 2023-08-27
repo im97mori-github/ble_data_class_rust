@@ -154,7 +154,7 @@ pub fn is_complete_local_name(data_type: u8) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{complete_local_name::{CompleteLocalName, is_complete_local_name}, data_type::DataType};
+    use crate::data_types::{complete_local_name::*, data_type::DataType};
 
     #[test]
     fn test_new() {

@@ -60,13 +60,13 @@ impl EncryptedData {
     /// data.append(&mut randomizer.to_vec());
     /// data.append(&mut payload.clone());
     /// data.append(&mut mic.to_vec());
-    /// 
+    ///
     /// let result = EncryptedData::from_with_offset(&data, 0);
     /// assert_eq!(length, result.length);
     /// assert_eq!(randomizer, result.randomizer);
     /// assert_eq!(payload, result.payload);
     /// assert_eq!(mic, result.mic);
-    /// 
+    ///
     /// data = Vec::new();
     /// data.push(0);
     /// data.push(length);
@@ -112,7 +112,7 @@ impl From<&Vec<u8>> for EncryptedData {
     /// data.append(&mut randomizer.to_vec());
     /// data.append(&mut payload.clone());
     /// data.append(&mut mic.to_vec());
-    /// 
+    ///
     /// let result = EncryptedData::from(&data);
     /// assert_eq!(length, result.length);
     /// assert_eq!(randomizer, result.randomizer);
@@ -137,17 +137,17 @@ impl Into<Vec<u8>> for EncryptedData {
     /// let mic: [u8; 4] = [7, 8, 9, 10];
     /// let length = 11;
     /// let result1 = EncryptedData::new(randomizer, &payload, mic);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(EncryptedData::data_type());
     /// data.append(&mut randomizer.to_vec());
     /// data.append(&mut payload.clone());
     /// data.append(&mut mic.to_vec());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = EncryptedData::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);
@@ -195,7 +195,7 @@ pub fn is_encrypted_data(data_type: u8) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{data_type::DataType, encrypted_data::{EncryptedData, is_encrypted_data}};
+    use crate::data_types::{data_type::DataType, encrypted_data::*};
 
     #[test]
     fn test_new() {

@@ -226,10 +226,7 @@ mod tests {
     use uuid::{uuid, Uuid};
 
     use crate::{
-        data_types::{
-            complete_list_of_32bit_service_uuids::{CompleteListOf32BitServiceUuids, is_complete_list_of_32bit_service_uuids},
-            data_type::DataType,
-        },
+        data_types::{complete_list_of_32bit_service_uuids::*, data_type::DataType},
         BASE_UUID,
     };
 
@@ -341,7 +338,7 @@ mod tests {
     fn test_data_type() {
         assert_eq!(0x05, CompleteListOf32BitServiceUuids::data_type());
     }
-    
+
     #[test]
     fn test_is_complete_list_of_32bit_service_uuids() {
         assert!(is_complete_list_of_32bit_service_uuids(0x05));

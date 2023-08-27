@@ -17,6 +17,7 @@ pub mod data_types {
     pub mod list_of_16bit_service_solicitation_uuids;
     pub mod list_of_32bit_service_solicitation_uuids;
     pub mod encrypted_data;
+    pub mod flags;
     pub mod data_type;
 }
 
