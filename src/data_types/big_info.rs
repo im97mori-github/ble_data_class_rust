@@ -905,9 +905,24 @@ impl DataType for BigInfo {
     }
 }
 
+/// check `BIGInfo` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::data_types::big_info::*;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_big_info(0x2c));
+/// assert!(!is_big_info(0x00));
+/// ```
+pub fn is_big_info(data_type: u8) -> bool {
+    BigInfo::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{big_info::BigInfo, data_type::DataType};
+    use crate::data_types::{big_info::{BigInfo, is_big_info}, data_type::DataType};
 
     #[test]
     fn test_new() {
@@ -1490,5 +1505,11 @@ mod tests {
     #[test]
     fn test_data_type() {
         assert_eq!(0x2c, BigInfo::data_type());
+    }
+    
+    #[test]
+    fn test_is_big_info() {
+        assert!(is_big_info(0x2c));
+        assert!(!is_big_info(0x00));
     }
 }

@@ -137,9 +137,24 @@ impl DataType for CompleteLocalName {
     }
 }
 
+/// check `Complete Local Name` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::data_types::complete_local_name::*;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_complete_local_name(0x09));
+/// assert!(!is_complete_local_name(0x00));
+/// ```
+pub fn is_complete_local_name(data_type: u8) -> bool {
+    CompleteLocalName::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
+    use crate::data_types::{complete_local_name::{CompleteLocalName, is_complete_local_name}, data_type::DataType};
 
     #[test]
     fn test_new() {
@@ -206,5 +221,11 @@ mod tests {
     #[test]
     fn test_data_type() {
         assert_eq!(0x09, CompleteLocalName::data_type());
+    }
+
+    #[test]
+    fn test_is_complete_local_name() {
+        assert!(is_complete_local_name(0x09));
+        assert!(!is_complete_local_name(0x00));
     }
 }

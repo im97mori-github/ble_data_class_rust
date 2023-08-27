@@ -182,9 +182,24 @@ impl DataType for Appearance {
     }
 }
 
+/// check `Appearance` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::data_types::appearance::*;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_appearance(0x19));
+/// assert!(!is_appearance(0x00));
+/// ```
+pub fn is_appearance(data_type: u8) -> bool {
+    Appearance::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{appearance::Appearance, data_type::DataType};
+    use crate::data_types::{appearance::{Appearance, is_appearance}, data_type::DataType};
 
     #[test]
     fn test_new() {
@@ -278,4 +293,11 @@ mod tests {
     fn test_data_type() {
         assert_eq!(0x19, Appearance::data_type());
     }
+    
+    #[test]
+    fn test_is_appearance() {
+        assert!(is_appearance(0x19));
+        assert!(!is_appearance(0x00));
+    }
+
 }

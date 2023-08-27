@@ -262,10 +262,25 @@ impl DataType for ChannelMapUpdateIndication {
     }
 }
 
+/// check `Channel Map Update Indication` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::data_types::channel_map_update_indication::*;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_channel_map_update_indication(0x28));
+/// assert!(!is_channel_map_update_indication(0x00));
+/// ```
+pub fn is_channel_map_update_indication(data_type: u8) -> bool {
+    ChannelMapUpdateIndication::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
     use crate::data_types::{
-        channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType,
+        channel_map_update_indication::{ChannelMapUpdateIndication, is_channel_map_update_indication}, data_type::DataType,
     };
 
     #[test]
@@ -429,5 +444,11 @@ mod tests {
     #[test]
     fn test_data_type() {
         assert_eq!(0x28, ChannelMapUpdateIndication::data_type());
+    }
+    
+    #[test]
+    fn test_is_channel_map_update_indication() {
+        assert!(is_channel_map_update_indication(0x28));
+        assert!(!is_channel_map_update_indication(0x00));
     }
 }

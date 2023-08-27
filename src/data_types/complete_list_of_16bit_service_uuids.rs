@@ -201,13 +201,28 @@ impl DataType for CompleteListOf16BitServiceUuids {
     }
 }
 
+/// check `Complete List of 16-bit Service Class UUIDs.` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::data_types::complete_list_of_16bit_service_uuids::*;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_complete_list_of_16bit_service_uuids(0x03));
+/// assert!(!is_complete_list_of_16bit_service_uuids(0x00));
+/// ```
+pub fn is_complete_list_of_16bit_service_uuids(data_type: u8) -> bool {
+    CompleteListOf16BitServiceUuids::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
     use uuid::{uuid, Uuid};
 
     use crate::{
         data_types::{
-            complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids,
+            complete_list_of_16bit_service_uuids::{CompleteListOf16BitServiceUuids, is_complete_list_of_16bit_service_uuids},
             data_type::DataType,
         },
         BASE_UUID,
@@ -308,5 +323,11 @@ mod tests {
     #[test]
     fn test_data_type() {
         assert_eq!(0x03, CompleteListOf16BitServiceUuids::data_type());
+    }
+
+    #[test]
+    fn test_is_complete_list_of_16bit_service_uuids() {
+        assert!(is_complete_list_of_16bit_service_uuids(0x03));
+        assert!(!is_complete_list_of_16bit_service_uuids(0x00));
     }
 }

@@ -166,10 +166,25 @@ impl DataType for AdvertisingInterval {
     }
 }
 
+/// check `Advertising Interval` data type.
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_class::data_types::advertising_interval::*;
+/// use ble_data_class::data_types::data_type::DataType;
+///
+/// assert!(is_advertising_interval(0x1a));
+/// assert!(!is_advertising_interval(0x00));
+/// ```
+pub fn is_advertising_interval(data_type: u8) -> bool {
+    AdvertisingInterval::data_type() == data_type
+}
+
 #[cfg(test)]
 mod tests {
     use crate::data_types::{
-        advertising_interval::{AdvertisingInterval, ADVINTERVAL_VALUE},
+        advertising_interval::{AdvertisingInterval, ADVINTERVAL_VALUE, is_advertising_interval},
         data_type::DataType,
     };
 
@@ -248,5 +263,12 @@ mod tests {
     #[test]
     fn test_data_type() {
         assert_eq!(0x1a, AdvertisingInterval::data_type());
+    }
+
+    
+    #[test]
+    fn test_is_advertising_interval() {
+        assert!(is_advertising_interval(0x1a));
+        assert!(!is_advertising_interval(0x00));
     }
 }
