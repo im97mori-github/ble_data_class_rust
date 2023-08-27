@@ -18,7 +18,7 @@ pub struct EncryptedData {
 }
 
 impl EncryptedData {
-    /// Create [EncryptedData] from `Encrypted Data`.
+    /// Create [EncryptedData] from Parameters.
     ///
     /// # Examples
     ///
