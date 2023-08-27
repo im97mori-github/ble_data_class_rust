@@ -1,4 +1,4 @@
-//! Complete List of 128-bit Service Class UUIDs (Data Type Value: 0x03) module.
+//! Complete List of 128-bit Service Class UUIDs (Data Type Value: 0x07) module.
 
 use uuid::Uuid;
 
