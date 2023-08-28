@@ -121,8 +121,9 @@ impl ChannelMapUpdateIndication {
     /// }
     /// ```
     pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let length = data[offset];
-        let ch_m: Vec<bool> = data[2 + offset..7 + offset]
+        let data = data[offset..].to_vec();
+        let length = data[0];
+        let ch_m: Vec<bool> = data[2..length as usize - 1]
             .iter()
             .flat_map(|x| {
                 let mut data: Vec<bool> = Vec::new();
@@ -140,7 +141,7 @@ impl ChannelMapUpdateIndication {
         Self {
             length,
             ch_m: ch_m.to_vec(),
-            instant: u16::from_le_bytes(data[7 + offset..9 + offset].try_into().unwrap()),
+            instant: u16::from_le_bytes(data[7..9].try_into().unwrap()),
         }
     }
 }

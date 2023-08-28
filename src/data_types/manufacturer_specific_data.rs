@@ -21,7 +21,6 @@ impl ManufacturerSpecificData {
     ///
     /// ```
     /// use ble_data_class::data_types::manufacturer_specific_data::ManufacturerSpecificData;
-    /// use uuid::{uuid, Uuid};
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
@@ -46,8 +45,7 @@ impl ManufacturerSpecificData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType}};
-    /// use uuid::{uuid, Uuid};
+    /// use ble_data_class::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
@@ -100,8 +98,7 @@ impl From<&Vec<u8>> for ManufacturerSpecificData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType}};
-    /// use uuid::{uuid, Uuid};
+    /// use ble_data_class::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
@@ -131,24 +128,23 @@ impl Into<Vec<u8>> for ManufacturerSpecificData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType}};
-    /// use uuid::{uuid, Uuid};
+    /// use ble_data_class::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
     /// let result1 =
     ///     ManufacturerSpecificData::new(company_identifier, &manufacturer_specific_data);
-    /// 
+    ///
     /// let length = manufacturer_specific_data.len() as u8 + 3;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(ManufacturerSpecificData::data_type());
     /// data.append(&mut u16::to_le_bytes(company_identifier).try_into().unwrap());
     /// data.append(&mut manufacturer_specific_data.clone());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = ManufacturerSpecificData::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);
