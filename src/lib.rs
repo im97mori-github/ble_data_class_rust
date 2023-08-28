@@ -23,7 +23,7 @@ pub mod data_types {
     pub mod list_of_16bit_service_solicitation_uuids;
     pub mod list_of_32bit_service_solicitation_uuids;
     pub mod manufacturer_specific_data;
-    // pub mod periodic_advertising_response_timing_information;
+    pub mod periodic_advertising_response_timing_information;
     pub mod peripheral_connection_interval_range;
     pub mod public_target_address;
     pub mod random_target_address;

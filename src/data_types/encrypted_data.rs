@@ -28,13 +28,13 @@ impl EncryptedData {
     /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
     /// let payload = [6].to_vec();
     /// let mic: [u8; 4] = [7, 8, 9, 10];
-    /// let result = EncryptedData::new(randomizer, &payload, mic);
+    /// let result = EncryptedData::new(&randomizer, &payload, mic);
     /// assert_eq!(11, result.length);
     /// assert_eq!(randomizer, result.randomizer);
     /// assert_eq!(payload, result.payload);
     /// assert_eq!(mic, result.mic);
     /// ```
-    pub fn new(randomizer: [u8; 5], payload: &Vec<u8>, mic: [u8; 4]) -> Self {
+    pub fn new(randomizer: &[u8; 5], payload: &Vec<u8>, mic: [u8; 4]) -> Self {
         Self {
             length: 10 + payload.len() as u8,
             randomizer: randomizer.clone(),
@@ -136,18 +136,18 @@ impl Into<Vec<u8>> for EncryptedData {
     /// let payload = [6].to_vec();
     /// let mic: [u8; 4] = [7, 8, 9, 10];
     /// let length = 11;
-    /// let result1 = EncryptedData::new(randomizer, &payload, mic);
-    ///
+    /// let result1 = EncryptedData::new(&randomizer, &payload, mic);
+    /// 
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(EncryptedData::data_type());
     /// data.append(&mut randomizer.to_vec());
     /// data.append(&mut payload.clone());
     /// data.append(&mut mic.to_vec());
-    ///
+    /// 
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    ///
+    /// 
     /// let result2 = EncryptedData::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);
@@ -202,7 +202,7 @@ mod tests {
         let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
         let payload = [6].to_vec();
         let mic: [u8; 4] = [7, 8, 9, 10];
-        let result = EncryptedData::new(randomizer, &payload, mic);
+        let result = EncryptedData::new(&randomizer, &payload, mic);
         assert_eq!(11, result.length);
         assert_eq!(randomizer, result.randomizer);
         assert_eq!(payload, result.payload);
@@ -268,7 +268,7 @@ mod tests {
         let payload = [6].to_vec();
         let mic: [u8; 4] = [7, 8, 9, 10];
         let length = 11;
-        let result1 = EncryptedData::new(randomizer, &payload, mic);
+        let result1 = EncryptedData::new(&randomizer, &payload, mic);
 
         let mut data: Vec<u8> = Vec::new();
         data.push(length);
