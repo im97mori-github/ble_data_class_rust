@@ -17,7 +17,7 @@ pub mod data_types {
     pub mod incomplete_list_of_16bit_service_uuids;
     pub mod incomplete_list_of_32bit_service_uuids;
     // pub mod le_bluetooth_device_address;
-    // pub mod le_role;
+    pub mod le_role;
     pub mod le_supported_features;
     pub mod list_of_128bit_service_solicitation_uuids;
     pub mod list_of_16bit_service_solicitation_uuids;

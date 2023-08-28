@@ -89,6 +89,11 @@ impl AdvertisingInterval {
     }
 }
 
+/// Units: 0.625 ms
+///
+/// advInterval value
+pub const ADVINTERVAL_VALUE: f32 = 0.625;
+
 impl From<&Vec<u8>> for AdvertisingInterval {
     /// Create [AdvertisingInterval] from `Vec<u8>`.
     ///
@@ -113,11 +118,6 @@ impl From<&Vec<u8>> for AdvertisingInterval {
         Self::from_with_offset(data, 0)
     }
 }
-
-/// Units: 0.625 ms
-///
-/// advInterval value
-pub const ADVINTERVAL_VALUE: f32 = 0.625;
 
 impl Into<Vec<u8>> for AdvertisingInterval {
     /// Create `Vec<u8>` from [AdvertisingInterval].
