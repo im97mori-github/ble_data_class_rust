@@ -7,6 +7,7 @@ pub mod data_types {
     pub mod big_info;
     pub mod broadcast_code;
     pub mod channel_map_update_indication;
+    // pub mod class_of_device;
     pub mod complete_list_of_128bit_service_uuids;
     pub mod complete_list_of_16bit_service_uuids;
     pub mod complete_list_of_32bit_service_uuids;
@@ -18,6 +19,8 @@ pub mod data_types {
     pub mod incomplete_list_of_32bit_service_uuids;
     pub mod le_bluetooth_device_address;
     pub mod le_role;
+    // pub mod le_secure_connections_confirmation_value;
+    // pub mod le_secure_connections_random_value;
     pub mod le_supported_features;
     pub mod list_of_128bit_service_solicitation_uuids;
     pub mod list_of_16bit_service_solicitation_uuids;
@@ -27,9 +30,12 @@ pub mod data_types {
     pub mod peripheral_connection_interval_range;
     pub mod public_target_address;
     pub mod random_target_address;
-    // pub mod secure_simple_pairing_oob;
     pub mod security_manager_oob;
     pub mod security_manager_tk_value;
+    pub mod secure_simple_pairing_hash_c192;
+    // pub mod secure_simple_pairing_randomizer_r192;
+    // pub mod secure_simple_pairing_hash_c256;
+    // pub mod secure_simple_pairing_randomizer_r256;
     pub mod service_data_128bit_uuid;
     pub mod service_data_16bit_uuid;
     pub mod service_data_32bit_uuid;
