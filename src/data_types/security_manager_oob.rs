@@ -192,7 +192,7 @@ impl SecurityManagerOutOfBand {
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_le_supported());
     /// ```
-    pub fn is_address_type(self) -> bool {
+    pub fn is_random_address(self) -> bool {
         self.security_manager_oob[3]
     }
 }
@@ -521,18 +521,18 @@ mod tests {
     }
 
     #[test]
-    fn test_is_address_type() {
+    fn test_is_random_address() {
         let security_manager_oob = [true, false, false, false, false, false, false, false];
         let result = SecurityManagerOutOfBand::new(&security_manager_oob);
-        assert!(!result.is_address_type());
+        assert!(!result.is_random_address());
 
         let security_manager_oob = [false, true, false, false, false, false, false, false];
         let result = SecurityManagerOutOfBand::new(&security_manager_oob);
-        assert!(!result.is_address_type());
+        assert!(!result.is_random_address());
 
         let security_manager_oob = [false, false, false, true, false, false, false, false];
         let result = SecurityManagerOutOfBand::new(&security_manager_oob);
-        assert!(result.is_address_type());
+        assert!(result.is_random_address());
     }
 
     #[test]
