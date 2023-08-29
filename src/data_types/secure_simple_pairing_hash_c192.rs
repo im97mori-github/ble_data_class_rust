@@ -12,7 +12,7 @@ pub struct SecureSimplePairingHashC192 {
 }
 
 impl SecureSimplePairingHashC192 {
-    /// Create [SecureSimplePairingHashC192] from Parameters.
+    /// Create [SecureSimplePairingHashC192] from `Secure Simple Pairing Hash C-192`.
     ///
     /// # Examples
     ///

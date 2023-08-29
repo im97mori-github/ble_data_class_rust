@@ -33,7 +33,7 @@ pub mod data_types {
     pub mod security_manager_oob;
     pub mod security_manager_tk_value;
     pub mod secure_simple_pairing_hash_c192;
-    // pub mod secure_simple_pairing_randomizer_r192;
+    pub mod secure_simple_pairing_randomizer_r192;
     // pub mod secure_simple_pairing_hash_c256;
     // pub mod secure_simple_pairing_randomizer_r256;
     pub mod service_data_128bit_uuid;
