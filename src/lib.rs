@@ -28,7 +28,7 @@ pub mod data_types {
     pub mod public_target_address;
     pub mod random_target_address;
     // pub mod secure_simple_pairing_oob;
-    // pub mod security_manager_oob;
+    pub mod security_manager_oob;
     pub mod security_manager_tk_value;
     pub mod service_data_128bit_uuid;
     pub mod service_data_16bit_uuid;
