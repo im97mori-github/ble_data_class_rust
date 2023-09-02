@@ -23,17 +23,17 @@ impl LeRole {
     /// let result = LeRole::new(le_role);
     /// assert_eq!(2, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert_eq!(2, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert_eq!(2, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert_eq!(2, result.length);
@@ -56,11 +56,11 @@ impl LeRole {
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let result = LeRole::from_with_offset(&data, 0);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// data = Vec::new();
     /// data.push(0);
     /// data.push(length);
@@ -70,18 +70,18 @@ impl LeRole {
     /// assert_eq!(length, result.length);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let length = 2;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let result = LeRole::from_with_offset(&data, 0);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// data = Vec::new();
     /// data.push(0);
     /// data.push(length);
@@ -91,18 +91,18 @@ impl LeRole {
     /// assert_eq!(length, result.length);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let length = 2;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let result = LeRole::from_with_offset(&data, 0);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// data = Vec::new();
     /// data.push(0);
     /// data.push(length);
@@ -112,18 +112,18 @@ impl LeRole {
     /// assert_eq!(length, result.length);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let length = 2;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let result = LeRole::from_with_offset(&data, 0);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// data = Vec::new();
     /// data.push(0);
     /// data.push(length);
@@ -153,20 +153,20 @@ impl LeRole {
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert!(result.is_only_peripheral_role_supported());
-    /// 
+    ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_only_peripheral_role_supported());
-    /// 
+    ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_only_peripheral_role_supported());
-    /// 
+    ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_only_peripheral_role_supported());
     /// ```
-    pub fn is_only_peripheral_role_supported(self) -> bool {
+    pub const fn is_only_peripheral_role_supported(&self) -> bool {
         self.le_role == ONLY_PERIPHERAL_ROLE_SUPPORTED
     }
 
@@ -180,20 +180,20 @@ impl LeRole {
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert!(result.is_only_peripheral_role_supported());
-    /// 
+    ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_only_peripheral_role_supported());
-    /// 
+    ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_only_peripheral_role_supported());
-    /// 
+    ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_only_peripheral_role_supported());
     /// ```
-    pub fn is_only_central_role_supported(self) -> bool {
+    pub const fn is_only_central_role_supported(&self) -> bool {
         self.le_role == ONLY_CENTRAL_ROLE_SUPPORTED
     }
 
@@ -207,20 +207,20 @@ impl LeRole {
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_peripheral_role_preferred_for_connection_establishment());
-    /// 
+    ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_peripheral_role_preferred_for_connection_establishment());
-    /// 
+    ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert!(result.is_peripheral_role_preferred_for_connection_establishment());
-    /// 
+    ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_peripheral_role_preferred_for_connection_establishment());
     /// ```
-    pub fn is_peripheral_role_preferred_for_connection_establishment(self) -> bool {
+    pub const fn is_peripheral_role_preferred_for_connection_establishment(&self) -> bool {
         self.le_role == PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT
     }
 
@@ -234,20 +234,20 @@ impl LeRole {
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_central_role_preferred_for_connection_establishment());
-    /// 
+    ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_central_role_preferred_for_connection_establishment());
-    /// 
+    ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert!(!result.is_central_role_preferred_for_connection_establishment());
-    /// 
+    ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let result = LeRole::new(le_role);
     /// assert!(result.is_central_role_preferred_for_connection_establishment());
     /// ```
-    pub fn is_central_role_preferred_for_connection_establishment(self) -> bool {
+    pub const fn is_central_role_preferred_for_connection_establishment(&self) -> bool {
         self.le_role == CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT
     }
 }
@@ -280,40 +280,40 @@ impl From<&Vec<u8>> for LeRole {
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let result = LeRole::from(&data);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let length = 2;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let result = LeRole::from(&data);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let length = 2;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let result = LeRole::from(&data);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
-    /// 
+    ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let length = 2;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let result = LeRole::from(&data);
     /// assert_eq!(length, result.length);
     /// assert_eq!(le_role, result.le_role);
@@ -334,63 +334,63 @@ impl Into<Vec<u8>> for LeRole {
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let length = 2;
     /// let result1 = LeRole::new(le_role);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = LeRole::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let length = 2;
     /// let result1 = LeRole::new(le_role);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = LeRole::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let length = 2;
     /// let result1 = LeRole::new(le_role);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = LeRole::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let length = 2;
     /// let result1 = LeRole::new(le_role);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = LeRole::from(&data);
     /// let into_data: Vec<u8> = result2.into();
     /// assert_eq!(data, into_data);

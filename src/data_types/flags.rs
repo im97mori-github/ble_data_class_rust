@@ -204,7 +204,7 @@ impl Flags {
     /// let result = Flags::new(&flags);
     /// assert!(!result.is_le_limited_discoverable_mode());
     /// ```
-    pub fn is_le_limited_discoverable_mode(self) -> bool {
+    pub fn is_le_limited_discoverable_mode(&self) -> bool {
         *self.flags.get(0).unwrap_or(&false)
     }
 
@@ -227,7 +227,7 @@ impl Flags {
     /// let result = Flags::new(&flags);
     /// assert!(!result.is_le_general_discoverable_mode());
     /// ```
-    pub fn is_le_general_discoverable_mode(self) -> bool {
+    pub fn is_le_general_discoverable_mode(&self) -> bool {
         *self.flags.get(1).unwrap_or(&false)
     }
 
@@ -250,7 +250,7 @@ impl Flags {
     /// let result = Flags::new(&flags);
     /// assert!(!result.is_br_edr_not_supported());
     /// ```
-    pub fn is_br_edr_not_supported(self) -> bool {
+    pub fn is_br_edr_not_supported(&self) -> bool {
         *self.flags.get(2).unwrap_or(&false)
     }
 
@@ -273,7 +273,7 @@ impl Flags {
     /// let result = Flags::new(&flags);
     /// assert!(!result.is_simultaneous_controller());
     /// ```
-    pub fn is_simultaneous_controller(self) -> bool {
+    pub fn is_simultaneous_controller(&self) -> bool {
         *self.flags.get(3).unwrap_or(&false)
     }
 }

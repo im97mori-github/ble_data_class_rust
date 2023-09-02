@@ -153,7 +153,7 @@ impl LeBluetoothDeviceAddress {
     /// let result = LeBluetoothDeviceAddress::new(le_bluetooth_device_address, address_type);
     /// assert_eq!(address_type, result.is_random_address());
     /// ```
-    pub fn is_random_address(self) -> bool {
+    pub const fn is_random_address(&self) -> bool {
         self.address_type
     }
 }

@@ -84,7 +84,7 @@ impl Appearance {
     /// let result = Appearance::from_with_offset(&data, 0);
     /// assert_eq!(0x051, result.category());
     /// ```
-    pub fn category(self) -> u16 {
+    pub const fn category(&self) -> u16 {
         (self.appearance >> 6) & 0b00000011_11111111
     }
 
@@ -105,7 +105,7 @@ impl Appearance {
     /// let result = Appearance::from_with_offset(&data, 0);
     /// assert_eq!(0x04, result.sub_category());
     /// ```
-    pub fn sub_category(self) -> u16 {
+    pub const fn sub_category(&self) -> u16 {
         self.appearance & 0b00111111
     }
 }

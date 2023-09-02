@@ -99,7 +99,7 @@ impl PeripheralConnectionIntervalRange {
     ///     result.minimum_value_millis()
     /// )
     /// ```
-    pub fn minimum_value_millis(self) -> f32 {
+    pub fn minimum_value_millis(&self) -> f32 {
         self.minimum_value as f32 * CONNECTION_INTERVAL_RANGE
     }
 
@@ -121,7 +121,7 @@ impl PeripheralConnectionIntervalRange {
     ///     result.minimum_value_millis()
     /// )
     /// ```
-    pub fn maximum_value_millis(self) -> f32 {
+    pub fn maximum_value_millis(&self) -> f32 {
         self.maximum_value as f32 * CONNECTION_INTERVAL_RANGE
     }
 
@@ -145,7 +145,7 @@ impl PeripheralConnectionIntervalRange {
     /// let result = PeripheralConnectionIntervalRange::new(minimum_value, maximum_value);
     /// assert!(result.is_no_specific_minimum_value());
     /// ```
-    pub fn is_no_specific_minimum_value(self) -> bool {
+    pub fn is_no_specific_minimum_value(&self) -> bool {
         self.minimum_value == CONNECTION_INTERVAL_NO_SPECIFIC_VALUE
     }
 
@@ -169,7 +169,7 @@ impl PeripheralConnectionIntervalRange {
     /// let result = PeripheralConnectionIntervalRange::new(minimum_value, maximum_value);
     /// assert!(result.is_no_specific_maximum_value());
     /// ```
-    pub fn is_no_specific_maximum_value(self) -> bool {
+    pub fn is_no_specific_maximum_value(&self) -> bool {
         self.maximum_value == CONNECTION_INTERVAL_NO_SPECIFIC_VALUE
     }
 }

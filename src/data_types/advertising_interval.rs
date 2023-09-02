@@ -84,7 +84,7 @@ impl AdvertisingInterval {
     /// result.advertising_interval_millis()
     /// )
     /// ```
-    pub fn advertising_interval_millis(self) -> f32 {
+    pub fn advertising_interval_millis(&self) -> f32 {
         self.advertising_interval as f32 * ADVINTERVAL_VALUE
     }
 }

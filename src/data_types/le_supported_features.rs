@@ -149,7 +149,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_encryption_supported());
     /// ```
-    pub fn is_le_encryption_supported(self) -> bool {
+    pub fn is_le_encryption_supported(&self) -> bool {
         *self.le_supported_features.get(0).unwrap_or(&false)
     }
 
@@ -165,7 +165,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connection_parameters_request_procedure_supported());
     /// ```
-    pub fn is_connection_parameters_request_procedure_supported(self) -> bool {
+    pub fn is_connection_parameters_request_procedure_supported(&self) -> bool {
         *self.le_supported_features.get(1).unwrap_or(&false)
     }
 
@@ -181,7 +181,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_extended_reject_indication_supported());
     /// ```
-    pub fn is_extended_reject_indication_supported(self) -> bool {
+    pub fn is_extended_reject_indication_supported(&self) -> bool {
         *self.le_supported_features.get(2).unwrap_or(&false)
     }
 
@@ -197,7 +197,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_peripheral_initiated_features_exchange_supported());
     /// ```
-    pub fn is_peripheral_initiated_features_exchange_supported(self) -> bool {
+    pub fn is_peripheral_initiated_features_exchange_supported(&self) -> bool {
         *self.le_supported_features.get(3).unwrap_or(&false)
     }
 
@@ -213,7 +213,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_ping_supported());
     /// ```
-    pub fn is_le_ping_supported(self) -> bool {
+    pub fn is_le_ping_supported(&self) -> bool {
         *self.le_supported_features.get(4).unwrap_or(&false)
     }
 
@@ -229,7 +229,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_data_packet_length_extension_supported());
     /// ```
-    pub fn is_le_data_packet_length_extension_supported(self) -> bool {
+    pub fn is_le_data_packet_length_extension_supported(&self) -> bool {
         *self.le_supported_features.get(5).unwrap_or(&false)
     }
 
@@ -245,7 +245,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_ll_privacy_supported());
     /// ```
-    pub fn is_ll_privacy_supported(self) -> bool {
+    pub fn is_ll_privacy_supported(&self) -> bool {
         *self.le_supported_features.get(6).unwrap_or(&false)
     }
 
@@ -261,7 +261,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_extended_scanning_filter_policies_supported());
     /// ```
-    pub fn is_extended_scanning_filter_policies_supported(self) -> bool {
+    pub fn is_extended_scanning_filter_policies_supported(&self) -> bool {
         *self.le_supported_features.get(7).unwrap_or(&false)
     }
 
@@ -277,7 +277,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_2m_phy_supported());
     /// ```
-    pub fn is_le_2m_phy_supported(self) -> bool {
+    pub fn is_le_2m_phy_supported(&self) -> bool {
         *self.le_supported_features.get(8).unwrap_or(&false)
     }
 
@@ -293,7 +293,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_stable_modulation_index_transmitter_supported());
     /// ```
-    pub fn is_stable_modulation_index_transmitter_supported(self) -> bool {
+    pub fn is_stable_modulation_index_transmitter_supported(&self) -> bool {
         *self.le_supported_features.get(9).unwrap_or(&false)
     }
 
@@ -309,7 +309,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_stable_modulation_index_receiver_supported());
     /// ```
-    pub fn is_stable_modulation_index_receiver_supported(self) -> bool {
+    pub fn is_stable_modulation_index_receiver_supported(&self) -> bool {
         *self.le_supported_features.get(10).unwrap_or(&false)
     }
 
@@ -325,7 +325,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_coded_phy_supported());
     /// ```
-    pub fn is_le_coded_phy_supported(self) -> bool {
+    pub fn is_le_coded_phy_supported(&self) -> bool {
         *self.le_supported_features.get(11).unwrap_or(&false)
     }
 
@@ -341,7 +341,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_extended_advertising_supported());
     /// ```
-    pub fn is_le_extended_advertising_supported(self) -> bool {
+    pub fn is_le_extended_advertising_supported(&self) -> bool {
         *self.le_supported_features.get(12).unwrap_or(&false)
     }
 
@@ -357,7 +357,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_periodic_advertising_supported());
     /// ```
-    pub fn is_le_periodic_advertising_supported(self) -> bool {
+    pub fn is_le_periodic_advertising_supported(&self) -> bool {
         *self.le_supported_features.get(13).unwrap_or(&false)
     }
 
@@ -373,7 +373,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_channel_selection_algorithm2_supported());
     /// ```
-    pub fn is_channel_selection_algorithm2_supported(self) -> bool {
+    pub fn is_channel_selection_algorithm2_supported(&self) -> bool {
         *self.le_supported_features.get(14).unwrap_or(&false)
     }
 
@@ -389,7 +389,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_power_class1_supported());
     /// ```
-    pub fn is_le_power_class1_supported(self) -> bool {
+    pub fn is_le_power_class1_supported(&self) -> bool {
         *self.le_supported_features.get(15).unwrap_or(&false)
     }
 
@@ -405,7 +405,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_minimum_number_of_used_channels_procedure_supported());
     /// ```
-    pub fn is_minimum_number_of_used_channels_procedure_supported(self) -> bool {
+    pub fn is_minimum_number_of_used_channels_procedure_supported(&self) -> bool {
         *self.le_supported_features.get(16).unwrap_or(&false)
     }
 
@@ -421,7 +421,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connection_cte_request_supported());
     /// ```
-    pub fn is_connection_cte_request_supported(self) -> bool {
+    pub fn is_connection_cte_request_supported(&self) -> bool {
         *self.le_supported_features.get(17).unwrap_or(&false)
     }
 
@@ -437,7 +437,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connection_cte_response_supported());
     /// ```
-    pub fn is_connection_cte_response_supported(self) -> bool {
+    pub fn is_connection_cte_response_supported(&self) -> bool {
         *self.le_supported_features.get(18).unwrap_or(&false)
     }
 
@@ -453,7 +453,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connectionless_cte_transmitter_supported());
     /// ```
-    pub fn is_connectionless_cte_transmitter_supported(self) -> bool {
+    pub fn is_connectionless_cte_transmitter_supported(&self) -> bool {
         *self.le_supported_features.get(19).unwrap_or(&false)
     }
 
@@ -469,7 +469,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connectionless_cte_receiver_supported());
     /// ```
-    pub fn is_connectionless_cte_receiver_supported(self) -> bool {
+    pub fn is_connectionless_cte_receiver_supported(&self) -> bool {
         *self.le_supported_features.get(20).unwrap_or(&false)
     }
 
@@ -485,7 +485,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_antenna_switching_during_cte_transmission_aod_supported());
     /// ```
-    pub fn is_antenna_switching_during_cte_transmission_aod_supported(self) -> bool {
+    pub fn is_antenna_switching_during_cte_transmission_aod_supported(&self) -> bool {
         *self.le_supported_features.get(21).unwrap_or(&false)
     }
 
@@ -501,7 +501,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_antenna_switching_during_cte_reception_aoa_supported());
     /// ```
-    pub fn is_antenna_switching_during_cte_reception_aoa_supported(self) -> bool {
+    pub fn is_antenna_switching_during_cte_reception_aoa_supported(&self) -> bool {
         *self.le_supported_features.get(22).unwrap_or(&false)
     }
 
@@ -517,7 +517,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_receiving_constant_tone_extensions_supported());
     /// ```
-    pub fn is_receiving_constant_tone_extensions_supported(self) -> bool {
+    pub fn is_receiving_constant_tone_extensions_supported(&self) -> bool {
         *self.le_supported_features.get(23).unwrap_or(&false)
     }
 
@@ -533,7 +533,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_periodic_advertising_sync_transfer_sender_supported());
     /// ```
-    pub fn is_periodic_advertising_sync_transfer_sender_supported(self) -> bool {
+    pub fn is_periodic_advertising_sync_transfer_sender_supported(&self) -> bool {
         *self.le_supported_features.get(24).unwrap_or(&false)
     }
 
@@ -549,7 +549,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_periodic_advertising_sync_transfer_recipient_supported());
     /// ```
-    pub fn is_periodic_advertising_sync_transfer_recipient_supported(self) -> bool {
+    pub fn is_periodic_advertising_sync_transfer_recipient_supported(&self) -> bool {
         *self.le_supported_features.get(25).unwrap_or(&false)
     }
 
@@ -565,7 +565,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_sleep_clock_accuracy_updates_supported());
     /// ```
-    pub fn is_sleep_clock_accuracy_updates_supported(self) -> bool {
+    pub fn is_sleep_clock_accuracy_updates_supported(&self) -> bool {
         *self.le_supported_features.get(26).unwrap_or(&false)
     }
 
@@ -581,7 +581,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_remote_public_key_validation_supported());
     /// ```
-    pub fn is_remote_public_key_validation_supported(self) -> bool {
+    pub fn is_remote_public_key_validation_supported(&self) -> bool {
         *self.le_supported_features.get(27).unwrap_or(&false)
     }
 
@@ -597,7 +597,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connected_isochronous_stream_central_supported());
     /// ```
-    pub fn is_connected_isochronous_stream_central_supported(self) -> bool {
+    pub fn is_connected_isochronous_stream_central_supported(&self) -> bool {
         *self.le_supported_features.get(28).unwrap_or(&false)
     }
 
@@ -613,7 +613,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connected_isochronous_stream_peripheral_supported());
     /// ```
-    pub fn is_connected_isochronous_stream_peripheral_supported(self) -> bool {
+    pub fn is_connected_isochronous_stream_peripheral_supported(&self) -> bool {
         *self.le_supported_features.get(29).unwrap_or(&false)
     }
 
@@ -629,7 +629,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_isochronous_broadcaster_supported());
     /// ```
-    pub fn is_isochronous_broadcaster_supported(self) -> bool {
+    pub fn is_isochronous_broadcaster_supported(&self) -> bool {
         *self.le_supported_features.get(30).unwrap_or(&false)
     }
 
@@ -645,7 +645,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_synchronized_receiver_supported());
     /// ```
-    pub fn is_synchronized_receiver_supported(self) -> bool {
+    pub fn is_synchronized_receiver_supported(&self) -> bool {
         *self.le_supported_features.get(31).unwrap_or(&false)
     }
 
@@ -661,7 +661,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connected_isochronous_stream_host_support_supported());
     /// ```
-    pub fn is_connected_isochronous_stream_host_support_supported(self) -> bool {
+    pub fn is_connected_isochronous_stream_host_support_supported(&self) -> bool {
         *self.le_supported_features.get(32).unwrap_or(&false)
     }
 
@@ -682,7 +682,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_power_control_request_supported());
     /// ```
-    pub fn is_le_power_control_request_supported(self) -> bool {
+    pub fn is_le_power_control_request_supported(&self) -> bool {
         *self.le_supported_features.get(33).unwrap_or(&false)
             | *self.le_supported_features.get(34).unwrap_or(&false)
     }
@@ -699,7 +699,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_le_path_loss_monitoring_supported());
     /// ```
-    pub fn is_le_path_loss_monitoring_supported(self) -> bool {
+    pub fn is_le_path_loss_monitoring_supported(&self) -> bool {
         *self.le_supported_features.get(35).unwrap_or(&false)
     }
 
@@ -715,7 +715,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_periodic_advertising_adi_support_supported());
     /// ```
-    pub fn is_periodic_advertising_adi_support_supported(self) -> bool {
+    pub fn is_periodic_advertising_adi_support_supported(&self) -> bool {
         *self.le_supported_features.get(36).unwrap_or(&false)
     }
 
@@ -731,7 +731,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connection_subrating_supported());
     /// ```
-    pub fn is_connection_subrating_supported(self) -> bool {
+    pub fn is_connection_subrating_supported(&self) -> bool {
         *self.le_supported_features.get(37).unwrap_or(&false)
     }
 
@@ -747,7 +747,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_connection_subrating_host_support_supported());
     /// ```
-    pub fn is_connection_subrating_host_support_supported(self) -> bool {
+    pub fn is_connection_subrating_host_support_supported(&self) -> bool {
         *self.le_supported_features.get(38).unwrap_or(&false)
     }
 
@@ -763,7 +763,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_channel_classification_supported());
     /// ```
-    pub fn is_channel_classification_supported(self) -> bool {
+    pub fn is_channel_classification_supported(&self) -> bool {
         *self.le_supported_features.get(39).unwrap_or(&false)
     }
 
@@ -779,7 +779,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_advertising_coding_selection_supported());
     /// ```
-    pub fn is_advertising_coding_selection_supported(self) -> bool {
+    pub fn is_advertising_coding_selection_supported(&self) -> bool {
         *self.le_supported_features.get(40).unwrap_or(&false)
     }
 
@@ -795,7 +795,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_advertising_coding_selection_host_support_supported());
     /// ```
-    pub fn is_advertising_coding_selection_host_support_supported(self) -> bool {
+    pub fn is_advertising_coding_selection_host_support_supported(&self) -> bool {
         *self.le_supported_features.get(41).unwrap_or(&false)
     }
 
@@ -811,7 +811,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_periodic_advertising_with_responses_advertiser_supported());
     /// ```
-    pub fn is_periodic_advertising_with_responses_advertiser_supported(self) -> bool {
+    pub fn is_periodic_advertising_with_responses_advertiser_supported(&self) -> bool {
         *self.le_supported_features.get(43).unwrap_or(&false)
     }
 
@@ -827,7 +827,7 @@ impl LeSupportedFeatures {
     /// let result = LeSupportedFeatures::new(&le_supported_features);
     /// assert!(result.is_periodic_advertising_with_responses_scanner_supported());
     /// ```
-    pub fn is_periodic_advertising_with_responses_scanner_supported(self) -> bool {
+    pub fn is_periodic_advertising_with_responses_scanner_supported(&self) -> bool {
         *self.le_supported_features.get(44).unwrap_or(&false)
     }
 }

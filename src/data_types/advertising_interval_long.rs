@@ -137,7 +137,7 @@ impl AdvertisingIntervalLong {
     ///     result.advertising_interval_long_millis()
     /// );
     /// ```
-    pub fn advertising_interval_long_millis(self) -> f32 {
+    pub fn advertising_interval_long_millis(&self) -> f32 {
         self.advertising_interval_long as f32 * ADVINTERVAL_VALUE
     }
 }

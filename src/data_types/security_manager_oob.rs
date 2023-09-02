@@ -146,7 +146,7 @@ impl SecurityManagerOutOfBand {
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_oob_flags_field());
     /// ```
-    pub fn is_oob_flags_field(self) -> bool {
+    pub fn is_oob_flags_field(&self) -> bool {
         self.security_manager_oob[0]
     }
 
@@ -169,7 +169,7 @@ impl SecurityManagerOutOfBand {
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_le_supported());
     /// ```
-    pub fn is_le_supported(self) -> bool {
+    pub fn is_le_supported(&self) -> bool {
         self.security_manager_oob[1]
     }
 
@@ -192,7 +192,7 @@ impl SecurityManagerOutOfBand {
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_le_supported());
     /// ```
-    pub fn is_random_address(self) -> bool {
+    pub fn is_random_address(&self) -> bool {
         self.security_manager_oob[3]
     }
 }
