@@ -231,7 +231,7 @@ impl Flags {
         *self.flags.get(1).unwrap_or(&false)
     }
 
-    /// check LE General Discoverable Mode.
+    /// check BR/EDR Not Supported.
     ///
     /// # Examples
     ///
@@ -254,7 +254,7 @@ impl Flags {
         *self.flags.get(2).unwrap_or(&false)
     }
 
-    /// check LE General Discoverable Mode.
+    /// check Simultaneous LE and BR/EDR to Same Device Capable (Controller).
     ///
     /// # Examples
     ///
