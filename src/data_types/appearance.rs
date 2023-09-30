@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Appearance.
+#[derive(Debug)]
 pub struct Appearance {
     /// data length
     pub length: u8,
@@ -12,7 +13,7 @@ pub struct Appearance {
 }
 
 impl Appearance {
-    /// Create [Appearance] from `Appearance`.
+    /// Create [`Appearance`] from `Appearance`.
     ///
     /// # Examples
     ///
@@ -31,42 +32,6 @@ impl Appearance {
         }
     }
 
-    /// Create [Appearance] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{appearance::Appearance, data_type::DataType};
-    ///
-    /// let appearance: u16 = 0x1444;
-    /// let length = 3;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(Appearance::data_type());
-    /// data.append(&mut appearance.to_le_bytes().to_vec());
-    ///
-    /// let result = Appearance::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(appearance, result.appearance);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(Appearance::data_type());
-    /// data.append(&mut appearance.to_le_bytes().to_vec());
-    /// let result = Appearance::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(appearance, result.appearance);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            appearance: u16::from_le_bytes(data[2..4].try_into().unwrap()),
-        }
-    }
-
     /// Get Category.
     ///
     /// # Examples
@@ -81,8 +46,8 @@ impl Appearance {
     /// data.push(Appearance::data_type());
     /// data.append(&mut appearance.to_le_bytes().to_vec());
     ///
-    /// let result = Appearance::from_with_offset(&data, 0);
-    /// assert_eq!(0x051, result.category());
+    /// let result = Appearance::try_from(&data);
+    /// assert_eq!(0x051, result.unwrap().category());
     /// ```
     pub const fn category(&self) -> u16 {
         (self.appearance >> 6) & 0b00000011_11111111
@@ -102,16 +67,17 @@ impl Appearance {
     /// data.push(Appearance::data_type());
     /// data.append(&mut appearance.to_le_bytes().to_vec());
     ///
-    /// let result = Appearance::from_with_offset(&data, 0);
-    /// assert_eq!(0x04, result.sub_category());
+    /// let result = Appearance::try_from(&data);
+    /// assert_eq!(0x04, result.unwrap().sub_category());
     /// ```
     pub const fn sub_category(&self) -> u16 {
         self.appearance & 0b00111111
     }
 }
 
-impl From<&Vec<u8>> for Appearance {
-    /// Create [Appearance] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for Appearance {
+    type Error = String;
+    /// Create [`Appearance`] from `Vec<u8>`.
     ///
     /// [`Appearance::from_with_offset`]
     ///
@@ -126,17 +92,35 @@ impl From<&Vec<u8>> for Appearance {
     /// data.push(length);
     /// data.push(Appearance::data_type());
     /// data.append(&mut appearance.to_le_bytes().to_vec());
-    /// let result = Appearance::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(appearance, result.appearance);
+    /// let result = Appearance::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(appearance, data_type.appearance);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = Appearance::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 4 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            appearance: u16::from_le_bytes(value[2..4].try_into().unwrap()),
+        })
     }
 }
 
 impl Into<Vec<u8>> for Appearance {
-    /// Create `Vec<u8>` from [Appearance].
+    /// Create `Vec<u8>` from [`Appearance`].
     ///
     /// # Examples
     ///
@@ -154,8 +138,10 @@ impl Into<Vec<u8>> for Appearance {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     ///
-    /// let result2 = Appearance::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = Appearance::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -210,29 +196,6 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
-        let appearance: u16 = 0x1444;
-        let length = 3;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(Appearance::data_type());
-        data.append(&mut appearance.to_le_bytes().to_vec());
-
-        let result = Appearance::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(appearance, result.appearance);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(Appearance::data_type());
-        data.append(&mut appearance.to_le_bytes().to_vec());
-        let result = Appearance::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(appearance, result.appearance);
-    }
-
-    #[test]
     fn test_category() {
         let appearance: u16 = 0x1444;
         let length = 3;
@@ -241,8 +204,8 @@ mod tests {
         data.push(Appearance::data_type());
         data.append(&mut appearance.to_le_bytes().to_vec());
 
-        let result = Appearance::from_with_offset(&data, 0);
-        assert_eq!(0x051, result.category());
+        let result = Appearance::try_from(&data);
+        assert_eq!(0x051, result.unwrap().category());
     }
 
     #[test]
@@ -254,21 +217,31 @@ mod tests {
         data.push(Appearance::data_type());
         data.append(&mut appearance.to_le_bytes().to_vec());
 
-        let result = Appearance::from_with_offset(&data, 0);
-        assert_eq!(0x04, result.sub_category());
+        let result = Appearance::try_from(&data);
+        assert_eq!(0x04, result.unwrap().sub_category());
     }
 
     #[test]
-    fn test_from() {
+    fn test_try_from() {
         let appearance: u16 = 0x1444;
         let length = 3;
         let mut data: Vec<u8> = Vec::new();
         data.push(length);
         data.push(Appearance::data_type());
         data.append(&mut appearance.to_le_bytes().to_vec());
-        let result = Appearance::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(appearance, result.appearance);
+        let result = Appearance::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(appearance, data_type.appearance);
+
+        let data: Vec<u8> = Vec::new();
+        let result = Appearance::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -284,8 +257,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = Appearance::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = Appearance::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 

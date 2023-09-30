@@ -3,7 +3,7 @@ pub mod data_types {
     //! EIR/AD/SRD/ACAD/OOB module.
     pub mod advertising_interval;
     pub mod advertising_interval_long;
-    // pub mod appearance;
+    pub mod appearance;
     // pub mod big_info;
     // pub mod broadcast_code;
     // pub mod channel_map_update_indication;
@@ -30,12 +30,12 @@ pub mod data_types {
     // pub mod peripheral_connection_interval_range;
     // pub mod public_target_address;
     // pub mod random_target_address;
+    // pub mod secure_simple_pairing_hash_c192;
+    // pub mod secure_simple_pairing_hash_c256;
+    // pub mod secure_simple_pairing_randomizer_r192;
+    // pub mod secure_simple_pairing_randomizer_r256;
     // pub mod security_manager_oob;
     // pub mod security_manager_tk_value;
-    // pub mod secure_simple_pairing_hash_c192;
-    // pub mod secure_simple_pairing_randomizer_r192;
-    // pub mod secure_simple_pairing_hash_c256;
-    // pub mod secure_simple_pairing_randomizer_r256;
     // pub mod service_data_128bit_uuid;
     // pub mod service_data_16bit_uuid;
     // pub mod service_data_32bit_uuid;

@@ -3,6 +3,7 @@
 use super::{
     advertising_interval::{is_advertising_interval, AdvertisingInterval},
     advertising_interval_long::{is_advertising_interval_long, AdvertisingIntervalLong},
+    appearance::{is_appearance, Appearance},
 };
 
 /// Data type parse result.
@@ -12,6 +13,9 @@ pub enum DataTypeParseResult {
 
     /// [`AdvertisingIntervalLong`]'s [`TryFrom::try_from`] result.
     AdvertisingIntervalLongResult(Result<AdvertisingIntervalLong, String>),
+
+    /// [`Appearance`]'s [`TryFrom::try_from`] result.
+    AppearanceResult(Result<Appearance, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -53,6 +57,24 @@ impl DataTypeParseResult {
     pub fn is_advertising_interval_long(&self) -> bool {
         matches!(self, DataTypeParseResult::AdvertisingIntervalLongResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::AppearanceResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{appearance::Appearance, parser::DataTypeParseResult};
+    ///
+    /// let appearance: u16 = 0x1444;
+    /// let data: Vec<u8> = Appearance::new(appearance).into();
+    /// assert!(DataTypeParseResult::from(&data).is_appearance());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_appearance());
+    /// ```
+    pub fn is_appearance(&self) -> bool {
+        matches!(self, DataTypeParseResult::AppearanceResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -82,6 +104,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::AdvertisingIntervalLongResult(
                     AdvertisingIntervalLong::try_from(value),
                 )
+            } else if is_appearance(data_type.to_owned()) {
+                DataTypeParseResult::AppearanceResult(Appearance::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -179,7 +203,8 @@ impl From<&Vec<u8>> for DataTypeParseResults {
 mod tests {
     use crate::data_types::{
         advertising_interval::AdvertisingInterval,
-        advertising_interval_long::AdvertisingIntervalLong, parser::DataTypeParseResult,
+        advertising_interval_long::AdvertisingIntervalLong, appearance::Appearance,
+        parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -202,6 +227,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_advertising_interval_long());
+    }
+
+    #[test]
+    fn test_is_appearance() {
+        let appearance: u16 = 0x1444;
+        let data: Vec<u8> = Appearance::new(appearance).into();
+        assert!(DataTypeParseResult::from(&data).is_appearance());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_appearance());
     }
 
     #[test]
