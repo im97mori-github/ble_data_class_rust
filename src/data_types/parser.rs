@@ -1,11 +1,17 @@
 //! Data type parser module.
 
-use super::advertising_interval::{is_advertising_interval, AdvertisingInterval};
+use super::{
+    advertising_interval::{is_advertising_interval, AdvertisingInterval},
+    advertising_interval_long::{is_advertising_interval_long, AdvertisingIntervalLong},
+};
 
 /// Data type parse result.
 pub enum DataTypeParseResult {
     /// [`AdvertisingInterval`]'s [`TryFrom::try_from`] result.
     AdvertisingIntervalResult(Result<AdvertisingInterval, String>),
+
+    /// [`AdvertisingIntervalLong`]'s [`TryFrom::try_from`] result.
+    AdvertisingIntervalLongResult(Result<AdvertisingIntervalLong, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -28,6 +34,24 @@ impl DataTypeParseResult {
     /// ```
     pub fn is_advertising_interval(&self) -> bool {
         matches!(self, DataTypeParseResult::AdvertisingIntervalResult(_))
+    }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::AdvertisingIntervalLongResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{advertising_interval_long::AdvertisingIntervalLong, parser::DataTypeParseResult};
+    ///
+    /// let advertising_interval_long: u32 = 0x01020304u32;
+    /// let data: Vec<u8> = AdvertisingIntervalLong::new(true, advertising_interval_long).into();
+    /// assert!(DataTypeParseResult::from(&data).is_advertising_interval_long());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_advertising_interval_long());
+    /// ```
+    pub fn is_advertising_interval_long(&self) -> bool {
+        matches!(self, DataTypeParseResult::AdvertisingIntervalLongResult(_))
     }
 }
 
@@ -54,6 +78,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
         if let Some(data_type) = value.get(1) {
             if is_advertising_interval(data_type.to_owned()) {
                 DataTypeParseResult::AdvertisingIntervalResult(AdvertisingInterval::try_from(value))
+            } else if is_advertising_interval_long(data_type.to_owned()) {
+                DataTypeParseResult::AdvertisingIntervalLongResult(
+                    AdvertisingIntervalLong::try_from(value),
+                )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -150,7 +178,8 @@ impl From<&Vec<u8>> for DataTypeParseResults {
 #[cfg(test)]
 mod tests {
     use crate::data_types::{
-        advertising_interval::AdvertisingInterval, parser::DataTypeParseResult,
+        advertising_interval::AdvertisingInterval,
+        advertising_interval_long::AdvertisingIntervalLong, parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -163,6 +192,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_advertising_interval());
+    }
+
+    #[test]
+    fn test_is_advertising_interval_long() {
+        let advertising_interval_long: u32 = 0x01020304u32;
+        let data: Vec<u8> = AdvertisingIntervalLong::new(true, advertising_interval_long).into();
+        assert!(DataTypeParseResult::from(&data).is_advertising_interval_long());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_advertising_interval_long());
     }
 
     #[test]

@@ -2,7 +2,7 @@
 pub mod data_types {
     //! EIR/AD/SRD/ACAD/OOB module.
     pub mod advertising_interval;
-    // pub mod advertising_interval_long;
+    pub mod advertising_interval_long;
     // pub mod appearance;
     // pub mod big_info;
     // pub mod broadcast_code;
