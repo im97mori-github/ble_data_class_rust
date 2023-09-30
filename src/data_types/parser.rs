@@ -5,6 +5,7 @@ use super::{
     advertising_interval_long::{is_advertising_interval_long, AdvertisingIntervalLong},
     appearance::{is_appearance, Appearance},
     big_info::{is_big_info, BigInfo},
+    broadcast_code::{is_broadcast_code, BroadcastCode},
 };
 
 /// Data type parse result.
@@ -20,6 +21,9 @@ pub enum DataTypeParseResult {
 
     /// [`BigInfo`]'s [`TryFrom::try_from`] result.
     BigInfoResult(Result<BigInfo, String>),
+
+    /// [`BroadcastCode`]'s [`TryFrom::try_from`] result.
+    BroadcastCodeResult(Result<BroadcastCode, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -142,6 +146,24 @@ impl DataTypeParseResult {
     pub fn is_big_info(&self) -> bool {
         matches!(self, DataTypeParseResult::BigInfoResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::BroadcastCodeResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{broadcast_code::BroadcastCode, parser::DataTypeParseResult};
+    ///
+    /// let broadcast_code = [0x00u8; 4].to_vec();
+    /// let data: Vec<u8> = BroadcastCode::new(&broadcast_code).into();
+    /// assert!(DataTypeParseResult::from(&data).is_broadcast_code());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_broadcast_code());
+    /// ```
+    pub fn is_broadcast_code(&self) -> bool {
+        matches!(self, DataTypeParseResult::BroadcastCodeResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -175,6 +197,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::AppearanceResult(Appearance::try_from(value))
             } else if is_big_info(data_type.to_owned()) {
                 DataTypeParseResult::BigInfoResult(BigInfo::try_from(value))
+            } else if is_broadcast_code(data_type.to_owned()) {
+                DataTypeParseResult::BroadcastCodeResult(BroadcastCode::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -273,7 +297,7 @@ mod tests {
     use crate::data_types::{
         advertising_interval::AdvertisingInterval,
         advertising_interval_long::AdvertisingIntervalLong, appearance::Appearance,
-        big_info::BigInfo, parser::DataTypeParseResult,
+        big_info::BigInfo, broadcast_code::BroadcastCode, parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -363,6 +387,15 @@ mod tests {
         assert!(!DataTypeParseResult::from(&data).is_big_info());
     }
 
+    #[test]
+    fn test_is_broadcast_code() {
+        let broadcast_code = [0x00u8; 4].to_vec();
+        let data: Vec<u8> = BroadcastCode::new(&broadcast_code).into();
+        assert!(DataTypeParseResult::from(&data).is_broadcast_code());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_broadcast_code());
+    }
     #[test]
     fn test_result_from_vec() {
         let advertising_interval = 0x01;
