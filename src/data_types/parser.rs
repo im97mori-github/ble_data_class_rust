@@ -4,6 +4,7 @@ use super::{
     advertising_interval::{is_advertising_interval, AdvertisingInterval},
     advertising_interval_long::{is_advertising_interval_long, AdvertisingIntervalLong},
     appearance::{is_appearance, Appearance},
+    big_info::{is_big_info, BigInfo},
 };
 
 /// Data type parse result.
@@ -16,6 +17,9 @@ pub enum DataTypeParseResult {
 
     /// [`Appearance`]'s [`TryFrom::try_from`] result.
     AppearanceResult(Result<Appearance, String>),
+
+    /// [`BigInfo`]'s [`TryFrom::try_from`] result.
+    BigInfoResult(Result<BigInfo, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -75,6 +79,69 @@ impl DataTypeParseResult {
     pub fn is_appearance(&self) -> bool {
         matches!(self, DataTypeParseResult::AppearanceResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::BigInfoResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{big_info::BigInfo, parser::DataTypeParseResult};
+    ///
+    /// let big_offset: u16 = 1;
+    /// let big_offset_units: bool = true;
+    /// let iso_interval: u16 = 2;
+    /// let num_bis: u8 = 3;
+    /// let nse: u8 = 4;
+    /// let bn: u8 = 5;
+    /// let sub_interval: u32 = 6;
+    /// let pto: u8 = 7;
+    /// let bis_spacing: u32 = 8;
+    /// let irc: u8 = 9;
+    /// let max_pdu: u8 = 10;
+    /// let rfu: u8 = 11;
+    /// let seed_access_address: u32 = 12;
+    /// let sdu_interval: u32 = 13;
+    /// let max_sdu: u16 = 14;
+    /// let base_crc_init: u16 = 15;
+    /// let ch_m: u64 = 16;
+    /// let phy: u8 = 17;
+    /// let bis_payload_count: u64 = 18;
+    /// let framing: bool = false;
+    /// let giv: Option<[u8; 8]> = None;
+    /// let gskd: Option<[u8; 16]> = None;
+    /// let data: Vec<u8> = BigInfo::new(
+    ///     big_offset,
+    ///     big_offset_units,
+    ///     iso_interval,
+    ///     num_bis,
+    ///     nse,
+    ///     bn,
+    ///     sub_interval,
+    ///     pto,
+    ///     bis_spacing,
+    ///     irc,
+    ///     max_pdu,
+    ///     rfu,
+    ///     seed_access_address,
+    ///     sdu_interval,
+    ///     max_sdu,
+    ///     base_crc_init,
+    ///     ch_m,
+    ///     phy,
+    ///     bis_payload_count,
+    ///     framing,
+    ///     giv,
+    ///     gskd,
+    /// )
+    /// .into();
+    /// assert!(DataTypeParseResult::from(&data).is_big_info());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_big_info());
+    /// ```
+    pub fn is_big_info(&self) -> bool {
+        matches!(self, DataTypeParseResult::BigInfoResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -106,6 +173,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 )
             } else if is_appearance(data_type.to_owned()) {
                 DataTypeParseResult::AppearanceResult(Appearance::try_from(value))
+            } else if is_big_info(data_type.to_owned()) {
+                DataTypeParseResult::BigInfoResult(BigInfo::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -204,7 +273,7 @@ mod tests {
     use crate::data_types::{
         advertising_interval::AdvertisingInterval,
         advertising_interval_long::AdvertisingIntervalLong, appearance::Appearance,
-        parser::DataTypeParseResult,
+        big_info::BigInfo, parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -237,6 +306,61 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_appearance());
+    }
+
+    #[test]
+    fn test_is_big_info() {
+        let big_offset: u16 = 1;
+        let big_offset_units: bool = true;
+        let iso_interval: u16 = 2;
+        let num_bis: u8 = 3;
+        let nse: u8 = 4;
+        let bn: u8 = 5;
+        let sub_interval: u32 = 6;
+        let pto: u8 = 7;
+        let bis_spacing: u32 = 8;
+        let irc: u8 = 9;
+        let max_pdu: u8 = 10;
+        let rfu: u8 = 11;
+        let seed_access_address: u32 = 12;
+        let sdu_interval: u32 = 13;
+        let max_sdu: u16 = 14;
+        let base_crc_init: u16 = 15;
+        let ch_m: u64 = 16;
+        let phy: u8 = 17;
+        let bis_payload_count: u64 = 18;
+        let framing: bool = false;
+        let giv: Option<[u8; 8]> = None;
+        let gskd: Option<[u8; 16]> = None;
+        let data: Vec<u8> = BigInfo::new(
+            big_offset,
+            big_offset_units,
+            iso_interval,
+            num_bis,
+            nse,
+            bn,
+            sub_interval,
+            pto,
+            bis_spacing,
+            irc,
+            max_pdu,
+            rfu,
+            seed_access_address,
+            sdu_interval,
+            max_sdu,
+            base_crc_init,
+            ch_m,
+            phy,
+            bis_payload_count,
+            framing,
+            giv,
+            gskd,
+        )
+        .into();
+        assert!(DataTypeParseResult::from(&data).is_big_info());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_big_info());
     }
 
     #[test]
