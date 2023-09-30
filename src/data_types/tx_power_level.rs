@@ -17,7 +17,7 @@ impl TxPowerLevel {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::tx_power_level::TxPowerLevel;
+    /// use ble_data_struct::data_types::tx_power_level::TxPowerLevel;
     ///
     /// let tx_power_level = -127;
     /// let result = TxPowerLevel::new(tx_power_level);
@@ -41,7 +41,7 @@ impl TxPowerLevel {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
+    /// use ble_data_struct::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
     ///
     /// let tx_power_level = -127;
     /// let length = 2;
@@ -100,7 +100,7 @@ impl From<&Vec<u8>> for TxPowerLevel {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
+    /// use ble_data_struct::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
     ///
     /// let tx_power_level = -127;
     /// let length = 2;
@@ -135,7 +135,7 @@ impl Into<Vec<u8>> for TxPowerLevel {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
+    /// use ble_data_struct::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
     ///
     /// let tx_power_level = -127;
     /// let result1 = TxPowerLevel::new(tx_power_level);
@@ -182,7 +182,7 @@ impl DataType for TxPowerLevel {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
+    /// use ble_data_struct::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
     ///
     /// assert_eq!(0x0a, TxPowerLevel::data_type());
     /// ```
@@ -196,8 +196,8 @@ impl DataType for TxPowerLevel {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::tx_power_level::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::tx_power_level::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_tx_power_level(0x0a));
 /// assert!(!is_tx_power_level(0x00));

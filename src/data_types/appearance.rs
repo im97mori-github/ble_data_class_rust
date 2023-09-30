@@ -17,7 +17,7 @@ impl Appearance {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::appearance::Appearance;
+    /// use ble_data_struct::data_types::appearance::Appearance;
     ///
     /// let appearance: u16 = 0x1444;
     /// let result = Appearance::new(appearance);
@@ -36,7 +36,7 @@ impl Appearance {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{appearance::Appearance, data_type::DataType};
+    /// use ble_data_struct::data_types::{appearance::Appearance, data_type::DataType};
     ///
     /// let appearance: u16 = 0x1444;
     /// let length = 3;
@@ -72,7 +72,7 @@ impl Appearance {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{appearance::Appearance, data_type::DataType};
+    /// use ble_data_struct::data_types::{appearance::Appearance, data_type::DataType};
     ///
     /// let appearance: u16 = 0x1444;
     /// let length = 3;
@@ -93,7 +93,7 @@ impl Appearance {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{appearance::Appearance, data_type::DataType};
+    /// use ble_data_struct::data_types::{appearance::Appearance, data_type::DataType};
     ///
     /// let appearance: u16 = 0x1444;
     /// let length = 3;
@@ -118,7 +118,7 @@ impl From<&Vec<u8>> for Appearance {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{appearance::Appearance, data_type::DataType};
+    /// use ble_data_struct::data_types::{appearance::Appearance, data_type::DataType};
     ///
     /// let appearance: u16 = 0x1444;
     /// let length = 3;
@@ -141,7 +141,7 @@ impl Into<Vec<u8>> for Appearance {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{appearance::Appearance, data_type::DataType};
+    /// use ble_data_struct::data_types::{appearance::Appearance, data_type::DataType};
     ///
     /// let appearance: u16 = 0x1444;
     /// let result1 = Appearance::new(appearance);
@@ -173,7 +173,7 @@ impl DataType for Appearance {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{appearance::Appearance, data_type::DataType};
+    /// use ble_data_struct::data_types::{appearance::Appearance, data_type::DataType};
     ///
     /// assert_eq!(0x19, Appearance::data_type());
     /// ```
@@ -187,8 +187,8 @@ impl DataType for Appearance {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::appearance::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::appearance::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_appearance(0x19));
 /// assert!(!is_appearance(0x00));

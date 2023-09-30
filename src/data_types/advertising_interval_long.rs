@@ -22,7 +22,7 @@ impl AdvertisingIntervalLong {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::advertising_interval_long::AdvertisingIntervalLong;
+    /// use ble_data_struct::data_types::advertising_interval_long::AdvertisingIntervalLong;
     ///
     /// let advertising_interval_long: u32 = 0x01020304u32;
     /// let result = AdvertisingIntervalLong::new(true, advertising_interval_long);
@@ -53,7 +53,7 @@ impl AdvertisingIntervalLong {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type::DataType};
+    /// use ble_data_struct::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type::DataType};
     ///
     /// let advertising_interval: u32 = 0x01020304u32;
     /// let length = 5;
@@ -119,7 +119,7 @@ impl AdvertisingIntervalLong {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{
+    /// use ble_data_struct::data_types::{
     ///    advertising_interval_long::{AdvertisingIntervalLong, ADVINTERVAL_VALUE},
     ///    data_type::DataType,
     /// };
@@ -155,7 +155,7 @@ impl From<&Vec<u8>> for AdvertisingIntervalLong {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type::DataType};
+    /// use ble_data_struct::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type::DataType};
     ///
     /// let advertising_interval_long: u32 = 0x01020304u32;
     /// let length = 5;
@@ -190,7 +190,7 @@ impl Into<Vec<u8>> for AdvertisingIntervalLong {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type::DataType};
+    /// use ble_data_struct::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type::DataType};
     ///
     /// let advertising_interval_long: u32 = 0x01020304u32;
     /// let result1 = AdvertisingIntervalLong::new(true, advertising_interval_long);
@@ -240,7 +240,7 @@ impl DataType for AdvertisingIntervalLong {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type::DataType};
+    /// use ble_data_struct::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type::DataType};
     ///
     /// assert_eq!(0x2f, AdvertisingIntervalLong::data_type());
     /// ```
@@ -254,8 +254,8 @@ impl DataType for AdvertisingIntervalLong {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::advertising_interval_long::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::advertising_interval_long::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_advertising_interval_long(0x2f));
 /// assert!(!is_advertising_interval_long(0x00));

@@ -19,7 +19,7 @@ impl ListOf32BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs;
+    /// use ble_data_struct::data_types::list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs;
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuids: Vec<Uuid> = [
@@ -43,7 +43,7 @@ impl ListOf32BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [
@@ -107,7 +107,7 @@ impl From<&Vec<u8>> for ListOf32BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [
@@ -144,7 +144,7 @@ impl Into<Vec<u8>> for ListOf32BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [
@@ -197,7 +197,7 @@ impl DataType for ListOf32BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type::DataType};
+    /// use ble_data_struct::data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type::DataType};
     ///
     /// assert_eq!(0x1f, ListOf32BitServiceSolicitationUUIDs::data_type());
     /// ```
@@ -211,8 +211,8 @@ impl DataType for ListOf32BitServiceSolicitationUUIDs {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::list_of_32bit_service_solicitation_uuids::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::list_of_32bit_service_solicitation_uuids::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_list_of_32bit_service_solicitation_uuids(0x1f));
 /// assert!(!is_list_of_32bit_service_solicitation_uuids(0x00));

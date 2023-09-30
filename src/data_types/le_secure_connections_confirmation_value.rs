@@ -17,7 +17,7 @@ impl LeSecureConnectionsConfirmationValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue;
+    /// use ble_data_struct::data_types::le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue;
     ///
     /// let le_secure_connections_confirmation_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result = LeSecureConnectionsConfirmationValue::new(le_secure_connections_confirmation_value);
@@ -36,7 +36,7 @@ impl LeSecureConnectionsConfirmationValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type::DataType}};
     ///
     /// let le_secure_connections_confirmation_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -76,7 +76,7 @@ impl From<&Vec<u8>> for LeSecureConnectionsConfirmationValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type::DataType}};
     ///
     /// let le_secure_connections_confirmation_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -100,7 +100,7 @@ impl Into<Vec<u8>> for LeSecureConnectionsConfirmationValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type::DataType}};
     ///
     /// let le_secure_connections_confirmation_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result1 = LeSecureConnectionsConfirmationValue::new(le_secure_connections_confirmation_value);
@@ -133,7 +133,7 @@ impl DataType for LeSecureConnectionsConfirmationValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type::DataType};
     ///
     /// assert_eq!(0x22, LeSecureConnectionsConfirmationValue::data_type());
     /// ```
@@ -147,8 +147,8 @@ impl DataType for LeSecureConnectionsConfirmationValue {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::le_secure_connections_confirmation_value::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::le_secure_connections_confirmation_value::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_le_secure_connections_confirmation_value(0x22));
 /// assert!(!is_le_secure_connections_confirmation_value(0x00));

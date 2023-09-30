@@ -17,7 +17,7 @@ impl ShortenedLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::shortened_local_name::ShortenedLocalName;
+    /// use ble_data_struct::data_types::shortened_local_name::ShortenedLocalName;
     ///
     /// let name = "shortened_local_name".to_string();
     /// let result = ShortenedLocalName::new(&name);
@@ -36,7 +36,7 @@ impl ShortenedLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
+    /// use ble_data_struct::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
     ///
     /// let name = "shortened_local_name".to_string();
     /// let length = name.as_bytes().len() as u8 + 1;
@@ -77,7 +77,7 @@ impl From<&Vec<u8>> for ShortenedLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
+    /// use ble_data_struct::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
     ///
     /// let name = "shortened_local_name".to_string();
     /// let length = name.as_bytes().len() as u8 + 1;
@@ -100,7 +100,7 @@ impl Into<Vec<u8>> for ShortenedLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
+    /// use ble_data_struct::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
     ///
     /// let name = "shortened_local_name".to_string();
     /// let result1 = ShortenedLocalName::new(&name);
@@ -128,7 +128,7 @@ impl DataType for ShortenedLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
+    /// use ble_data_struct::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
     ///
     /// assert_eq!(0x08, ShortenedLocalName::data_type());
     /// ```
@@ -142,8 +142,8 @@ impl DataType for ShortenedLocalName {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::shortened_local_name::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::shortened_local_name::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_shortened_local_name(0x08));
 /// assert!(!is_shortened_local_name(0x00));

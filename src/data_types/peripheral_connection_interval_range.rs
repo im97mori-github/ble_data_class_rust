@@ -20,7 +20,7 @@ impl PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::peripheral_connection_interval_range::PeripheralConnectionIntervalRange;
+    /// use ble_data_struct::data_types::peripheral_connection_interval_range::PeripheralConnectionIntervalRange;
     ///
     /// let minimum_value = 0x0006u16;
     /// let maximum_value = 0x0C80u16;
@@ -42,7 +42,7 @@ impl PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
+    /// use ble_data_struct::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
     ///
     /// let minimum_value = 0x0006u16;
     /// let maximum_value = 0x0C80u16;
@@ -86,7 +86,7 @@ impl PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{
+    /// use ble_data_struct::data_types::{
     ///    peripheral_connection_interval_range::{PeripheralConnectionIntervalRange, CONNECTION_INTERVAL_RANGE},
     ///    data_type::DataType,
     /// };
@@ -108,7 +108,7 @@ impl PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{
+    /// use ble_data_struct::data_types::{
     ///    peripheral_connection_interval_range::{PeripheralConnectionIntervalRange, CONNECTION_INTERVAL_RANGE},
     ///    data_type::DataType,
     /// };
@@ -130,7 +130,7 @@ impl PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{
+    /// use ble_data_struct::data_types::{
     ///    peripheral_connection_interval_range::{PeripheralConnectionIntervalRange, CONNECTION_INTERVAL_NO_SPECIFIC_VALUE},
     ///    data_type::DataType,
     /// };
@@ -154,7 +154,7 @@ impl PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{
+    /// use ble_data_struct::data_types::{
     ///    peripheral_connection_interval_range::{PeripheralConnectionIntervalRange, CONNECTION_INTERVAL_NO_SPECIFIC_VALUE},
     ///    data_type::DataType,
     /// };
@@ -190,7 +190,7 @@ impl From<&Vec<u8>> for PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
+    /// use ble_data_struct::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
     ///
     /// let minimum_value = 0x0006u16;
     /// let maximum_value = 0x0C80u16;
@@ -217,7 +217,7 @@ impl Into<Vec<u8>> for PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
+    /// use ble_data_struct::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
     ///
     /// let minimum_value = 0x0006u16;
     /// let maximum_value = 0x0C80u16;
@@ -252,7 +252,7 @@ impl DataType for PeripheralConnectionIntervalRange {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
+    /// use ble_data_struct::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
     ///
     /// assert_eq!(0x12, PeripheralConnectionIntervalRange::data_type());
     /// ```
@@ -266,8 +266,8 @@ impl DataType for PeripheralConnectionIntervalRange {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::peripheral_connection_interval_range::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::peripheral_connection_interval_range::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_peripheral_connection_interval_range(0x12));
 /// assert!(!is_peripheral_connection_interval_range(0x00));

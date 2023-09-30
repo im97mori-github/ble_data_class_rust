@@ -17,7 +17,7 @@ impl Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::flags::Flags;
+    /// use ble_data_struct::data_types::flags::Flags;
     ///
     /// let flags = [true, false, false, false, false, false, false, false].to_vec();
     /// let result = Flags::new(&flags);
@@ -55,7 +55,7 @@ impl Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{flags::Flags, data_type::DataType};
+    /// use ble_data_struct::data_types::{flags::Flags, data_type::DataType};
     ///
     /// let flags_bytes = [0b00000001u8].to_vec();
     /// let flags: Vec<bool> = flags_bytes
@@ -190,7 +190,7 @@ impl Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::flags::Flags;
+    /// use ble_data_struct::data_types::flags::Flags;
     ///
     /// let flags = [true, false, false, false, false, false, false, false].to_vec();
     /// let result = Flags::new(&flags);
@@ -213,7 +213,7 @@ impl Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::flags::Flags;
+    /// use ble_data_struct::data_types::flags::Flags;
     ///
     /// let flags = [false, true, false, false, false, false, false, false].to_vec();
     /// let result = Flags::new(&flags);
@@ -236,7 +236,7 @@ impl Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::flags::Flags;
+    /// use ble_data_struct::data_types::flags::Flags;
     ///
     /// let flags = [false, false, true, false, false, false, false, false].to_vec();
     /// let result = Flags::new(&flags);
@@ -259,7 +259,7 @@ impl Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::flags::Flags;
+    /// use ble_data_struct::data_types::flags::Flags;
     ///
     /// let flags = [false, false, false, true, false, false, false, false].to_vec();
     /// let result = Flags::new(&flags);
@@ -286,7 +286,7 @@ impl From<&Vec<u8>> for Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{flags::Flags, data_type::DataType};
+    /// use ble_data_struct::data_types::{flags::Flags, data_type::DataType};
     ///
     /// let flags_bytes = [0b00000001u8].to_vec();
     /// let flags: Vec<bool> = flags_bytes
@@ -377,7 +377,7 @@ impl Into<Vec<u8>> for Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{flags::Flags, data_type::DataType};
+    /// use ble_data_struct::data_types::{flags::Flags, data_type::DataType};
     ///
     /// let flags = [true, false, false, false, false, false, false, false].to_vec();
     /// let length = (flags.len() / 8 + 1) as u8;
@@ -532,7 +532,7 @@ impl DataType for Flags {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{flags::Flags, data_type::DataType};
+    /// use ble_data_struct::data_types::{flags::Flags, data_type::DataType};
     ///
     /// assert_eq!(0x01, Flags::data_type());
     /// ```
@@ -546,8 +546,8 @@ impl DataType for Flags {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::flags::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::flags::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_flags(0x01));
 /// assert!(!is_flags(0x00));

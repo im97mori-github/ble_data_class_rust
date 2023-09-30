@@ -17,7 +17,7 @@ impl SecureSimplePairingHashC192 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::secure_simple_pairing_hash_c192::SecureSimplePairingHashC192;
+    /// use ble_data_struct::data_types::secure_simple_pairing_hash_c192::SecureSimplePairingHashC192;
     ///
     /// let secure_simple_pairing_hash_c192 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result = SecureSimplePairingHashC192::new(secure_simple_pairing_hash_c192);
@@ -36,7 +36,7 @@ impl SecureSimplePairingHashC192 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type::DataType}};
     ///
     /// let secure_simple_pairing_hash_c192 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -76,7 +76,7 @@ impl From<&Vec<u8>> for SecureSimplePairingHashC192 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type::DataType}};
     ///
     /// let secure_simple_pairing_hash_c192 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -100,7 +100,7 @@ impl Into<Vec<u8>> for SecureSimplePairingHashC192 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type::DataType}};
     ///
     /// let secure_simple_pairing_hash_c192 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result1 = SecureSimplePairingHashC192::new(secure_simple_pairing_hash_c192);
@@ -133,7 +133,7 @@ impl DataType for SecureSimplePairingHashC192 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type::DataType};
+    /// use ble_data_struct::data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type::DataType};
     ///
     /// assert_eq!(0x0e, SecureSimplePairingHashC192::data_type());
     /// ```
@@ -147,8 +147,8 @@ impl DataType for SecureSimplePairingHashC192 {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::secure_simple_pairing_hash_c192::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::secure_simple_pairing_hash_c192::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_secure_simple_pairing_hash_c192(0x0e));
 /// assert!(!is_secure_simple_pairing_hash_c192(0x00));

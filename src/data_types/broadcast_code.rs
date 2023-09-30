@@ -17,7 +17,7 @@ impl BroadcastCode {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::broadcast_code::BroadcastCode;
+    /// use ble_data_struct::data_types::broadcast_code::BroadcastCode;
     ///
     /// let broadcast_code = [0x00u8; 4].to_vec();
     /// let result = BroadcastCode::new(&broadcast_code);
@@ -50,7 +50,7 @@ impl BroadcastCode {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{broadcast_code::BroadcastCode, data_type::DataType};
+    /// use ble_data_struct::data_types::{broadcast_code::BroadcastCode, data_type::DataType};
     ///
     /// let broadcast_code = [0x00u8; 4].to_vec();
     /// let length = broadcast_code.len() as u8 + 1;
@@ -137,7 +137,7 @@ impl From<&Vec<u8>> for BroadcastCode {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{broadcast_code::BroadcastCode, data_type::DataType};
+    /// use ble_data_struct::data_types::{broadcast_code::BroadcastCode, data_type::DataType};
     ///
     /// let broadcast_code = [0x00u8; 4].to_vec();
     /// let length = broadcast_code.len() as u8 + 1;
@@ -187,7 +187,7 @@ impl Into<Vec<u8>> for BroadcastCode {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{broadcast_code::BroadcastCode, data_type::DataType};
+    /// use ble_data_struct::data_types::{broadcast_code::BroadcastCode, data_type::DataType};
     ///
     /// let broadcast_code = [0x00u8; 4].to_vec();
     /// let result1 = BroadcastCode::new(&broadcast_code);
@@ -256,7 +256,7 @@ impl DataType for BroadcastCode {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{broadcast_code::BroadcastCode, data_type::DataType};
+    /// use ble_data_struct::data_types::{broadcast_code::BroadcastCode, data_type::DataType};
     ///
     /// assert_eq!(0x2d, BroadcastCode::data_type());
     /// ```
@@ -270,8 +270,8 @@ impl DataType for BroadcastCode {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::broadcast_code::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::broadcast_code::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_broadcast_code(0x2d));
 /// assert!(!is_broadcast_code(0x00));

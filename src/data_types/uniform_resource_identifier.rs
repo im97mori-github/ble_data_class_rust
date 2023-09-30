@@ -20,7 +20,7 @@ impl UniformResourceIdentifier {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::uniform_resource_identifier::UniformResourceIdentifier;
+    /// use ble_data_struct::data_types::uniform_resource_identifier::UniformResourceIdentifier;
     ///
     /// let scheme = '\u{0016}';
     /// let body = "uniform_resource_identifier";
@@ -51,7 +51,7 @@ impl UniformResourceIdentifier {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
+    /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
     ///
     /// let scheme = '\u{0016}';
     /// let body = "uniform_resource_identifier";
@@ -122,7 +122,7 @@ impl From<&Vec<u8>> for UniformResourceIdentifier {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
+    /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
     ///
     /// let scheme = '\u{0016}';
     /// let body = "uniform_resource_identifier";
@@ -163,7 +163,7 @@ impl Into<Vec<u8>> for UniformResourceIdentifier {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
+    /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
     ///
     /// let scheme = '\u{0016}';
     /// let body = "uniform_resource_identifier";
@@ -217,7 +217,7 @@ impl DataType for UniformResourceIdentifier {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
+    /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
     ///
     /// assert_eq!(0x24, UniformResourceIdentifier::data_type());
     /// ```
@@ -231,8 +231,8 @@ impl DataType for UniformResourceIdentifier {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::uniform_resource_identifier::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::uniform_resource_identifier::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_uniform_resource_identifier(0x24));
 /// assert!(!is_uniform_resource_identifier(0x00));

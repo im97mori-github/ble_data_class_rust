@@ -23,7 +23,7 @@ impl EncryptedData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::encrypted_data::EncryptedData;
+    /// use ble_data_struct::data_types::encrypted_data::EncryptedData;
     ///
     /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
     /// let payload = [6].to_vec();
@@ -48,7 +48,7 @@ impl EncryptedData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{encrypted_data::EncryptedData, data_type::DataType};
+    /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, data_type::DataType};
     ///
     /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
     /// let payload = [6].to_vec();
@@ -100,7 +100,7 @@ impl From<&Vec<u8>> for EncryptedData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{encrypted_data::EncryptedData, data_type::DataType};
+    /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, data_type::DataType};
     ///
     /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
     /// let payload = [6].to_vec();
@@ -130,7 +130,7 @@ impl Into<Vec<u8>> for EncryptedData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{encrypted_data::EncryptedData, data_type::DataType};
+    /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, data_type::DataType};
     ///
     /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
     /// let payload = [6].to_vec();
@@ -169,7 +169,7 @@ impl DataType for EncryptedData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{encrypted_data::EncryptedData, data_type::DataType};
+    /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, data_type::DataType};
     ///
     /// assert_eq!(0x31, EncryptedData::data_type());
     /// ```
@@ -183,8 +183,8 @@ impl DataType for EncryptedData {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::encrypted_data::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::encrypted_data::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_encrypted_data(0x31));
 /// assert!(!is_encrypted_data(0x00));

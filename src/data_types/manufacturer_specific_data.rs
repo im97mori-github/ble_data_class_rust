@@ -20,7 +20,7 @@ impl ManufacturerSpecificData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::manufacturer_specific_data::ManufacturerSpecificData;
+    /// use ble_data_struct::data_types::manufacturer_specific_data::ManufacturerSpecificData;
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
@@ -45,7 +45,7 @@ impl ManufacturerSpecificData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
+    /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
@@ -98,7 +98,7 @@ impl From<&Vec<u8>> for ManufacturerSpecificData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
+    /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
@@ -128,7 +128,7 @@ impl Into<Vec<u8>> for ManufacturerSpecificData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
+    /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
@@ -165,7 +165,7 @@ impl DataType for ManufacturerSpecificData {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
+    /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
     ///
     /// assert_eq!(0xff, ManufacturerSpecificData::data_type());
     /// ```
@@ -179,8 +179,8 @@ impl DataType for ManufacturerSpecificData {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::manufacturer_specific_data::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::manufacturer_specific_data::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_manufacturer_specific_data(0xff));
 /// assert!(!is_manufacturer_specific_data(0x00));

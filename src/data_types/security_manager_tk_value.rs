@@ -17,7 +17,7 @@ impl SecurityManagerTkValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::security_manager_tk_value::SecurityManagerTkValue;
+    /// use ble_data_struct::data_types::security_manager_tk_value::SecurityManagerTkValue;
     ///
     /// let security_manager_tk_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result = SecurityManagerTkValue::new(security_manager_tk_value);
@@ -36,7 +36,7 @@ impl SecurityManagerTkValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type::DataType}};
     ///
     /// let security_manager_tk_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -76,7 +76,7 @@ impl From<&Vec<u8>> for SecurityManagerTkValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type::DataType}};
     ///
     /// let security_manager_tk_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -100,7 +100,7 @@ impl Into<Vec<u8>> for SecurityManagerTkValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type::DataType}};
     ///
     /// let security_manager_tk_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result1 = SecurityManagerTkValue::new(security_manager_tk_value);
@@ -133,7 +133,7 @@ impl DataType for SecurityManagerTkValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type::DataType};
+    /// use ble_data_struct::data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type::DataType};
     ///
     /// assert_eq!(0x10, SecurityManagerTkValue::data_type());
     /// ```
@@ -147,8 +147,8 @@ impl DataType for SecurityManagerTkValue {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::security_manager_tk_value::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::security_manager_tk_value::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_security_manager_tk_value(0x10));
 /// assert!(!is_security_manager_tk_value(0x00));

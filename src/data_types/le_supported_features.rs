@@ -17,7 +17,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// for i in 0..44 {
@@ -40,7 +40,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType}};
     ///
     /// let mut le_supported_features = [0u8; 6].to_vec();
     ///
@@ -142,7 +142,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[0] = true;
@@ -158,7 +158,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[1] = true;
@@ -174,7 +174,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[2] = true;
@@ -190,7 +190,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[3] = true;
@@ -206,7 +206,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[4] = true;
@@ -222,7 +222,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[5] = true;
@@ -238,7 +238,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[6] = true;
@@ -254,7 +254,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[7] = true;
@@ -270,7 +270,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[8] = true;
@@ -286,7 +286,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[9] = true;
@@ -302,7 +302,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[10] = true;
@@ -318,7 +318,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[11] = true;
@@ -334,7 +334,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[12] = true;
@@ -350,7 +350,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[13] = true;
@@ -366,7 +366,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[14] = true;
@@ -382,7 +382,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[15] = true;
@@ -398,7 +398,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[16] = true;
@@ -414,7 +414,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[17] = true;
@@ -430,7 +430,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[18] = true;
@@ -446,7 +446,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[19] = true;
@@ -462,7 +462,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[20] = true;
@@ -478,7 +478,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[21] = true;
@@ -494,7 +494,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[22] = true;
@@ -510,7 +510,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[23] = true;
@@ -526,7 +526,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[24] = true;
@@ -542,7 +542,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[25] = true;
@@ -558,7 +558,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[26] = true;
@@ -574,7 +574,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[27] = true;
@@ -590,7 +590,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[28] = true;
@@ -606,7 +606,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[29] = true;
@@ -622,7 +622,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[30] = true;
@@ -638,7 +638,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[31] = true;
@@ -654,7 +654,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[32] = true;
@@ -670,7 +670,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[33] = true;
@@ -692,7 +692,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[35] = true;
@@ -708,7 +708,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[36] = true;
@@ -724,7 +724,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[37] = true;
@@ -740,7 +740,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[38] = true;
@@ -756,7 +756,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[39] = true;
@@ -772,7 +772,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[40] = true;
@@ -788,7 +788,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[41] = true;
@@ -804,7 +804,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[43] = true;
@@ -820,7 +820,7 @@ impl LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_supported_features::LeSupportedFeatures;
+    /// use ble_data_struct::data_types::le_supported_features::LeSupportedFeatures;
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// le_supported_features[44] = true;
@@ -840,7 +840,7 @@ impl From<&Vec<u8>> for LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType};
     ///
     /// let mut le_supported_features = [0u8; 6].to_vec();
     ///
@@ -888,7 +888,7 @@ impl Into<Vec<u8>> for LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType};
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// for i in 0..44 {
@@ -948,7 +948,7 @@ impl DataType for LeSupportedFeatures {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType};
     ///
     /// assert_eq!(0x27, LeSupportedFeatures::data_type());
     /// ```
@@ -962,8 +962,8 @@ impl DataType for LeSupportedFeatures {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::le_supported_features::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::le_supported_features::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_le_supported_features(0x27));
 /// assert!(!is_le_supported_features(0x00));

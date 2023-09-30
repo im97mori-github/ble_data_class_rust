@@ -17,7 +17,7 @@ impl SecureSimplePairingRandomizerR256 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256;
+    /// use ble_data_struct::data_types::secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256;
     ///
     /// let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result = SecureSimplePairingRandomizerR256::new(secure_simple_pairing_randomizer_r256);
@@ -36,7 +36,7 @@ impl SecureSimplePairingRandomizerR256 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType}};
     ///
     /// let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -76,7 +76,7 @@ impl From<&Vec<u8>> for SecureSimplePairingRandomizerR256 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType}};
     ///
     /// let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -100,7 +100,7 @@ impl Into<Vec<u8>> for SecureSimplePairingRandomizerR256 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType}};
     ///
     /// let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result1 = SecureSimplePairingRandomizerR256::new(secure_simple_pairing_randomizer_r256);
@@ -133,7 +133,7 @@ impl DataType for SecureSimplePairingRandomizerR256 {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType};
+    /// use ble_data_struct::data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType};
     ///
     /// assert_eq!(0x0f, SecureSimplePairingRandomizerR256::data_type());
     /// ```
@@ -147,8 +147,8 @@ impl DataType for SecureSimplePairingRandomizerR256 {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::secure_simple_pairing_randomizer_r256::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::secure_simple_pairing_randomizer_r256::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_secure_simple_pairing_randomizer_r256(0x0f));
 /// assert!(!is_secure_simple_pairing_randomizer_r256(0x00));

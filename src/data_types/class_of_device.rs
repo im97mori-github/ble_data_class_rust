@@ -17,7 +17,7 @@ impl ClassOfDevice {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::class_of_device::ClassOfDevice;
+    /// use ble_data_struct::data_types::class_of_device::ClassOfDevice;
     ///
     /// let name = "class_of_device".to_string();
     /// let major_service_classes = 0b10000000_00000000_00000000;
@@ -40,7 +40,7 @@ impl ClassOfDevice {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
+    /// use ble_data_struct::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
     ///
     /// let major_service_classes = 0b10000000_00000000_00000000;
     /// let major_device_class = 0b00000000_00000001_00000000;
@@ -84,7 +84,7 @@ impl ClassOfDevice {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
+    /// use ble_data_struct::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
     ///
     /// let major_service_classes = 0b10000000_00000000_00000000;
     /// let major_device_class = 0b00000000_00000001_00000000;
@@ -104,7 +104,7 @@ impl ClassOfDevice {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::class_of_device::ClassOfDevice;
+    /// use ble_data_struct::data_types::class_of_device::ClassOfDevice;
     ///
     /// let major_service_classes = 0b10000000_00000000_00000000;
     /// let major_device_class = 0b00000000_00000001_00000000;
@@ -124,7 +124,7 @@ impl ClassOfDevice {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::class_of_device::ClassOfDevice;
+    /// use ble_data_struct::data_types::class_of_device::ClassOfDevice;
     ///
     /// let major_service_classes = 0b10000000_00000000_00000000;
     /// let major_device_class = 0b00000000_00000001_00000000;
@@ -157,7 +157,7 @@ impl From<&Vec<u8>> for ClassOfDevice {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
+    /// use ble_data_struct::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
     ///
     /// let major_service_classes = 0b10000000_00000000_00000000;
     /// let major_device_class = 0b00000000_00000001_00000000;
@@ -186,7 +186,7 @@ impl Into<Vec<u8>> for ClassOfDevice {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
+    /// use ble_data_struct::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
     ///
     /// let major_service_classes = 0b10000000_00000000_00000000;
     /// let major_device_class = 0b00000000_00000001_00000000;
@@ -225,7 +225,7 @@ impl DataType for ClassOfDevice {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
+    /// use ble_data_struct::data_types::{class_of_device::ClassOfDevice, data_type::DataType};
     ///
     /// assert_eq!(0x0d, ClassOfDevice::data_type());
     /// ```
@@ -239,8 +239,8 @@ impl DataType for ClassOfDevice {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::class_of_device::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::class_of_device::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_class_of_device(0x0d));
 /// assert!(!is_class_of_device(0x00));

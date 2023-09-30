@@ -17,7 +17,7 @@ impl SecurityManagerOutOfBand {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::security_manager_oob::*;
+    /// use ble_data_struct::data_types::security_manager_oob::*;
     ///
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
@@ -46,7 +46,7 @@ impl SecurityManagerOutOfBand {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{security_manager_oob::*, data_type::DataType};
+    /// use ble_data_struct::data_types::{security_manager_oob::*, data_type::DataType};
     ///
     /// let security_manager_oob_byte = SECURITY_MANAGER_OUT_OF_BAND_FLAG_OOB_FLAGS;
     /// let mut security_manager_oob = [false; 8];
@@ -132,7 +132,7 @@ impl SecurityManagerOutOfBand {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::security_manager_oob::SecurityManagerOutOfBand;
+    /// use ble_data_struct::data_types::security_manager_oob::SecurityManagerOutOfBand;
     ///
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
@@ -155,7 +155,7 @@ impl SecurityManagerOutOfBand {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::security_manager_oob::SecurityManagerOutOfBand;
+    /// use ble_data_struct::data_types::security_manager_oob::SecurityManagerOutOfBand;
     ///
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
@@ -178,7 +178,7 @@ impl SecurityManagerOutOfBand {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::security_manager_oob::SecurityManagerOutOfBand;
+    /// use ble_data_struct::data_types::security_manager_oob::SecurityManagerOutOfBand;
     ///
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
@@ -217,7 +217,7 @@ impl From<&Vec<u8>> for SecurityManagerOutOfBand {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{security_manager_oob::*, data_type::DataType};
+    /// use ble_data_struct::data_types::{security_manager_oob::*, data_type::DataType};
     ///
     /// let security_manager_oob_byte = SECURITY_MANAGER_OUT_OF_BAND_FLAG_OOB_FLAGS;
     /// let mut security_manager_oob = [false; 8];
@@ -269,7 +269,7 @@ impl Into<Vec<u8>> for SecurityManagerOutOfBand {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{security_manager_oob::*, data_type::DataType};
+    /// use ble_data_struct::data_types::{security_manager_oob::*, data_type::DataType};
     ///
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let length = 2;
@@ -375,7 +375,7 @@ impl DataType for SecurityManagerOutOfBand {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{security_manager_oob::SecurityManagerOutOfBand, data_type::DataType};
+    /// use ble_data_struct::data_types::{security_manager_oob::SecurityManagerOutOfBand, data_type::DataType};
     ///
     /// assert_eq!(0x11, SecurityManagerOutOfBand::data_type());
     /// ```
@@ -389,8 +389,8 @@ impl DataType for SecurityManagerOutOfBand {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::security_manager_oob::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::security_manager_oob::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_security_manager_oob(0x11));
 /// assert!(!is_security_manager_oob(0x00));

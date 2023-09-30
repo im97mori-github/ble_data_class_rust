@@ -80,7 +80,7 @@ impl BigInfo {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::big_info::BigInfo;
+    /// use ble_data_struct::data_types::big_info::BigInfo;
     ///
     /// let big_offset: u16 = 1;
     /// let big_offset_units: bool = true;
@@ -258,7 +258,7 @@ impl BigInfo {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{big_info::BigInfo, data_type::DataType};
+    /// use ble_data_struct::data_types::{big_info::BigInfo, data_type::DataType};
     ///
     /// let length = 34;
     /// let big_offset: u16 = 1;
@@ -563,7 +563,7 @@ impl From<&Vec<u8>> for BigInfo {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{big_info::BigInfo, data_type::DataType};
+    /// use ble_data_struct::data_types::{big_info::BigInfo, data_type::DataType};
     ///
     /// let length = 34;
     /// let big_offset: u16 = 1;
@@ -690,7 +690,7 @@ impl Into<Vec<u8>> for BigInfo {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{big_info::BigInfo, data_type::DataType};
+    /// use ble_data_struct::data_types::{big_info::BigInfo, data_type::DataType};
     ///
     /// let length = 34;
     /// let big_offset: u16 = 1;
@@ -896,7 +896,7 @@ impl DataType for BigInfo {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{big_info::BigInfo, data_type::DataType};
+    /// use ble_data_struct::data_types::{big_info::BigInfo, data_type::DataType};
     ///
     /// assert_eq!(0x2c, BigInfo::data_type());
     /// ```
@@ -910,8 +910,8 @@ impl DataType for BigInfo {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::big_info::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::big_info::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_big_info(0x2c));
 /// assert!(!is_big_info(0x00));

@@ -22,7 +22,7 @@ impl ServiceData128BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::service_data_128bit_uuid::ServiceData128BitUUID;
+    /// use ble_data_struct::data_types::service_data_128bit_uuid::ServiceData128BitUUID;
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid = uuid!("04030201-0000-1000-8000-00805F9B34FB");
@@ -45,7 +45,7 @@ impl ServiceData128BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [
@@ -97,7 +97,7 @@ impl From<&Vec<u8>> for ServiceData128BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [
@@ -130,7 +130,7 @@ impl Into<Vec<u8>> for ServiceData128BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [
@@ -172,7 +172,7 @@ impl DataType for ServiceData128BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType};
+    /// use ble_data_struct::data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType};
     ///
     /// assert_eq!(0x21, ServiceData128BitUUID::data_type());
     /// ```
@@ -186,8 +186,8 @@ impl DataType for ServiceData128BitUUID {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::service_data_128bit_uuid::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::service_data_128bit_uuid::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_service_data_128bit_uuid(0x21));
 /// assert!(!is_service_data_128bit_uuid(0x00));

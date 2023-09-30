@@ -19,7 +19,7 @@ impl ListOf16BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs;
+    /// use ble_data_struct::data_types::list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs;
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuids: Vec<Uuid> = [
@@ -43,7 +43,7 @@ impl ListOf16BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
@@ -101,7 +101,7 @@ impl From<&Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
@@ -143,7 +143,7 @@ impl Into<Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
@@ -192,7 +192,7 @@ impl DataType for ListOf16BitServiceSolicitationUUIDs {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType};
+    /// use ble_data_struct::data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType};
     ///
     /// assert_eq!(0x14, ListOf16BitServiceSolicitationUUIDs::data_type());
     /// ```
@@ -206,8 +206,8 @@ impl DataType for ListOf16BitServiceSolicitationUUIDs {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::list_of_16bit_service_solicitation_uuids::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::list_of_16bit_service_solicitation_uuids::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_list_of_16bit_service_solicitation_uuids(0x14));
 /// assert!(!is_list_of_16bit_service_solicitation_uuids(0x00));

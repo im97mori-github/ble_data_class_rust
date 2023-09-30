@@ -20,7 +20,7 @@ impl ChannelMapUpdateIndication {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::channel_map_update_indication::ChannelMapUpdateIndication;
+    /// use ble_data_struct::data_types::channel_map_update_indication::ChannelMapUpdateIndication;
     ///
     /// let mut ch_m = [false; 37].to_vec();
     /// for i in 0..37 {
@@ -45,7 +45,7 @@ impl ChannelMapUpdateIndication {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
+    /// use ble_data_struct::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
     ///
     /// let mut ch_m = [0u8; 5].to_vec();
     ///
@@ -154,7 +154,7 @@ impl From<&Vec<u8>> for ChannelMapUpdateIndication {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
+    /// use ble_data_struct::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
     ///
     /// let mut ch_m = [0u8; 5].to_vec();
     ///
@@ -203,7 +203,7 @@ impl Into<Vec<u8>> for ChannelMapUpdateIndication {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
+    /// use ble_data_struct::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
     ///
     /// let mut ch_m = [false; 37].to_vec();
     /// for i in 0..37 {
@@ -254,7 +254,7 @@ impl DataType for ChannelMapUpdateIndication {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
+    /// use ble_data_struct::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
     ///
     /// assert_eq!(0x28, ChannelMapUpdateIndication::data_type());
     /// ```
@@ -268,8 +268,8 @@ impl DataType for ChannelMapUpdateIndication {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::channel_map_update_indication::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::channel_map_update_indication::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_channel_map_update_indication(0x28));
 /// assert!(!is_channel_map_update_indication(0x00));

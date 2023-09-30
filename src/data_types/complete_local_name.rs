@@ -17,7 +17,7 @@ impl CompleteLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::complete_local_name::CompleteLocalName;
+    /// use ble_data_struct::data_types::complete_local_name::CompleteLocalName;
     ///
     /// let name = "complete_local_name".to_string();
     /// let result = CompleteLocalName::new(&name);
@@ -36,7 +36,7 @@ impl CompleteLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
+    /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
     ///
     /// let name = "complete_local_name".to_string();
     /// let length = name.as_bytes().len() as u8 + 1;
@@ -77,7 +77,7 @@ impl From<&Vec<u8>> for CompleteLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
+    /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
     ///
     /// let name = "complete_local_name".to_string();
     /// let length = name.as_bytes().len() as u8 + 1;
@@ -100,7 +100,7 @@ impl Into<Vec<u8>> for CompleteLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
+    /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
     ///
     /// let name = "complete_local_name".to_string();
     /// let result1 = CompleteLocalName::new(&name);
@@ -128,7 +128,7 @@ impl DataType for CompleteLocalName {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
+    /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
     ///
     /// assert_eq!(0x09, CompleteLocalName::data_type());
     /// ```
@@ -142,8 +142,8 @@ impl DataType for CompleteLocalName {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::complete_local_name::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::complete_local_name::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_complete_local_name(0x09));
 /// assert!(!is_complete_local_name(0x00));

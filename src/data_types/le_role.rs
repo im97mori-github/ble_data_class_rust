@@ -17,7 +17,7 @@ impl LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_role::*;
+    /// use ble_data_struct::data_types::le_role::*;
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
@@ -48,7 +48,7 @@ impl LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_role::*, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_role::*, data_type::DataType};
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let length = 2;
@@ -148,7 +148,7 @@ impl LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_role::*;
+    /// use ble_data_struct::data_types::le_role::*;
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
@@ -175,7 +175,7 @@ impl LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_role::*;
+    /// use ble_data_struct::data_types::le_role::*;
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
@@ -202,7 +202,7 @@ impl LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_role::*;
+    /// use ble_data_struct::data_types::le_role::*;
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
@@ -229,7 +229,7 @@ impl LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_role::*;
+    /// use ble_data_struct::data_types::le_role::*;
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let result = LeRole::new(le_role);
@@ -272,7 +272,7 @@ impl From<&Vec<u8>> for LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_role::*, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_role::*, data_type::DataType};
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let length = 2;
@@ -329,7 +329,7 @@ impl Into<Vec<u8>> for LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_role::*, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_role::*, data_type::DataType};
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let length = 2;
@@ -410,7 +410,7 @@ impl DataType for LeRole {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_role::LeRole, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_role::LeRole, data_type::DataType};
     ///
     /// assert_eq!(0x1c, LeRole::data_type());
     /// ```
@@ -424,8 +424,8 @@ impl DataType for LeRole {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::le_role::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::le_role::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_le_role(0x1c));
 /// assert!(!is_le_role(0x00));

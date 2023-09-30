@@ -29,7 +29,7 @@ impl PeriodicAdvertisingResponseTimingInformation {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation;
+    /// use ble_data_struct::data_types::periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation;
     ///
     /// let rsp_aa: [u8; 4] = [1, 2, 3, 4];
     /// let num_subevents = 6u8;
@@ -72,7 +72,7 @@ impl PeriodicAdvertisingResponseTimingInformation {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
+    /// use ble_data_struct::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
     ///
     /// let rsp_aa: [u8; 4] = [1, 2, 3, 4];
     /// let num_subevents = 6u8;
@@ -136,7 +136,7 @@ impl From<&Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
+    /// use ble_data_struct::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
     ///
     /// let rsp_aa: [u8; 4] = [1, 2, 3, 4];
     /// let num_subevents = 6u8;
@@ -172,7 +172,7 @@ impl Into<Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
+    /// use ble_data_struct::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
     ///
     /// let rsp_aa: [u8; 4] = [1, 2, 3, 4];
     /// let num_subevents = 6u8;
@@ -222,7 +222,7 @@ impl DataType for PeriodicAdvertisingResponseTimingInformation {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
+    /// use ble_data_struct::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
     ///
     /// assert_eq!(0x32, PeriodicAdvertisingResponseTimingInformation::data_type());
     /// ```
@@ -236,8 +236,8 @@ impl DataType for PeriodicAdvertisingResponseTimingInformation {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::periodic_advertising_response_timing_information::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::periodic_advertising_response_timing_information::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_periodic_advertising_response_timing_information(0x32));
 /// assert!(!is_periodic_advertising_response_timing_information(0x00));

@@ -22,7 +22,7 @@ impl ServiceData16BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::service_data_16bit_uuid::ServiceData16BitUUID;
+    /// use ble_data_struct::data_types::service_data_16bit_uuid::ServiceData16BitUUID;
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid = uuid!("00000201-0000-1000-8000-00805F9B34FB");
@@ -45,7 +45,7 @@ impl ServiceData16BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8].to_vec();
@@ -97,7 +97,7 @@ impl From<&Vec<u8>> for ServiceData16BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8].to_vec();
@@ -127,7 +127,7 @@ impl Into<Vec<u8>> for ServiceData16BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8].to_vec();
@@ -166,7 +166,7 @@ impl DataType for ServiceData16BitUUID {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type::DataType};
+    /// use ble_data_struct::data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type::DataType};
     ///
     /// assert_eq!(0x16, ServiceData16BitUUID::data_type());
     /// ```
@@ -180,8 +180,8 @@ impl DataType for ServiceData16BitUUID {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::service_data_16bit_uuid::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::service_data_16bit_uuid::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_service_data_16bit_uuid(0x16));
 /// assert!(!is_service_data_16bit_uuid(0x00));

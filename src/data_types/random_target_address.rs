@@ -16,7 +16,7 @@ impl RandomTargetAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::random_target_address::RandomTargetAddress;
+    /// use ble_data_struct::data_types::random_target_address::RandomTargetAddress;
     ///
     /// let random_target_address: Vec<u64> = [
     ///     u64::from_le_bytes([
@@ -43,7 +43,7 @@ impl RandomTargetAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{random_target_address::RandomTargetAddress, data_type::DataType};
+    /// use ble_data_struct::data_types::{random_target_address::RandomTargetAddress, data_type::DataType};
     ///
     /// let random_target_address_bytes = [
     ///     0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
@@ -114,7 +114,7 @@ impl From<&Vec<u8>> for RandomTargetAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{random_target_address::RandomTargetAddress, data_type::DataType};
+    /// use ble_data_struct::data_types::{random_target_address::RandomTargetAddress, data_type::DataType};
     ///
     /// let random_target_address_bytes = [
     ///     0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
@@ -156,7 +156,7 @@ impl Into<Vec<u8>> for RandomTargetAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{random_target_address::RandomTargetAddress, data_type::DataType};
+    /// use ble_data_struct::data_types::{random_target_address::RandomTargetAddress, data_type::DataType};
     ///
     /// let random_target_address_bytes = [
     ///     0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
@@ -215,7 +215,7 @@ impl DataType for RandomTargetAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{random_target_address::RandomTargetAddress, data_type::DataType};
+    /// use ble_data_struct::data_types::{random_target_address::RandomTargetAddress, data_type::DataType};
     ///
     /// assert_eq!(0x18, RandomTargetAddress::data_type());
     /// ```
@@ -229,8 +229,8 @@ impl DataType for RandomTargetAddress {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::random_target_address::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::random_target_address::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_random_target_address(0x18));
 /// assert!(!is_random_target_address(0x00));

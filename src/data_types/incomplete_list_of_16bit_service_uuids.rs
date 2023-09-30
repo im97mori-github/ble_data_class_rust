@@ -19,7 +19,7 @@ impl IncompleteListOf16BitServiceUuids {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids;
+    /// use ble_data_struct::data_types::incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids;
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuids: Vec<Uuid> = [
@@ -43,7 +43,7 @@ impl IncompleteListOf16BitServiceUuids {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
@@ -101,7 +101,7 @@ impl From<&Vec<u8>> for IncompleteListOf16BitServiceUuids {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
@@ -143,7 +143,7 @@ impl Into<Vec<u8>> for IncompleteListOf16BitServiceUuids {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
@@ -192,7 +192,7 @@ impl DataType for IncompleteListOf16BitServiceUuids {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type::DataType};
+    /// use ble_data_struct::data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type::DataType};
     ///
     /// assert_eq!(0x02, IncompleteListOf16BitServiceUuids::data_type());
     /// ```
@@ -206,8 +206,8 @@ impl DataType for IncompleteListOf16BitServiceUuids {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::incomplete_list_of_16bit_service_uuids::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::incomplete_list_of_16bit_service_uuids::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_incomplete_list_of_16bit_service_uuids(0x02));
 /// assert!(!is_incomplete_list_of_16bit_service_uuids(0x00));

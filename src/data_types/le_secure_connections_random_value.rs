@@ -17,7 +17,7 @@ impl LeSecureConnectionsRandomValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_secure_connections_random_value::LeSecureConnectionsRandomValue;
+    /// use ble_data_struct::data_types::le_secure_connections_random_value::LeSecureConnectionsRandomValue;
     ///
     /// let le_secure_connections_random_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result = LeSecureConnectionsRandomValue::new(le_secure_connections_random_value);
@@ -36,7 +36,7 @@ impl LeSecureConnectionsRandomValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type::DataType}};
     ///
     /// let le_secure_connections_random_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -76,7 +76,7 @@ impl From<&Vec<u8>> for LeSecureConnectionsRandomValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type::DataType}};
     ///
     /// let le_secure_connections_random_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let length = 17;
@@ -100,7 +100,7 @@ impl Into<Vec<u8>> for LeSecureConnectionsRandomValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::{BASE_UUID, data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type::DataType}};
+    /// use ble_data_struct::{BASE_UUID, data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type::DataType}};
     ///
     /// let le_secure_connections_random_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result1 = LeSecureConnectionsRandomValue::new(le_secure_connections_random_value);
@@ -133,7 +133,7 @@ impl DataType for LeSecureConnectionsRandomValue {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type::DataType};
     ///
     /// assert_eq!(0x23, LeSecureConnectionsRandomValue::data_type());
     /// ```
@@ -147,8 +147,8 @@ impl DataType for LeSecureConnectionsRandomValue {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::le_secure_connections_random_value::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::le_secure_connections_random_value::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_le_secure_connections_random_value(0x23));
 /// assert!(!is_le_secure_connections_random_value(0x00));

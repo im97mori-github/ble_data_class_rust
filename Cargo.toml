@@ -1,5 +1,5 @@
 [package]
-name = "ble-data-class"
+name = "ble-data-struct"
 version = "0.1.0"
 edition = "2021"
 

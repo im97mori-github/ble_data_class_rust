@@ -20,7 +20,7 @@ impl LeBluetoothDeviceAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_bluetooth_device_address::LeBluetoothDeviceAddress;
+    /// use ble_data_struct::data_types::le_bluetooth_device_address::LeBluetoothDeviceAddress;
     ///
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
     /// let address_type = false;
@@ -55,7 +55,7 @@ impl LeBluetoothDeviceAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
     ///
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
     /// let address_type = false;
@@ -141,7 +141,7 @@ impl LeBluetoothDeviceAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::le_bluetooth_device_address::LeBluetoothDeviceAddress;
+    /// use ble_data_struct::data_types::le_bluetooth_device_address::LeBluetoothDeviceAddress;
     ///
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
     /// let address_type = false;
@@ -166,7 +166,7 @@ impl From<&Vec<u8>> for LeBluetoothDeviceAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
     ///
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
     /// let address_type = false;
@@ -218,7 +218,7 @@ impl Into<Vec<u8>> for LeBluetoothDeviceAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
     ///
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
     /// let address_type = false;
@@ -254,7 +254,7 @@ impl DataType for LeBluetoothDeviceAddress {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_class::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
+    /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
     ///
     /// assert_eq!(0x17, LeBluetoothDeviceAddress::data_type());
     /// ```
@@ -268,8 +268,8 @@ impl DataType for LeBluetoothDeviceAddress {
 /// # Examples
 ///
 /// ```
-/// use ble_data_class::data_types::le_bluetooth_device_address::*;
-/// use ble_data_class::data_types::data_type::DataType;
+/// use ble_data_struct::data_types::le_bluetooth_device_address::*;
+/// use ble_data_struct::data_types::data_type::DataType;
 ///
 /// assert!(is_le_bluetooth_device_address(0x17));
 /// assert!(!is_le_bluetooth_device_address(0x00));
