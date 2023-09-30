@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Channel Map Update Indication.
+#[derive(Debug)]
 pub struct ChannelMapUpdateIndication {
     /// data length
     pub length: u8,
@@ -15,7 +16,7 @@ pub struct ChannelMapUpdateIndication {
 }
 
 impl ChannelMapUpdateIndication {
-    /// Create [ChannelMapUpdateIndication] from Parameters.
+    /// Create [`ChannelMapUpdateIndication`] from Parameters.
     ///
     /// # Examples
     ///
@@ -39,8 +40,11 @@ impl ChannelMapUpdateIndication {
             instant,
         }
     }
+}
 
-    /// Create [ChannelMapUpdateIndication] from `Vec<u8>` with offset.
+impl TryFrom<&Vec<u8>> for ChannelMapUpdateIndication {
+
+    type Error = String;    /// Create [`ChannelMapUpdateIndication`] from `Vec<u8>`.
     ///
     /// # Examples
     ///
@@ -49,55 +53,22 @@ impl ChannelMapUpdateIndication {
     ///
     /// let mut ch_m = [0u8; 5].to_vec();
     ///
-    /// for i in 0..37 {
-    ///     ch_m[i / 8] = 0b1 << (i % 8);
-    ///
-    ///     let length = 8;
-    ///     let mut data: Vec<u8> = Vec::new();
-    ///     data.push(length);
-    ///     data.push(ChannelMapUpdateIndication::data_type());
-    ///     data.append(&mut ch_m.clone());
-    ///     data.append(&mut (i as u16).to_le_bytes().to_vec());
-    ///
-    ///     let result = ChannelMapUpdateIndication::from_with_offset(&data, 0);
-    ///     assert_eq!(length, result.length);
-    ///     let bool_vec: Vec<bool> = ch_m
-    ///         .clone()
-    ///         .iter()
-    ///         .flat_map(|x| {
-    ///             let mut data: Vec<bool> = Vec::new();
-    ///             data.push((x & 0b0000_0001) != 0);
-    ///             data.push((x & 0b0000_0010) != 0);
-    ///             data.push((x & 0b0000_0100) != 0);
-    ///             data.push((x & 0b0000_1000) != 0);
-    ///             data.push((x & 0b0001_0000) != 0);
-    ///             data.push((x & 0b0010_0000) != 0);
-    ///             data.push((x & 0b0100_0000) != 0);
-    ///             data.push((x & 0b1000_0000) != 0);
-    ///             data
-    ///         })
-    ///         .collect();
-    ///
-    ///     assert_eq!(bool_vec, result.ch_m);
-    ///
-    ///     ch_m[i / 8] = 0u8;
-    /// }
-    ///
     /// let mut ch_m = [0u8; 5].to_vec();
-    ///
+    /// 
     /// for i in 0..37 {
     ///     ch_m[i / 8] = 0b1 << (i % 8);
-    ///
+    /// 
     ///     let length = 8;
     ///     let mut data: Vec<u8> = Vec::new();
-    ///     data.push(0);
     ///     data.push(length);
     ///     data.push(ChannelMapUpdateIndication::data_type());
     ///     data.append(&mut ch_m.clone());
     ///     data.append(&mut (i as u16).to_le_bytes().to_vec());
-    ///
-    ///     let result = ChannelMapUpdateIndication::from_with_offset(&data, 1);
-    ///     assert_eq!(length, result.length);
+    /// 
+    ///     let result = ChannelMapUpdateIndication::try_from(&data);
+    ///     assert!(result.is_ok());
+    ///     let data_type = result.unwrap();
+    ///     assert_eq!(length, data_type.length);
     ///     let bool_vec: Vec<bool> = ch_m
     ///         .clone()
     ///         .iter()
@@ -114,16 +85,27 @@ impl ChannelMapUpdateIndication {
     ///             data
     ///         })
     ///         .collect();
-    ///
-    ///     assert_eq!(bool_vec, result.ch_m);
-    ///
+    /// 
+    ///     assert_eq!(bool_vec, data_type.ch_m);
+    /// 
     ///     ch_m[i / 8] = 0u8;
     /// }
+    /// 
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = ChannelMapUpdateIndication::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        let ch_m: Vec<bool> = data[2..length as usize - 1]
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 9 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        let ch_m: Vec<bool> = value[2..length as usize - 1]
             .iter()
             .flat_map(|x| {
                 let mut data: Vec<bool> = Vec::new();
@@ -138,67 +120,16 @@ impl ChannelMapUpdateIndication {
                 data
             })
             .collect();
-        Self {
+        Ok(Self {
             length,
             ch_m: ch_m.to_vec(),
-            instant: u16::from_le_bytes(data[7..9].try_into().unwrap()),
-        }
-    }
-}
-
-impl From<&Vec<u8>> for ChannelMapUpdateIndication {
-    /// Create [ChannelMapUpdateIndication] from `Vec<u8>`.
-    ///
-    /// [`ChannelMapUpdateIndication::from_with_offset`]
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type::DataType};
-    ///
-    /// let mut ch_m = [0u8; 5].to_vec();
-    ///
-    /// for i in 0..37 {
-    ///     ch_m[i / 8] = 0b1 << (i % 8);
-    ///
-    ///     let length = 8;
-    ///     let mut data: Vec<u8> = Vec::new();
-    ///     data.push(length);
-    ///     data.push(ChannelMapUpdateIndication::data_type());
-    ///     data.append(&mut ch_m.clone());
-    ///     data.append(&mut (i as u16).to_le_bytes().to_vec());
-    ///
-    ///     let result = ChannelMapUpdateIndication::from(&data);
-    ///     assert_eq!(length, result.length);
-    ///     let bool_vec: Vec<bool> = ch_m
-    ///         .clone()
-    ///         .iter()
-    ///         .flat_map(|x| {
-    ///             let mut data: Vec<bool> = Vec::new();
-    ///             data.push((x & 0b0000_0001) != 0);
-    ///             data.push((x & 0b0000_0010) != 0);
-    ///             data.push((x & 0b0000_0100) != 0);
-    ///             data.push((x & 0b0000_1000) != 0);
-    ///             data.push((x & 0b0001_0000) != 0);
-    ///             data.push((x & 0b0010_0000) != 0);
-    ///             data.push((x & 0b0100_0000) != 0);
-    ///             data.push((x & 0b1000_0000) != 0);
-    ///             data
-    ///         })
-    ///         .collect();
-    ///
-    ///     assert_eq!(bool_vec, result.ch_m);
-    ///
-    ///     ch_m[i / 8] = 0u8;
-    /// }
-    /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+            instant: u16::from_le_bytes(value[7..9].try_into().unwrap()),
+        })
     }
 }
 
 impl Into<Vec<u8>> for ChannelMapUpdateIndication {
-    /// Create `Vec<u8>` from [ChannelMapUpdateIndication].
+    /// Create `Vec<u8>` from [`ChannelMapUpdateIndication`].
     ///
     /// # Examples
     ///
@@ -209,7 +140,7 @@ impl Into<Vec<u8>> for ChannelMapUpdateIndication {
     /// for i in 0..37 {
     ///     ch_m[i] = true;
     ///     let result1 = ChannelMapUpdateIndication::new(&ch_m, i as u16);
-    ///
+    /// 
     ///     let mut data: Vec<u8> = Vec::new();
     ///     data.push(8);
     ///     data.push(ChannelMapUpdateIndication::data_type());
@@ -221,14 +152,16 @@ impl Into<Vec<u8>> for ChannelMapUpdateIndication {
     ///     }
     ///     data.append(&mut u8_vec.clone().to_vec());
     ///     data.append(&mut (i as u16).to_le_bytes().to_vec());
-    ///
+    /// 
     ///     let into_data: Vec<u8> = result1.into();
     ///     assert_eq!(data, into_data);
-    ///
-    ///     let result2 = ChannelMapUpdateIndication::from(&data);
-    ///     let into_data: Vec<u8> = result2.into();
+    /// 
+    ///     let result2 = ChannelMapUpdateIndication::try_from(&data);
+    ///     assert!(result2.is_ok());
+    ///     let data_type = result2.unwrap();
+    ///     let into_data: Vec<u8> = data_type.into();
     ///     assert_eq!(data, into_data);
-    ///
+    /// 
     ///     ch_m[i] = false;
     /// }
     /// ```
@@ -296,7 +229,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let mut ch_m = [0u8; 5].to_vec();
 
         for i in 0..37 {
@@ -309,8 +242,10 @@ mod tests {
             data.append(&mut ch_m.clone());
             data.append(&mut (i as u16).to_le_bytes().to_vec());
 
-            let result = ChannelMapUpdateIndication::from_with_offset(&data, 0);
-            assert_eq!(length, result.length);
+            let result = ChannelMapUpdateIndication::try_from(&data);
+            assert!(result.is_ok());
+            let data_type = result.unwrap();
+            assert_eq!(length, data_type.length);
             let bool_vec: Vec<bool> = ch_m
                 .clone()
                 .iter()
@@ -328,86 +263,18 @@ mod tests {
                 })
                 .collect();
 
-            assert_eq!(bool_vec, result.ch_m);
+            assert_eq!(bool_vec, data_type.ch_m);
 
             ch_m[i / 8] = 0u8;
         }
 
-        let mut ch_m = [0u8; 5].to_vec();
-
-        for i in 0..37 {
-            ch_m[i / 8] = 0b1 << (i % 8);
-
-            let length = 8;
-            let mut data: Vec<u8> = Vec::new();
-            data.push(0);
-            data.push(length);
-            data.push(ChannelMapUpdateIndication::data_type());
-            data.append(&mut ch_m.clone());
-            data.append(&mut (i as u16).to_le_bytes().to_vec());
-
-            let result = ChannelMapUpdateIndication::from_with_offset(&data, 1);
-            assert_eq!(length, result.length);
-            let bool_vec: Vec<bool> = ch_m
-                .clone()
-                .iter()
-                .flat_map(|x| {
-                    let mut data: Vec<bool> = Vec::new();
-                    data.push((x & 0b0000_0001) != 0);
-                    data.push((x & 0b0000_0010) != 0);
-                    data.push((x & 0b0000_0100) != 0);
-                    data.push((x & 0b0000_1000) != 0);
-                    data.push((x & 0b0001_0000) != 0);
-                    data.push((x & 0b0010_0000) != 0);
-                    data.push((x & 0b0100_0000) != 0);
-                    data.push((x & 0b1000_0000) != 0);
-                    data
-                })
-                .collect();
-
-            assert_eq!(bool_vec, result.ch_m);
-
-            ch_m[i / 8] = 0u8;
-        }
-    }
-
-    #[test]
-    fn test_from() {
-        let mut ch_m = [0u8; 5].to_vec();
-
-        for i in 0..37 {
-            ch_m[i / 8] = 0b1 << (i % 8);
-
-            let length = 8;
-            let mut data: Vec<u8> = Vec::new();
-            data.push(length);
-            data.push(ChannelMapUpdateIndication::data_type());
-            data.append(&mut ch_m.clone());
-            data.append(&mut (i as u16).to_le_bytes().to_vec());
-
-            let result = ChannelMapUpdateIndication::from(&data);
-            assert_eq!(length, result.length);
-            let bool_vec: Vec<bool> = ch_m
-                .clone()
-                .iter()
-                .flat_map(|x| {
-                    let mut data: Vec<bool> = Vec::new();
-                    data.push((x & 0b0000_0001) != 0);
-                    data.push((x & 0b0000_0010) != 0);
-                    data.push((x & 0b0000_0100) != 0);
-                    data.push((x & 0b0000_1000) != 0);
-                    data.push((x & 0b0001_0000) != 0);
-                    data.push((x & 0b0010_0000) != 0);
-                    data.push((x & 0b0100_0000) != 0);
-                    data.push((x & 0b1000_0000) != 0);
-                    data
-                })
-                .collect();
-
-            assert_eq!(bool_vec, result.ch_m);
-
-            ch_m[i / 8] = 0u8;
-        }
+        let data: Vec<u8> = Vec::new();
+        let result = ChannelMapUpdateIndication::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -432,8 +299,10 @@ mod tests {
             let into_data: Vec<u8> = result1.into();
             assert_eq!(data, into_data);
 
-            let result2 = ChannelMapUpdateIndication::from(&data);
-            let into_data: Vec<u8> = result2.into();
+            let result2 = ChannelMapUpdateIndication::try_from(&data);
+            assert!(result2.is_ok());
+            let data_type = result2.unwrap();
+            let into_data: Vec<u8> = data_type.into();
             assert_eq!(data, into_data);
 
             ch_m[i] = false;

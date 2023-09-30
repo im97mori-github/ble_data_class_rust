@@ -6,6 +6,7 @@ use super::{
     appearance::{is_appearance, Appearance},
     big_info::{is_big_info, BigInfo},
     broadcast_code::{is_broadcast_code, BroadcastCode},
+    channel_map_update_indication::{is_channel_map_update_indication, ChannelMapUpdateIndication},
 };
 
 /// Data type parse result.
@@ -24,6 +25,9 @@ pub enum DataTypeParseResult {
 
     /// [`BroadcastCode`]'s [`TryFrom::try_from`] result.
     BroadcastCodeResult(Result<BroadcastCode, String>),
+
+    /// [`ChannelMapUpdateIndication`]'s [`TryFrom::try_from`] result.
+    ChannelMapUpdateIndicationResult(Result<ChannelMapUpdateIndication, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -164,6 +168,31 @@ impl DataTypeParseResult {
     pub fn is_broadcast_code(&self) -> bool {
         matches!(self, DataTypeParseResult::BroadcastCodeResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::ChannelMapUpdateIndicationResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, parser::DataTypeParseResult};
+    ///
+    /// let mut ch_m = [false; 37].to_vec();
+    /// for i in 0..37 {
+    ///     ch_m[i] = true;
+    ///     let data = ChannelMapUpdateIndication::new(&ch_m, i as u16).into();
+    ///     assert!(DataTypeParseResult::from(&data).is_channel_map_update_indication());
+    ///     ch_m[i] = false;
+    /// }
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_channel_map_update_indication());
+    /// ```
+    pub fn is_channel_map_update_indication(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::ChannelMapUpdateIndicationResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -199,6 +228,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::BigInfoResult(BigInfo::try_from(value))
             } else if is_broadcast_code(data_type.to_owned()) {
                 DataTypeParseResult::BroadcastCodeResult(BroadcastCode::try_from(value))
+            } else if is_channel_map_update_indication(data_type.to_owned()) {
+                DataTypeParseResult::ChannelMapUpdateIndicationResult(
+                    ChannelMapUpdateIndication::try_from(value),
+                )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -297,7 +330,8 @@ mod tests {
     use crate::data_types::{
         advertising_interval::AdvertisingInterval,
         advertising_interval_long::AdvertisingIntervalLong, appearance::Appearance,
-        big_info::BigInfo, broadcast_code::BroadcastCode, parser::DataTypeParseResult,
+        big_info::BigInfo, broadcast_code::BroadcastCode,
+        channel_map_update_indication::ChannelMapUpdateIndication, parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -396,6 +430,21 @@ mod tests {
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_broadcast_code());
     }
+
+    #[test]
+    fn test_is_channel_map_update_indication() {
+        let mut ch_m = [false; 37].to_vec();
+        for i in 0..37 {
+            ch_m[i] = true;
+            let data = ChannelMapUpdateIndication::new(&ch_m, i as u16).into();
+            assert!(DataTypeParseResult::from(&data).is_channel_map_update_indication());
+            ch_m[i] = false;
+        }
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_channel_map_update_indication());
+    }
+
     #[test]
     fn test_result_from_vec() {
         let advertising_interval = 0x01;
