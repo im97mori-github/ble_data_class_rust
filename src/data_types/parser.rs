@@ -16,7 +16,9 @@ use super::{
     },
     complete_list_of_32bit_service_uuids::{
         is_complete_list_of_32bit_service_uuids, CompleteListOf32BitServiceUuids,
-    }, complete_local_name::{CompleteLocalName, is_complete_local_name},
+    },
+    complete_local_name::{is_complete_local_name, CompleteLocalName},
+    encrypted_data::{is_encrypted_data, EncryptedData},
 };
 
 /// Data type parse result.
@@ -53,6 +55,9 @@ pub enum DataTypeParseResult {
 
     /// [`CompleteLocalName`]'s [`TryFrom::try_from`] result.
     CompleteLocalNameResult(Result<CompleteLocalName, String>),
+
+    /// [`EncryptedData`]'s [`TryFrom::try_from`] result.
+    EncryptedDataResult(Result<EncryptedData, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -318,7 +323,7 @@ impl DataTypeParseResult {
         )
     }
 
-        /// Returns `true` if the result is [`DataTypeParseResult::CompleteLocalNameResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::CompleteLocalNameResult`].
     ///
     /// # Examples
     ///
@@ -329,15 +334,33 @@ impl DataTypeParseResult {
     /// let name = "complete_local_name".to_string();
     /// let data = CompleteLocalName::new(&name).into();
     /// assert!(DataTypeParseResult::from(&data).is_complete_local_name());
-    /// 
+    ///
     /// let data: Vec<u8> = Vec::new();
     /// assert!(!DataTypeParseResult::from(&data).is_complete_local_name());
     /// ```
     pub fn is_complete_local_name(&self) -> bool {
-        matches!(
-            self,
-            DataTypeParseResult::CompleteLocalNameResult(_)
-        )
+        matches!(self, DataTypeParseResult::CompleteLocalNameResult(_))
+    }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::EncryptedDataResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, parser::DataTypeParseResult};
+    ///
+    /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
+    /// let payload = [6].to_vec();
+    /// let mic: [u8; 4] = [7, 8, 9, 10];
+    /// let data = EncryptedData::new(&randomizer, &payload, mic).into();
+    /// assert!(DataTypeParseResult::from(&data).is_encrypted_data());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_encrypted_data());
+    /// ```
+    pub fn is_encrypted_data(&self) -> bool {
+        matches!(self, DataTypeParseResult::EncryptedDataResult(_))
     }
 }
 
@@ -393,9 +416,9 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                     CompleteListOf32BitServiceUuids::try_from(value),
                 )
             } else if is_complete_local_name(data_type.to_owned()) {
-                DataTypeParseResult::CompleteLocalNameResult(
-                    CompleteLocalName::try_from(value),
-                )
+                DataTypeParseResult::CompleteLocalNameResult(CompleteLocalName::try_from(value))
+            } else if is_encrypted_data(data_type.to_owned()) {
+                DataTypeParseResult::EncryptedDataResult(EncryptedData::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -501,7 +524,8 @@ mod tests {
         complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids,
         complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids,
         complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids,
-        parser::DataTypeParseResult, complete_local_name::CompleteLocalName,
+        complete_local_name::CompleteLocalName, encrypted_data::EncryptedData,
+        parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -678,6 +702,18 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_complete_local_name());
+    }
+
+    #[test]
+    fn test_is_encrypted_data() {
+        let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
+        let payload = [6].to_vec();
+        let mic: [u8; 4] = [7, 8, 9, 10];
+        let data = EncryptedData::new(&randomizer, &payload, mic).into();
+        assert!(DataTypeParseResult::from(&data).is_encrypted_data());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_encrypted_data());
     }
 
     #[test]

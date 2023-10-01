@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Encrypted Data.
+#[derive(Debug)]
 pub struct EncryptedData {
     /// data length
     pub length: u8,
@@ -18,7 +19,7 @@ pub struct EncryptedData {
 }
 
 impl EncryptedData {
-    /// Create [EncryptedData] from Parameters.
+    /// Create [`EncryptedData`] from Parameters.
     ///
     /// # Examples
     ///
@@ -42,60 +43,11 @@ impl EncryptedData {
             mic: mic.clone(),
         }
     }
-
-    /// Create [EncryptedData] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, data_type::DataType};
-    ///
-    /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
-    /// let payload = [6].to_vec();
-    /// let mic: [u8; 4] = [7, 8, 9, 10];
-    /// let length = 11;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(EncryptedData::data_type());
-    /// data.append(&mut randomizer.to_vec());
-    /// data.append(&mut payload.clone());
-    /// data.append(&mut mic.to_vec());
-    ///
-    /// let result = EncryptedData::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(randomizer, result.randomizer);
-    /// assert_eq!(payload, result.payload);
-    /// assert_eq!(mic, result.mic);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(EncryptedData::data_type());
-    /// data.append(&mut randomizer.to_vec());
-    /// data.append(&mut payload.clone());
-    /// data.append(&mut mic.to_vec());
-    /// let result = EncryptedData::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(randomizer, result.randomizer);
-    /// assert_eq!(payload, result.payload);
-    /// assert_eq!(mic, result.mic);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            randomizer: data[2..7].try_into().unwrap(),
-            payload: data[7..(length - 3) as usize].to_vec(),
-            mic: data[data.len() - 4..].try_into().unwrap(),
-        }
-    }
 }
 
-impl From<&Vec<u8>> for EncryptedData {
-    /// Create [EncryptedData] from `Vec<u8>`.
-    ///
-    /// [`EncryptedData::from_with_offset`]
+impl TryFrom<&Vec<u8>> for EncryptedData {
+    type Error = String;
+    /// Create [`EncryptedData`] from `Vec<u8>`.
     ///
     /// # Examples
     ///
@@ -112,20 +64,50 @@ impl From<&Vec<u8>> for EncryptedData {
     /// data.append(&mut randomizer.to_vec());
     /// data.append(&mut payload.clone());
     /// data.append(&mut mic.to_vec());
-    ///
-    /// let result = EncryptedData::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(randomizer, result.randomizer);
-    /// assert_eq!(payload, result.payload);
-    /// assert_eq!(mic, result.mic);
+    /// 
+    /// let result = EncryptedData::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(randomizer, data_type.randomizer);
+    /// assert_eq!(payload, data_type.payload);
+    /// assert_eq!(mic, data_type.mic);
+    /// 
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = EncryptedData::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 11 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        let randomizer: [u8; 5];
+        match value[2..7].try_into() {
+            Ok(x) => randomizer = x,
+            Err(x) => return Err(x.to_string()),
+        }
+        let mic: [u8; 4];
+        match value[value.len() - 4..].try_into() {
+            Ok(x) => mic = x,
+            Err(x) => return Err(x.to_string()),
+        }
+        Ok(Self {
+            length,
+            randomizer,
+            payload: value[7..(length - 3) as usize].to_vec(),
+            mic,
+        })
     }
 }
 
 impl Into<Vec<u8>> for EncryptedData {
-    /// Create `Vec<u8>` from [EncryptedData].
+    /// Create `Vec<u8>` from [`EncryptedData`].
     ///
     /// # Examples
     ///
@@ -148,8 +130,10 @@ impl Into<Vec<u8>> for EncryptedData {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     /// 
-    /// let result2 = EncryptedData::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = EncryptedData::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -210,7 +194,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
         let payload = [6].to_vec();
         let mic: [u8; 4] = [7, 8, 9, 10];
@@ -222,44 +206,21 @@ mod tests {
         data.append(&mut payload.clone());
         data.append(&mut mic.to_vec());
 
-        let result = EncryptedData::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(randomizer, result.randomizer);
-        assert_eq!(payload, result.payload);
-        assert_eq!(mic, result.mic);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(EncryptedData::data_type());
-        data.append(&mut randomizer.to_vec());
-        data.append(&mut payload.clone());
-        data.append(&mut mic.to_vec());
-        let result = EncryptedData::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(randomizer, result.randomizer);
-        assert_eq!(payload, result.payload);
-        assert_eq!(mic, result.mic);
-    }
-
-    #[test]
-    fn test_from() {
-        let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
-        let payload = [6].to_vec();
-        let mic: [u8; 4] = [7, 8, 9, 10];
-        let length = 11;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(EncryptedData::data_type());
-        data.append(&mut randomizer.to_vec());
-        data.append(&mut payload.clone());
-        data.append(&mut mic.to_vec());
-
-        let result = EncryptedData::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(randomizer, result.randomizer);
-        assert_eq!(payload, result.payload);
-        assert_eq!(mic, result.mic);
+        let result = EncryptedData::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(randomizer, data_type.randomizer);
+        assert_eq!(payload, data_type.payload);
+        assert_eq!(mic, data_type.mic);
+        
+        let data: Vec<u8> = Vec::new();
+        let result = EncryptedData::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -280,8 +241,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = EncryptedData::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = EncryptedData::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 
