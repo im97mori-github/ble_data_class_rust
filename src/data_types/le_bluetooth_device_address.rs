@@ -3,6 +3,8 @@
 use crate::data_types::data_type::DataType;
 
 /// LE Bluetooth Device Address.
+
+#[derive(Debug)]
 pub struct LeBluetoothDeviceAddress {
     /// data length
     pub length: u8,
@@ -15,7 +17,7 @@ pub struct LeBluetoothDeviceAddress {
 }
 
 impl LeBluetoothDeviceAddress {
-    /// Create [LeBluetoothDeviceAddress] from Parameters.
+    /// Create [`LeBluetoothDeviceAddress`] from Parameters.
     ///
     /// # Examples
     ///
@@ -50,92 +52,6 @@ impl LeBluetoothDeviceAddress {
         }
     }
 
-    /// Create [LeBluetoothDeviceAddress] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
-    ///
-    /// let le_bluetooth_device_address = 0x0000060504030201u64;
-    /// let address_type = false;
-    /// let length = 8;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(LeBluetoothDeviceAddress::data_type());
-    /// data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
-    /// data.push(u8::from(address_type));
-    /// 
-    /// let result = LeBluetoothDeviceAddress::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(
-    ///     le_bluetooth_device_address,
-    ///     result.le_bluetooth_device_address
-    /// );
-    /// assert_eq!(address_type, result.address_type);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(LeBluetoothDeviceAddress::data_type());
-    /// data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
-    /// data.push(u8::from(address_type));
-    /// let result = LeBluetoothDeviceAddress::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(
-    ///     le_bluetooth_device_address,
-    ///     result.le_bluetooth_device_address
-    /// );
-    /// assert_eq!(address_type, result.address_type);
-    /// 
-    /// let le_bluetooth_device_address = 0x0000060504030201u64;
-    /// let address_type = true;
-    /// let length = 8;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(LeBluetoothDeviceAddress::data_type());
-    /// data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
-    /// data.push(u8::from(address_type));
-    /// 
-    /// let result = LeBluetoothDeviceAddress::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(
-    ///     le_bluetooth_device_address,
-    ///     result.le_bluetooth_device_address
-    /// );
-    /// assert_eq!(address_type, result.address_type);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(LeBluetoothDeviceAddress::data_type());
-    /// data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
-    /// data.push(u8::from(address_type));
-    /// let result = LeBluetoothDeviceAddress::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(
-    ///     le_bluetooth_device_address,
-    ///     result.le_bluetooth_device_address
-    /// );
-    /// assert_eq!(address_type, result.address_type);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        let mut bytes = [0x00u8; 8];
-        bytes[0] = data[2];
-        bytes[1] = data[3];
-        bytes[2] = data[4];
-        bytes[3] = data[5];
-        bytes[4] = data[6];
-        bytes[5] = data[7];
-        Self {
-            length,
-            le_bluetooth_device_address: u64::from_le_bytes(bytes),
-            address_type: data[8] & ADDRESS_TYPE != 0,
-        }
-    }
-
     /// check Address type.
     ///
     /// # Examples
@@ -158,10 +74,9 @@ impl LeBluetoothDeviceAddress {
     }
 }
 
-impl From<&Vec<u8>> for LeBluetoothDeviceAddress {
-    /// Create [LeBluetoothDeviceAddress] from `Vec<u8>`.
-    ///
-    /// [`LeBluetoothDeviceAddress::from_with_offset`]
+impl TryFrom<&Vec<u8>> for LeBluetoothDeviceAddress {
+    type Error = String;
+    /// Create [`LeBluetoothDeviceAddress`] from `Vec<u8>`.
     ///
     /// # Examples
     ///
@@ -176,15 +91,17 @@ impl From<&Vec<u8>> for LeBluetoothDeviceAddress {
     /// data.push(LeBluetoothDeviceAddress::data_type());
     /// data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
     /// data.push(u8::from(address_type));
-    /// 
-    /// let result = LeBluetoothDeviceAddress::from(&data);
-    /// assert_eq!(length, result.length);
+    ///
+    /// let result = LeBluetoothDeviceAddress::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
     /// assert_eq!(
     ///     le_bluetooth_device_address,
-    ///     result.le_bluetooth_device_address
+    ///     data_type.le_bluetooth_device_address
     /// );
-    /// assert_eq!(address_type, result.address_type);
-    /// 
+    /// assert_eq!(address_type, data_type.address_type);
+    ///
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
     /// let address_type = true;
     /// let length = 8;
@@ -193,17 +110,43 @@ impl From<&Vec<u8>> for LeBluetoothDeviceAddress {
     /// data.push(LeBluetoothDeviceAddress::data_type());
     /// data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
     /// data.push(u8::from(address_type));
-    /// 
-    /// let result = LeBluetoothDeviceAddress::from(&data);
-    /// assert_eq!(length, result.length);
+    ///
+    /// let result = LeBluetoothDeviceAddress::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
     /// assert_eq!(
     ///     le_bluetooth_device_address,
-    ///     result.le_bluetooth_device_address
+    ///     data_type.le_bluetooth_device_address
     /// );
-    /// assert_eq!(address_type, result.address_type);
+    /// assert_eq!(address_type, data_type.address_type);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = LeBluetoothDeviceAddress::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 8 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        let mut bytes = [0x00u8; 8];
+        bytes[0] = value[2];
+        bytes[1] = value[3];
+        bytes[2] = value[4];
+        bytes[3] = value[5];
+        bytes[4] = value[6];
+        bytes[5] = value[7];
+        Ok(Self {
+            length,
+            le_bluetooth_device_address: u64::from_le_bytes(bytes),
+            address_type: value[8] & ADDRESS_TYPE != 0,
+        })
     }
 }
 
@@ -213,7 +156,7 @@ impl From<&Vec<u8>> for LeBluetoothDeviceAddress {
 pub const ADDRESS_TYPE: u8 = 0b00000001;
 
 impl Into<Vec<u8>> for LeBluetoothDeviceAddress {
-    /// Create `Vec<u8>` from [LeBluetoothDeviceAddress].
+    /// Create `Vec<u8>` from [`LeBluetoothDeviceAddress`].
     ///
     /// # Examples
     ///
@@ -223,19 +166,21 @@ impl Into<Vec<u8>> for LeBluetoothDeviceAddress {
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
     /// let address_type = false;
     /// let result1 = LeBluetoothDeviceAddress::new(le_bluetooth_device_address, address_type);
-    /// 
+    ///
     /// let length = 8;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(LeBluetoothDeviceAddress::data_type());
     /// data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
     /// data.push(u8::from(address_type));
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
-    /// let result2 = LeBluetoothDeviceAddress::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    ///
+    /// let result2 = LeBluetoothDeviceAddress::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -306,71 +251,6 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
-        let le_bluetooth_device_address = 0x0000060504030201u64;
-        let address_type = false;
-        let length = 8;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(LeBluetoothDeviceAddress::data_type());
-        data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
-        data.push(u8::from(address_type));
-
-        let result = LeBluetoothDeviceAddress::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(
-            le_bluetooth_device_address,
-            result.le_bluetooth_device_address
-        );
-        assert_eq!(address_type, result.address_type);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(LeBluetoothDeviceAddress::data_type());
-        data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
-        data.push(u8::from(address_type));
-        let result = LeBluetoothDeviceAddress::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(
-            le_bluetooth_device_address,
-            result.le_bluetooth_device_address
-        );
-        assert_eq!(address_type, result.address_type);
-
-        let le_bluetooth_device_address = 0x0000060504030201u64;
-        let address_type = true;
-        let length = 8;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(LeBluetoothDeviceAddress::data_type());
-        data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
-        data.push(u8::from(address_type));
-
-        let result = LeBluetoothDeviceAddress::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(
-            le_bluetooth_device_address,
-            result.le_bluetooth_device_address
-        );
-        assert_eq!(address_type, result.address_type);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(LeBluetoothDeviceAddress::data_type());
-        data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
-        data.push(u8::from(address_type));
-        let result = LeBluetoothDeviceAddress::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(
-            le_bluetooth_device_address,
-            result.le_bluetooth_device_address
-        );
-        assert_eq!(address_type, result.address_type);
-    }
-
-    #[test]
     fn test_is_random_address() {
         let le_bluetooth_device_address = 0x0000060504030201u64;
         let address_type = false;
@@ -384,7 +264,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from() {
+    fn test_try_from() {
         let le_bluetooth_device_address = 0x0000060504030201u64;
         let address_type = false;
         let length = 8;
@@ -394,13 +274,15 @@ mod tests {
         data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
         data.push(u8::from(address_type));
 
-        let result = LeBluetoothDeviceAddress::from(&data);
-        assert_eq!(length, result.length);
+        let result = LeBluetoothDeviceAddress::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
         assert_eq!(
             le_bluetooth_device_address,
-            result.le_bluetooth_device_address
+            data_type.le_bluetooth_device_address
         );
-        assert_eq!(address_type, result.address_type);
+        assert_eq!(address_type, data_type.address_type);
 
         let le_bluetooth_device_address = 0x0000060504030201u64;
         let address_type = true;
@@ -411,13 +293,23 @@ mod tests {
         data.append(&mut le_bluetooth_device_address.clone().to_le_bytes()[..6].to_vec());
         data.push(u8::from(address_type));
 
-        let result = LeBluetoothDeviceAddress::from(&data);
-        assert_eq!(length, result.length);
+        let result = LeBluetoothDeviceAddress::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
         assert_eq!(
             le_bluetooth_device_address,
-            result.le_bluetooth_device_address
+            data_type.le_bluetooth_device_address
         );
-        assert_eq!(address_type, result.address_type);
+        assert_eq!(address_type, data_type.address_type);
+
+        let data: Vec<u8> = Vec::new();
+        let result = LeBluetoothDeviceAddress::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -436,8 +328,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = LeBluetoothDeviceAddress::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = LeBluetoothDeviceAddress::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 

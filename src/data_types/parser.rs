@@ -29,6 +29,7 @@ use super::{
     incomplete_list_of_32bit_service_uuids::{
         is_incomplete_list_of_32bit_service_uuids, IncompleteListOf32BitServiceUuids,
     },
+    le_bluetooth_device_address::{is_le_bluetooth_device_address, LeBluetoothDeviceAddress},
 };
 
 /// Data type parse result.
@@ -80,6 +81,9 @@ pub enum DataTypeParseResult {
 
     /// [`IncompleteListOf32BitServiceUuids`]'s [`TryFrom::try_from`] result.
     IncompleteListOf32BitServiceUuidsResult(Result<IncompleteListOf32BitServiceUuids, String>),
+
+    /// [`LeBluetoothDeviceAddress`]'s [`TryFrom::try_from`] result.
+    LeBluetoothDeviceAddressResult(Result<LeBluetoothDeviceAddress, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -404,7 +408,7 @@ impl DataTypeParseResult {
         matches!(self, DataTypeParseResult::FlagsResult(_))
     }
 
-    /// Returns `true` if the result is [`DataTypeParseResult::FlagsResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::IncompleteListOf128BitServiceUuidsResult`].
     ///
     /// # Examples
     ///
@@ -430,7 +434,7 @@ impl DataTypeParseResult {
         )
     }
 
-    /// Returns `true` if the result is [`DataTypeParseResult::FlagsResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::IncompleteListOf16BitServiceUuidsResult`].
     ///
     /// # Examples
     ///
@@ -456,7 +460,7 @@ impl DataTypeParseResult {
         )
     }
 
-    /// Returns `true` if the result is [`DataTypeParseResult::FlagsResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::IncompleteListOf32BitServiceUuidsResult`].
     ///
     /// # Examples
     ///
@@ -480,6 +484,26 @@ impl DataTypeParseResult {
             self,
             DataTypeParseResult::IncompleteListOf32BitServiceUuidsResult(_)
         )
+    }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::LeBluetoothDeviceAddressResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, parser::DataTypeParseResult};
+    ///
+    /// let le_bluetooth_device_address = 0x0000060504030201u64;
+    /// let address_type = false;
+    /// let data = LeBluetoothDeviceAddress::new(le_bluetooth_device_address, address_type).into();
+    /// assert!(DataTypeParseResult::from(&data).is_le_bluetooth_device_address());
+    /// 
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_le_bluetooth_device_address());
+    /// ```
+    pub fn is_le_bluetooth_device_address(&self) -> bool {
+        matches!(self, DataTypeParseResult::LeBluetoothDeviceAddressResult(_))
     }
 }
 
@@ -551,6 +575,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_incomplete_list_of_32bit_service_uuids(data_type.to_owned()) {
                 DataTypeParseResult::IncompleteListOf32BitServiceUuidsResult(
                     IncompleteListOf32BitServiceUuids::try_from(value),
+                )
+            } else if is_le_bluetooth_device_address(data_type.to_owned()) {
+                DataTypeParseResult::LeBluetoothDeviceAddressResult(
+                    LeBluetoothDeviceAddress::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -661,7 +689,7 @@ mod tests {
         incomplete_list_of_128bit_service_uuids::IncompleteListOf128BitServiceUuids,
         incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids,
         incomplete_list_of_32bit_service_uuids::IncompleteListOf32BitServiceUuids,
-        parser::DataTypeParseResult,
+        le_bluetooth_device_address::LeBluetoothDeviceAddress, parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -902,6 +930,17 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_incomplete_list_of_32bit_service_uuids());
+    }
+
+    #[test]
+    fn test_is_le_bluetooth_device_address() {
+        let le_bluetooth_device_address = 0x0000060504030201u64;
+        let address_type = false;
+        let data = LeBluetoothDeviceAddress::new(le_bluetooth_device_address, address_type).into();
+        assert!(DataTypeParseResult::from(&data).is_le_bluetooth_device_address());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_le_bluetooth_device_address());
     }
 
     #[test]
