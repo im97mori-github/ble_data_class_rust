@@ -19,6 +19,7 @@ use super::{
     },
     complete_local_name::{is_complete_local_name, CompleteLocalName},
     encrypted_data::{is_encrypted_data, EncryptedData},
+    flags::{is_flags, Flags},
 };
 
 /// Data type parse result.
@@ -58,6 +59,9 @@ pub enum DataTypeParseResult {
 
     /// [`EncryptedData`]'s [`TryFrom::try_from`] result.
     EncryptedDataResult(Result<EncryptedData, String>),
+
+    /// [`Flags`]'s [`TryFrom::try_from`] result.
+    FlagsResult(Result<Flags, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -362,6 +366,25 @@ impl DataTypeParseResult {
     pub fn is_encrypted_data(&self) -> bool {
         matches!(self, DataTypeParseResult::EncryptedDataResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::FlagsResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{flags::Flags, parser::DataTypeParseResult};
+    ///
+    /// let flags = [true, false, false, false, false, false, false, false].to_vec();
+    /// let data = Flags::new(&flags).into();
+    /// assert!(DataTypeParseResult::from(&data).is_flags());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_flags());
+    /// ```
+    pub fn is_flags(&self) -> bool {
+        matches!(self, DataTypeParseResult::FlagsResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -419,6 +442,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::CompleteLocalNameResult(CompleteLocalName::try_from(value))
             } else if is_encrypted_data(data_type.to_owned()) {
                 DataTypeParseResult::EncryptedDataResult(EncryptedData::try_from(value))
+            } else if is_flags(data_type.to_owned()) {
+                DataTypeParseResult::FlagsResult(Flags::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -524,7 +549,7 @@ mod tests {
         complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids,
         complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids,
         complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids,
-        complete_local_name::CompleteLocalName, encrypted_data::EncryptedData,
+        complete_local_name::CompleteLocalName, encrypted_data::EncryptedData, flags::Flags,
         parser::DataTypeParseResult,
     };
 
@@ -714,6 +739,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_encrypted_data());
+    }
+
+    #[test]
+    fn test_is_flags() {
+        let flags = [true, false, false, false, false, false, false, false].to_vec();
+        let data = Flags::new(&flags).into();
+        assert!(DataTypeParseResult::from(&data).is_flags());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_flags());
     }
 
     #[test]
