@@ -8,6 +8,9 @@ use super::{
     broadcast_code::{is_broadcast_code, BroadcastCode},
     channel_map_update_indication::{is_channel_map_update_indication, ChannelMapUpdateIndication},
     class_of_device::{is_class_of_device, ClassOfDevice},
+    complete_list_of_128bit_service_uuids::{
+        is_complete_list_of_128bit_service_uuids, CompleteListOf128BitServiceUuids,
+    },
 };
 
 /// Data type parse result.
@@ -32,6 +35,9 @@ pub enum DataTypeParseResult {
 
     /// [`ClassOfDevice`]'s [`TryFrom::try_from`] result.
     ClassOfDeviceResult(Result<ClassOfDevice, String>),
+
+    /// [`CompleteListOf128BitServiceUuids`]'s [`TryFrom::try_from`] result.
+    CompleteListOf128BitServiceUuidsResult(Result<CompleteListOf128BitServiceUuids, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -218,6 +224,32 @@ impl DataTypeParseResult {
     pub fn is_class_of_device(&self) -> bool {
         matches!(self, DataTypeParseResult::ClassOfDeviceResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::CompleteListOf128BitServiceUuidsResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids, parser::DataTypeParseResult};
+    ///
+    /// let uuids: Vec<Uuid> = [
+    ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+    ///     uuid!("00000002-0000-1000-8000-00805F9B34FB"),
+    /// ]
+    /// .to_vec();
+    /// let data = CompleteListOf128BitServiceUuids::new(&uuids).into();
+    /// assert!(DataTypeParseResult::from(&data).is_complete_list_of_128bit_service_uuids());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_complete_list_of_128bit_service_uuids());
+    /// ```
+    pub fn is_complete_list_of_128bit_service_uuids(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::CompleteListOf128BitServiceUuidsResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -259,6 +291,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 )
             } else if is_class_of_device(data_type.to_owned()) {
                 DataTypeParseResult::ClassOfDeviceResult(ClassOfDevice::try_from(value))
+            } else if is_complete_list_of_128bit_service_uuids(data_type.to_owned()) {
+                DataTypeParseResult::CompleteListOf128BitServiceUuidsResult(
+                    CompleteListOf128BitServiceUuids::try_from(value),
+                )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -354,11 +390,14 @@ impl From<&Vec<u8>> for DataTypeParseResults {
 
 #[cfg(test)]
 mod tests {
+    use uuid::{uuid, Uuid};
+
     use crate::data_types::{
         advertising_interval::AdvertisingInterval,
         advertising_interval_long::AdvertisingIntervalLong, appearance::Appearance,
         big_info::BigInfo, broadcast_code::BroadcastCode,
         channel_map_update_indication::ChannelMapUpdateIndication, class_of_device::ClassOfDevice,
+        complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids,
         parser::DataTypeParseResult,
     };
 
@@ -484,6 +523,20 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_class_of_device());
+    }
+
+    #[test]
+    fn test_is_complete_list_of_128bit_service_uuids() {
+        let uuids: Vec<Uuid> = [
+            uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+            uuid!("00000002-0000-1000-8000-00805F9B34FB"),
+        ]
+        .to_vec();
+        let data = CompleteListOf128BitServiceUuids::new(&uuids).into();
+        assert!(DataTypeParseResult::from(&data).is_complete_list_of_128bit_service_uuids());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_complete_list_of_128bit_service_uuids());
     }
 
     #[test]
