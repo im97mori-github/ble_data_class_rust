@@ -7,6 +7,7 @@ use super::{
     big_info::{is_big_info, BigInfo},
     broadcast_code::{is_broadcast_code, BroadcastCode},
     channel_map_update_indication::{is_channel_map_update_indication, ChannelMapUpdateIndication},
+    class_of_device::{is_class_of_device, ClassOfDevice},
 };
 
 /// Data type parse result.
@@ -28,6 +29,9 @@ pub enum DataTypeParseResult {
 
     /// [`ChannelMapUpdateIndication`]'s [`TryFrom::try_from`] result.
     ChannelMapUpdateIndicationResult(Result<ChannelMapUpdateIndication, String>),
+
+    /// [`ClassOfDevice`]'s [`TryFrom::try_from`] result.
+    ClassOfDeviceResult(Result<ClassOfDevice, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -193,6 +197,27 @@ impl DataTypeParseResult {
             DataTypeParseResult::ChannelMapUpdateIndicationResult(_)
         )
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::ClassOfDeviceResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{class_of_device::ClassOfDevice, parser::DataTypeParseResult};
+    ///
+    /// let major_service_classes = 0b10000000_00000000_00000000;
+    /// let major_device_class = 0b00000000_00000001_00000000;
+    /// let minor_device_class = 0b00000000_00000000_00000100;
+    /// let class_of_device = major_service_classes | major_device_class | minor_device_class;
+    /// let data = ClassOfDevice::new(class_of_device).into();
+    /// assert!(DataTypeParseResult::from(&data).is_class_of_device());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_class_of_device());
+    /// ```
+    pub fn is_class_of_device(&self) -> bool {
+        matches!(self, DataTypeParseResult::ClassOfDeviceResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -232,6 +257,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::ChannelMapUpdateIndicationResult(
                     ChannelMapUpdateIndication::try_from(value),
                 )
+            } else if is_class_of_device(data_type.to_owned()) {
+                DataTypeParseResult::ClassOfDeviceResult(ClassOfDevice::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -331,7 +358,8 @@ mod tests {
         advertising_interval::AdvertisingInterval,
         advertising_interval_long::AdvertisingIntervalLong, appearance::Appearance,
         big_info::BigInfo, broadcast_code::BroadcastCode,
-        channel_map_update_indication::ChannelMapUpdateIndication, parser::DataTypeParseResult,
+        channel_map_update_indication::ChannelMapUpdateIndication, class_of_device::ClassOfDevice,
+        parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -443,6 +471,19 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_channel_map_update_indication());
+    }
+
+    #[test]
+    fn test_is_class_of_device() {
+        let major_service_classes = 0b10000000_00000000_00000000;
+        let major_device_class = 0b00000000_00000001_00000000;
+        let minor_device_class = 0b00000000_00000000_00000100;
+        let class_of_device = major_service_classes | major_device_class | minor_device_class;
+        let data = ClassOfDevice::new(class_of_device).into();
+        assert!(DataTypeParseResult::from(&data).is_class_of_device());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_class_of_device());
     }
 
     #[test]
