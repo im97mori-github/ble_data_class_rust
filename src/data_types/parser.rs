@@ -16,7 +16,7 @@ use super::{
     },
     complete_list_of_32bit_service_uuids::{
         is_complete_list_of_32bit_service_uuids, CompleteListOf32BitServiceUuids,
-    },
+    }, complete_local_name::{CompleteLocalName, is_complete_local_name},
 };
 
 /// Data type parse result.
@@ -50,6 +50,9 @@ pub enum DataTypeParseResult {
 
     /// [`CompleteListOf32BitServiceUuids`]'s [`TryFrom::try_from`] result.
     CompleteListOf32BitServiceUuidsResult(Result<CompleteListOf32BitServiceUuids, String>),
+
+    /// [`CompleteLocalName`]'s [`TryFrom::try_from`] result.
+    CompleteLocalNameResult(Result<CompleteLocalName, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -304,7 +307,7 @@ impl DataTypeParseResult {
     /// .to_vec();
     /// let data = CompleteListOf32BitServiceUuids::new(&uuids).into();
     /// assert!(DataTypeParseResult::from(&data).is_complete_list_of_32bit_service_uuids());
-    /// 
+    ///
     /// let data: Vec<u8> = Vec::new();
     /// assert!(!DataTypeParseResult::from(&data).is_complete_list_of_32bit_service_uuids());
     /// ```
@@ -312,6 +315,28 @@ impl DataTypeParseResult {
         matches!(
             self,
             DataTypeParseResult::CompleteListOf32BitServiceUuidsResult(_)
+        )
+    }
+
+        /// Returns `true` if the result is [`DataTypeParseResult::CompleteLocalNameResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, parser::DataTypeParseResult};
+    ///
+    /// let name = "complete_local_name".to_string();
+    /// let data = CompleteLocalName::new(&name).into();
+    /// assert!(DataTypeParseResult::from(&data).is_complete_local_name());
+    /// 
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_complete_local_name());
+    /// ```
+    pub fn is_complete_local_name(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::CompleteLocalNameResult(_)
         )
     }
 }
@@ -366,6 +391,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_complete_list_of_32bit_service_uuids(data_type.to_owned()) {
                 DataTypeParseResult::CompleteListOf32BitServiceUuidsResult(
                     CompleteListOf32BitServiceUuids::try_from(value),
+                )
+            } else if is_complete_local_name(data_type.to_owned()) {
+                DataTypeParseResult::CompleteLocalNameResult(
+                    CompleteLocalName::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -472,7 +501,7 @@ mod tests {
         complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids,
         complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids,
         complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids,
-        parser::DataTypeParseResult,
+        parser::DataTypeParseResult, complete_local_name::CompleteLocalName,
     };
 
     use super::DataTypeParseResults;
@@ -639,6 +668,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_complete_list_of_32bit_service_uuids());
+    }
+
+    #[test]
+    fn test_is_complete_local_name() {
+        let name = "complete_local_name".to_string();
+        let data = CompleteLocalName::new(&name).into();
+        assert!(DataTypeParseResult::from(&data).is_complete_local_name());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_complete_local_name());
     }
 
     #[test]

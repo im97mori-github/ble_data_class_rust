@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Complete Local Name.
+#[derive(Debug)]
 pub struct CompleteLocalName {
     /// data length
     pub length: u8,
@@ -12,7 +13,7 @@ pub struct CompleteLocalName {
 }
 
 impl CompleteLocalName {
-    /// Create [CompleteLocalName] from `utf8`.
+    /// Create [`CompleteLocalName`] from `utf8`.
     ///
     /// # Examples
     ///
@@ -30,49 +31,11 @@ impl CompleteLocalName {
             complete_local_name: complete_local_name.to_string(),
         }
     }
-
-    /// Create [CompleteLocalName] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, data_type::DataType};
-    ///
-    /// let name = "complete_local_name".to_string();
-    /// let length = name.as_bytes().len() as u8 + 1;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(CompleteLocalName::data_type());
-    /// data.append(&mut name.to_string().into_bytes());
-    ///
-    /// let result = CompleteLocalName::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(name, result.complete_local_name);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(CompleteLocalName::data_type());
-    /// data.append(&mut name.to_string().into_bytes());
-    /// let result = CompleteLocalName::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(name, result.complete_local_name);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            complete_local_name: String::from_utf8(data[2..1 + usize::from(length)].to_vec())
-                .unwrap(),
-        }
-    }
 }
 
-impl From<&Vec<u8>> for CompleteLocalName {
-    /// Create [CompleteLocalName] from `Vec<u8>`.
-    ///
-    /// [`CompleteLocalName::from_with_offset`]
+impl TryFrom<&Vec<u8>> for CompleteLocalName {
+    type Error = String;
+    /// Create [`CompleteLocalName`] from `Vec<u8>`.
     ///
     /// # Examples
     ///
@@ -85,17 +48,37 @@ impl From<&Vec<u8>> for CompleteLocalName {
     /// data.push(length);
     /// data.push(CompleteLocalName::data_type());
     /// data.append(&mut name.to_string().into_bytes());
-    /// let result = CompleteLocalName::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(name, result.complete_local_name);
+    ///
+    /// let result = CompleteLocalName::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(name, data_type.complete_local_name);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = CompleteLocalName::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 2 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            complete_local_name: String::from_utf8(value[2..1 + usize::from(length)].to_vec())
+                .unwrap(),
+        })
     }
 }
 
 impl Into<Vec<u8>> for CompleteLocalName {
-    /// Create `Vec<u8>` from [CompleteLocalName].
+    /// Create `Vec<u8>` from [`CompleteLocalName`].
     ///
     /// # Examples
     ///
@@ -111,6 +94,12 @@ impl Into<Vec<u8>> for CompleteLocalName {
     /// data.append(&mut name.to_string().into_bytes());
     ///
     /// let into_data: Vec<u8> = result1.into();
+    /// assert_eq!(data, into_data);
+    ///
+    /// let result2 = CompleteLocalName::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -165,7 +154,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let name = "complete_local_name".to_string();
         let length = name.as_bytes().len() as u8 + 1;
         let mut data: Vec<u8> = Vec::new();
@@ -173,31 +162,19 @@ mod tests {
         data.push(CompleteLocalName::data_type());
         data.append(&mut name.to_string().into_bytes());
 
-        let result = CompleteLocalName::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(name, result.complete_local_name);
+        let result = CompleteLocalName::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(name, data_type.complete_local_name);
 
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(CompleteLocalName::data_type());
-        data.append(&mut name.to_string().into_bytes());
-        let result = CompleteLocalName::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(name, result.complete_local_name);
-    }
-
-    #[test]
-    fn test_from() {
-        let name = "complete_local_name".to_string();
-        let length = name.as_bytes().len() as u8 + 1;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(CompleteLocalName::data_type());
-        data.append(&mut name.to_string().into_bytes());
-        let result = CompleteLocalName::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(name, result.complete_local_name);
+        let data: Vec<u8> = Vec::new();
+        let result = CompleteLocalName::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -213,8 +190,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = CompleteLocalName::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = CompleteLocalName::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 
