@@ -11,6 +11,9 @@ use super::{
     complete_list_of_128bit_service_uuids::{
         is_complete_list_of_128bit_service_uuids, CompleteListOf128BitServiceUuids,
     },
+    complete_list_of_16bit_service_uuids::{
+        is_complete_list_of_16bit_service_uuids, CompleteListOf16BitServiceUuids,
+    },
 };
 
 /// Data type parse result.
@@ -38,6 +41,9 @@ pub enum DataTypeParseResult {
 
     /// [`CompleteListOf128BitServiceUuids`]'s [`TryFrom::try_from`] result.
     CompleteListOf128BitServiceUuidsResult(Result<CompleteListOf128BitServiceUuids, String>),
+
+    /// [`CompleteListOf16BitServiceUuids`]'s [`TryFrom::try_from`] result.
+    CompleteListOf16BitServiceUuidsResult(Result<CompleteListOf16BitServiceUuids, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -250,6 +256,32 @@ impl DataTypeParseResult {
             DataTypeParseResult::CompleteListOf128BitServiceUuidsResult(_)
         )
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::CompleteListOf16BitServiceUuidsResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids, parser::DataTypeParseResult};
+    ///
+    /// let uuids: Vec<Uuid> = [
+    ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+    ///     uuid!("00000002-0000-1000-8000-00805F9B34FB"),
+    /// ]
+    /// .to_vec();
+    /// let data = CompleteListOf16BitServiceUuids::new(&uuids).into();
+    /// assert!(DataTypeParseResult::from(&data).is_complete_list_of_16bit_service_uuids());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_complete_list_of_16bit_service_uuids());
+    /// ```
+    pub fn is_complete_list_of_16bit_service_uuids(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::CompleteListOf16BitServiceUuidsResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -294,6 +326,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_complete_list_of_128bit_service_uuids(data_type.to_owned()) {
                 DataTypeParseResult::CompleteListOf128BitServiceUuidsResult(
                     CompleteListOf128BitServiceUuids::try_from(value),
+                )
+            } else if is_complete_list_of_16bit_service_uuids(data_type.to_owned()) {
+                DataTypeParseResult::CompleteListOf16BitServiceUuidsResult(
+                    CompleteListOf16BitServiceUuids::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -398,6 +434,7 @@ mod tests {
         big_info::BigInfo, broadcast_code::BroadcastCode,
         channel_map_update_indication::ChannelMapUpdateIndication, class_of_device::ClassOfDevice,
         complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids,
+        complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids,
         parser::DataTypeParseResult,
     };
 
@@ -537,6 +574,20 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_complete_list_of_128bit_service_uuids());
+    }
+
+    #[test]
+    fn test_is_complete_list_of_16bit_service_uuids() {
+        let uuids: Vec<Uuid> = [
+            uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+            uuid!("00000002-0000-1000-8000-00805F9B34FB"),
+        ]
+        .to_vec();
+        let data = CompleteListOf16BitServiceUuids::new(&uuids).into();
+        assert!(DataTypeParseResult::from(&data).is_complete_list_of_16bit_service_uuids());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_complete_list_of_16bit_service_uuids());
     }
 
     #[test]

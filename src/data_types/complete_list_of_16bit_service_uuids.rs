@@ -5,6 +5,7 @@ use uuid::Uuid;
 use crate::{data_types::data_type::DataType, BASE_UUID};
 
 /// Complete List of 16-bit Service Class UUIDs.
+#[derive(Debug)]
 pub struct CompleteListOf16BitServiceUuids {
     /// data length
     pub length: u8,
@@ -14,7 +15,7 @@ pub struct CompleteListOf16BitServiceUuids {
 }
 
 impl CompleteListOf16BitServiceUuids {
-    /// Create [CompleteListOf16BitServiceUuids] from [`Vec<Uuid>`].
+    /// Create [`CompleteListOf16BitServiceUuids`] from [`Vec<Uuid>`].
     ///
     /// # Examples
     ///
@@ -37,8 +38,11 @@ impl CompleteListOf16BitServiceUuids {
             uuids: uuids.clone(),
         }
     }
+}
 
-    /// Create [CompleteListOf16BitServiceUuids] from `Vec<u8>` with offset.
+impl TryFrom<&Vec<u8>> for CompleteListOf16BitServiceUuids {
+    type Error = String;
+    /// Create [`CompleteListOf16BitServiceUuids`] from `Vec<u8>`.
     ///
     /// # Examples
     ///
@@ -61,25 +65,21 @@ impl CompleteListOf16BitServiceUuids {
     /// data.push(CompleteListOf16BitServiceUuids::data_type());
     /// data.append(&mut uuid_bytes.clone());
     ///
-    /// let result = CompleteListOf16BitServiceUuids::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(uuids, result.uuids);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(CompleteListOf16BitServiceUuids::data_type());
-    /// data.append(&mut uuid_bytes.clone());
-    /// let result = CompleteListOf16BitServiceUuids::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(uuids, result.uuids);
+    /// let result = CompleteListOf16BitServiceUuids::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(uuids, data_type.uuids);
     /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 4 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
             length,
-            uuids: data[2..2 + length as usize - 1]
+            uuids: value[2..2 + length as usize - 1]
                 .windows(2)
                 .step_by(2)
                 .map(|w| {
@@ -89,14 +89,12 @@ impl CompleteListOf16BitServiceUuids {
                     Uuid::from_bytes_le(bytes)
                 })
                 .collect(),
-        }
+        })
     }
 }
 
-impl From<&Vec<u8>> for CompleteListOf16BitServiceUuids {
-    /// Create [CompleteListOf16BitServiceUuids] from `Vec<u8>`.
-    ///
-    /// [`CompleteListOf16BitServiceUuids::from_with_offset`]
+impl Into<Vec<u8>> for CompleteListOf16BitServiceUuids {
+    /// Create `Vec<u8>` from [`CompleteListOf16BitServiceUuids`].
     ///
     /// # Examples
     ///
@@ -113,38 +111,7 @@ impl From<&Vec<u8>> for CompleteListOf16BitServiceUuids {
     ///         Uuid::from_fields(d1 | ((f[0] as u32) << 0) | ((f[1] as u32) << 8), d2, d3, d4)
     ///     })
     ///     .collect();
-    /// let length = uuid_bytes.len() as u8 + 1;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(CompleteListOf16BitServiceUuids::data_type());
-    /// data.append(&mut uuid_bytes.clone());
-    ///
-    /// let result = CompleteListOf16BitServiceUuids::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(uuids, result.uuids);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(CompleteListOf16BitServiceUuids::data_type());
-    /// data.append(&mut uuid_bytes.clone());
-    /// let result = CompleteListOf16BitServiceUuids::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(uuids, result.uuids);
-    /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
-    }
-}
-
-impl Into<Vec<u8>> for CompleteListOf16BitServiceUuids {
-    /// Create `Vec<u8>` from [CompleteListOf16BitServiceUuids].
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::{BASE_UUID, data_types::{complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids, data_type::DataType}};
-    /// use uuid::{uuid, Uuid};
+    /// let result1 = CompleteListOf16BitServiceUuids::new(&uuids);
     ///
     /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
     /// let uuids: Vec<Uuid> = uuid_bytes
@@ -166,8 +133,10 @@ impl Into<Vec<u8>> for CompleteListOf16BitServiceUuids {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     ///
-    /// let result2 = CompleteListOf16BitServiceUuids::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = CompleteListOf16BitServiceUuids::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -238,7 +207,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
         let uuids: Vec<Uuid> = uuid_bytes
             .windows(2)
@@ -254,40 +223,11 @@ mod tests {
         data.push(CompleteListOf16BitServiceUuids::data_type());
         data.append(&mut uuid_bytes.clone());
 
-        let result = CompleteListOf16BitServiceUuids::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(uuids, result.uuids);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(CompleteListOf16BitServiceUuids::data_type());
-        data.append(&mut uuid_bytes.clone());
-        let result = CompleteListOf16BitServiceUuids::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(uuids, result.uuids);
-    }
-
-    #[test]
-    fn test_from() {
-        let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
-        let uuids: Vec<Uuid> = uuid_bytes
-            .windows(2)
-            .step_by(2)
-            .map(|f| {
-                let (d1, d2, d3, d4) = BASE_UUID.as_fields();
-                Uuid::from_fields(d1 | ((f[0] as u32) << 0) | ((f[1] as u32) << 8), d2, d3, d4)
-            })
-            .collect();
-        let length = uuid_bytes.len() as u8 + 1;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(CompleteListOf16BitServiceUuids::data_type());
-        data.append(&mut uuid_bytes.clone());
-
-        let result = CompleteListOf16BitServiceUuids::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(uuids, result.uuids);
+        let result = CompleteListOf16BitServiceUuids::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(uuids, data_type.uuids);
     }
 
     #[test]
@@ -312,8 +252,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = CompleteListOf16BitServiceUuids::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = CompleteListOf16BitServiceUuids::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 
