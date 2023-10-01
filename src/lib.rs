@@ -10,7 +10,7 @@ pub mod data_types {
     pub mod class_of_device;
     pub mod complete_list_of_128bit_service_uuids;
     pub mod complete_list_of_16bit_service_uuids;
-    // pub mod complete_list_of_32bit_service_uuids;
+    pub mod complete_list_of_32bit_service_uuids;
     // pub mod complete_local_name;
     // pub mod encrypted_data;
     // pub mod flags;
