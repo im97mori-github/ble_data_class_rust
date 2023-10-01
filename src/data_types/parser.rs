@@ -30,6 +30,7 @@ use super::{
         is_incomplete_list_of_32bit_service_uuids, IncompleteListOf32BitServiceUuids,
     },
     le_bluetooth_device_address::{is_le_bluetooth_device_address, LeBluetoothDeviceAddress},
+    le_role::{is_le_role, LeRole},
 };
 
 /// Data type parse result.
@@ -84,6 +85,9 @@ pub enum DataTypeParseResult {
 
     /// [`LeBluetoothDeviceAddress`]'s [`TryFrom::try_from`] result.
     LeBluetoothDeviceAddressResult(Result<LeBluetoothDeviceAddress, String>),
+
+    /// [`LeRole`]'s [`TryFrom::try_from`] result.
+    LeRoleResult(Result<LeRole, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -498,12 +502,31 @@ impl DataTypeParseResult {
     /// let address_type = false;
     /// let data = LeBluetoothDeviceAddress::new(le_bluetooth_device_address, address_type).into();
     /// assert!(DataTypeParseResult::from(&data).is_le_bluetooth_device_address());
-    /// 
+    ///
     /// let data: Vec<u8> = Vec::new();
     /// assert!(!DataTypeParseResult::from(&data).is_le_bluetooth_device_address());
     /// ```
     pub fn is_le_bluetooth_device_address(&self) -> bool {
         matches!(self, DataTypeParseResult::LeBluetoothDeviceAddressResult(_))
+    }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::LeRoleResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{le_role::*, parser::DataTypeParseResult};
+    ///
+    /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
+    /// let data = LeRole::new(le_role).into();
+    /// assert!(DataTypeParseResult::from(&data).is_le_role());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_le_role());
+    /// ```
+    pub fn is_le_role(&self) -> bool {
+        matches!(self, DataTypeParseResult::LeRoleResult(_))
     }
 }
 
@@ -580,6 +603,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::LeBluetoothDeviceAddressResult(
                     LeBluetoothDeviceAddress::try_from(value),
                 )
+            } else if is_le_role(data_type.to_owned()) {
+                DataTypeParseResult::LeRoleResult(LeRole::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -679,17 +704,24 @@ mod tests {
 
     use crate::data_types::{
         advertising_interval::AdvertisingInterval,
-        advertising_interval_long::AdvertisingIntervalLong, appearance::Appearance,
-        big_info::BigInfo, broadcast_code::BroadcastCode,
-        channel_map_update_indication::ChannelMapUpdateIndication, class_of_device::ClassOfDevice,
+        advertising_interval_long::AdvertisingIntervalLong,
+        appearance::Appearance,
+        big_info::BigInfo,
+        broadcast_code::BroadcastCode,
+        channel_map_update_indication::ChannelMapUpdateIndication,
+        class_of_device::ClassOfDevice,
         complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids,
         complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids,
         complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids,
-        complete_local_name::CompleteLocalName, encrypted_data::EncryptedData, flags::Flags,
+        complete_local_name::CompleteLocalName,
+        encrypted_data::EncryptedData,
+        flags::Flags,
         incomplete_list_of_128bit_service_uuids::IncompleteListOf128BitServiceUuids,
         incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids,
         incomplete_list_of_32bit_service_uuids::IncompleteListOf32BitServiceUuids,
-        le_bluetooth_device_address::LeBluetoothDeviceAddress, parser::DataTypeParseResult,
+        le_bluetooth_device_address::LeBluetoothDeviceAddress,
+        le_role::{LeRole, ONLY_PERIPHERAL_ROLE_SUPPORTED},
+        parser::DataTypeParseResult,
     };
 
     use super::DataTypeParseResults;
@@ -941,6 +973,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_le_bluetooth_device_address());
+    }
+
+    #[test]
+    fn test_is_le_role() {
+        let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
+        let data = LeRole::new(le_role).into();
+        assert!(DataTypeParseResult::from(&data).is_le_role());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_le_role());
     }
 
     #[test]

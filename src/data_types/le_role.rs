@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// LE Role.
+#[derive(Debug)]
 pub struct LeRole {
     /// data length
     pub length: u8,
@@ -41,106 +42,6 @@ impl LeRole {
     /// ```
     pub fn new(le_role: u8) -> Self {
         Self { length: 2, le_role }
-    }
-
-    /// Create [LeRole] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{le_role::*, data_type::DataType};
-    ///
-    /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
-    /// let length = 2;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(LeRole::data_type());
-    /// data.push(le_role);
-    ///
-    /// let result = LeRole::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(LeRole::data_type());
-    /// data.push(le_role);
-    /// let result = LeRole::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
-    ///
-    /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
-    /// let length = 2;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(LeRole::data_type());
-    /// data.push(le_role);
-    ///
-    /// let result = LeRole::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(LeRole::data_type());
-    /// data.push(le_role);
-    /// let result = LeRole::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
-    ///
-    /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
-    /// let length = 2;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(LeRole::data_type());
-    /// data.push(le_role);
-    ///
-    /// let result = LeRole::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(LeRole::data_type());
-    /// data.push(le_role);
-    /// let result = LeRole::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
-    ///
-    /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
-    /// let length = 2;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(LeRole::data_type());
-    /// data.push(le_role);
-    ///
-    /// let result = LeRole::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(LeRole::data_type());
-    /// data.push(le_role);
-    /// let result = LeRole::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            le_role: data[2],
-        }
     }
 
     /// check Only Peripheral Role supported.
@@ -264,7 +165,8 @@ pub const PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT: u8 = 0x02;
 /// Peripheral and Central Role supported, Central Role preferred for connection establishment
 pub const CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT: u8 = 0x03;
 
-impl From<&Vec<u8>> for LeRole {
+impl TryFrom<&Vec<u8>> for LeRole {
+    type Error = String;
     /// Create [LE Role] from `Vec<u8>`.
     ///
     /// [`LeRole::from_with_offset`]
@@ -281,9 +183,11 @@ impl From<&Vec<u8>> for LeRole {
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
     ///
-    /// let result = LeRole::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
+    /// let result = LeRole::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(le_role, data_type.le_role);
     ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
     /// let length = 2;
@@ -292,9 +196,11 @@ impl From<&Vec<u8>> for LeRole {
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
     ///
-    /// let result = LeRole::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
+    /// let result = LeRole::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(le_role, data_type.le_role);
     ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let length = 2;
@@ -303,9 +209,11 @@ impl From<&Vec<u8>> for LeRole {
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
     ///
-    /// let result = LeRole::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
+    /// let result = LeRole::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(le_role, data_type.le_role);
     ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
     /// let length = 2;
@@ -314,12 +222,30 @@ impl From<&Vec<u8>> for LeRole {
     /// data.push(LeRole::data_type());
     /// data.push(le_role);
     ///
-    /// let result = LeRole::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(le_role, result.le_role);
+    /// let result = LeRole::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(le_role, data_type.le_role);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = LeRole::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 3 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            le_role: value[2],
+        })
     }
 }
 
@@ -343,8 +269,10 @@ impl Into<Vec<u8>> for LeRole {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     ///
-    /// let result2 = LeRole::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = LeRole::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     ///
     /// let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
@@ -359,8 +287,10 @@ impl Into<Vec<u8>> for LeRole {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     ///
-    /// let result2 = LeRole::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = LeRole::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     ///
     /// let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
@@ -375,8 +305,10 @@ impl Into<Vec<u8>> for LeRole {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     ///
-    /// let result2 = LeRole::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = LeRole::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     ///
     /// let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
@@ -391,8 +323,10 @@ impl Into<Vec<u8>> for LeRole {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     ///
-    /// let result2 = LeRole::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = LeRole::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -458,93 +392,6 @@ mod tests {
         let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
         let result = LeRole::new(le_role);
         assert_eq!(2, result.length);
-        assert_eq!(le_role, result.le_role);
-    }
-
-    #[test]
-    fn test_from_with_offset() {
-        let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
-        let length = 2;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(LeRole::data_type());
-        data.push(le_role);
-
-        let result = LeRole::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(LeRole::data_type());
-        data.push(le_role);
-        let result = LeRole::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
-
-        let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
-        let length = 2;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(LeRole::data_type());
-        data.push(le_role);
-
-        let result = LeRole::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(LeRole::data_type());
-        data.push(le_role);
-        let result = LeRole::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
-
-        let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
-        let length = 2;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(LeRole::data_type());
-        data.push(le_role);
-
-        let result = LeRole::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(LeRole::data_type());
-        data.push(le_role);
-        let result = LeRole::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
-
-        let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
-        let length = 2;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(LeRole::data_type());
-        data.push(le_role);
-
-        let result = LeRole::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(LeRole::data_type());
-        data.push(le_role);
-        let result = LeRole::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(length, result.length);
         assert_eq!(le_role, result.le_role);
     }
 
@@ -625,7 +472,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from() {
+    fn test_try_from() {
         let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
         let length = 2;
         let mut data: Vec<u8> = Vec::new();
@@ -633,9 +480,11 @@ mod tests {
         data.push(LeRole::data_type());
         data.push(le_role);
 
-        let result = LeRole::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
+        let result = LeRole::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(le_role, data_type.le_role);
 
         let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
         let length = 2;
@@ -644,9 +493,11 @@ mod tests {
         data.push(LeRole::data_type());
         data.push(le_role);
 
-        let result = LeRole::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
+        let result = LeRole::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(le_role, data_type.le_role);
 
         let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
         let length = 2;
@@ -655,9 +506,11 @@ mod tests {
         data.push(LeRole::data_type());
         data.push(le_role);
 
-        let result = LeRole::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
+        let result = LeRole::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(le_role, data_type.le_role);
 
         let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
         let length = 2;
@@ -666,9 +519,19 @@ mod tests {
         data.push(LeRole::data_type());
         data.push(le_role);
 
-        let result = LeRole::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(le_role, result.le_role);
+        let result = LeRole::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(le_role, data_type.le_role);
+
+        let data: Vec<u8> = Vec::new();
+        let result = LeRole::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -685,8 +548,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = LeRole::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = LeRole::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
 
         let le_role = ONLY_CENTRAL_ROLE_SUPPORTED;
@@ -701,8 +566,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = LeRole::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = LeRole::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
 
         let le_role = PERIPHERAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
@@ -717,8 +584,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = LeRole::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = LeRole::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
 
         let le_role = CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT;
@@ -733,8 +602,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = LeRole::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = LeRole::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 
