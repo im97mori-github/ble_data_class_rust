@@ -20,6 +20,9 @@ use super::{
     complete_local_name::{is_complete_local_name, CompleteLocalName},
     encrypted_data::{is_encrypted_data, EncryptedData},
     flags::{is_flags, Flags},
+    incomplete_list_of_128bit_service_uuids::{
+        is_incomplete_list_of_128bit_service_uuids, IncompleteListOf128BitServiceUuids,
+    },
 };
 
 /// Data type parse result.
@@ -62,6 +65,9 @@ pub enum DataTypeParseResult {
 
     /// [`Flags`]'s [`TryFrom::try_from`] result.
     FlagsResult(Result<Flags, String>),
+
+    /// [`IncompleteListOf128BitServiceUuids`]'s [`TryFrom::try_from`] result.
+    IncompleteListOf128BitServiceUuidsResult(Result<IncompleteListOf128BitServiceUuids, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -385,6 +391,32 @@ impl DataTypeParseResult {
     pub fn is_flags(&self) -> bool {
         matches!(self, DataTypeParseResult::FlagsResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::FlagsResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{incomplete_list_of_128bit_service_uuids::IncompleteListOf128BitServiceUuids, parser::DataTypeParseResult};
+    ///
+    /// let uuids: Vec<Uuid> = [
+    ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+    ///     uuid!("00000002-0000-1000-8000-00805F9B34FB"),
+    /// ]
+    /// .to_vec();
+    /// let data = IncompleteListOf128BitServiceUuids::new(&uuids).into();
+    /// assert!(DataTypeParseResult::from(&data).is_incomplete_list_of_128bit_service_uuids());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_incomplete_list_of_128bit_service_uuids());
+    /// ```
+    pub fn is_incomplete_list_of_128bit_service_uuids(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::IncompleteListOf128BitServiceUuidsResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -444,6 +476,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::EncryptedDataResult(EncryptedData::try_from(value))
             } else if is_flags(data_type.to_owned()) {
                 DataTypeParseResult::FlagsResult(Flags::try_from(value))
+            } else if is_incomplete_list_of_128bit_service_uuids(data_type.to_owned()) {
+                DataTypeParseResult::IncompleteListOf128BitServiceUuidsResult(
+                    IncompleteListOf128BitServiceUuids::try_from(value),
+                )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -550,6 +586,7 @@ mod tests {
         complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids,
         complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids,
         complete_local_name::CompleteLocalName, encrypted_data::EncryptedData, flags::Flags,
+        incomplete_list_of_128bit_service_uuids::IncompleteListOf128BitServiceUuids,
         parser::DataTypeParseResult,
     };
 
@@ -749,6 +786,20 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_flags());
+    }
+
+    #[test]
+    fn test_is_incomplete_list_of_128bit_service_uuids() {
+        let uuids: Vec<Uuid> = [
+            uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+            uuid!("00000002-0000-1000-8000-00805F9B34FB"),
+        ]
+        .to_vec();
+        let data = IncompleteListOf128BitServiceUuids::new(&uuids).into();
+        assert!(DataTypeParseResult::from(&data).is_incomplete_list_of_128bit_service_uuids());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_incomplete_list_of_128bit_service_uuids());
     }
 
     #[test]
