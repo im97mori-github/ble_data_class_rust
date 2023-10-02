@@ -34,6 +34,9 @@ use super::{
     le_secure_connections_confirmation_value::{
         is_le_secure_connections_confirmation_value, LeSecureConnectionsConfirmationValue,
     },
+    le_secure_connections_random_value::{
+        is_le_secure_connections_random_value, LeSecureConnectionsRandomValue,
+    },
 };
 
 /// Data type parse result.
@@ -96,6 +99,9 @@ pub enum DataTypeParseResult {
     LeSecureConnectionsConfirmationValueResult(
         Result<LeSecureConnectionsConfirmationValue, String>,
     ),
+
+    /// [`LeSecureConnectionsRandomValue`]'s [`TryFrom::try_from`] result.
+    LeSecureConnectionsRandomValueResult(Result<LeSecureConnectionsRandomValue, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -560,6 +566,29 @@ impl DataTypeParseResult {
             DataTypeParseResult::LeSecureConnectionsConfirmationValueResult(_)
         )
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::LeSecureConnectionsRandomValueResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, parser::DataTypeParseResult};
+    ///
+    /// let le_secure_connections_random_value = 0x0102030405060708090a0b0c0d0e0f10u128;
+    ///
+    /// let data = LeSecureConnectionsRandomValue::new(le_secure_connections_random_value).into();
+    /// assert!(DataTypeParseResult::from(&data).is_le_secure_connections_random_value());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_le_secure_connections_random_value());
+    /// ```
+    pub fn is_le_secure_connections_random_value(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::LeSecureConnectionsRandomValueResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -640,6 +669,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_le_secure_connections_confirmation_value(data_type.to_owned()) {
                 DataTypeParseResult::LeSecureConnectionsConfirmationValueResult(
                     LeSecureConnectionsConfirmationValue::try_from(value),
+                )
+            } else if is_le_secure_connections_random_value(data_type.to_owned()) {
+                DataTypeParseResult::LeSecureConnectionsRandomValueResult(
+                    LeSecureConnectionsRandomValue::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -758,6 +791,7 @@ mod tests {
         le_bluetooth_device_address::LeBluetoothDeviceAddress,
         le_role::{LeRole, ONLY_PERIPHERAL_ROLE_SUPPORTED},
         le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue,
+        le_secure_connections_random_value::LeSecureConnectionsRandomValue,
         parser::DataTypeParseResult,
     };
 
@@ -1032,6 +1066,17 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_le_secure_connections_confirmation_value());
+    }
+
+    #[test]
+    fn test_is_le_secure_connections_random_value() {
+        let le_secure_connections_random_value = 0x0102030405060708090a0b0c0d0e0f10u128;
+
+        let data = LeSecureConnectionsRandomValue::new(le_secure_connections_random_value).into();
+        assert!(DataTypeParseResult::from(&data).is_le_secure_connections_random_value());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_le_secure_connections_random_value());
     }
 
     #[test]
