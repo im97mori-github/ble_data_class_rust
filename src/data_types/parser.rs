@@ -38,6 +38,9 @@ use super::{
         is_le_secure_connections_random_value, LeSecureConnectionsRandomValue,
     },
     le_supported_features::{is_le_supported_features, LeSupportedFeatures},
+    list_of_128bit_service_solicitation_uuids::{
+        is_list_of_128bit_service_solicitation_uuids, ListOf128BitServiceSolicitationUUIDs,
+    },
 };
 
 /// Data type parse result.
@@ -106,6 +109,11 @@ pub enum DataTypeParseResult {
 
     /// [`LeSupportedFeatures`]'s [`TryFrom::try_from`] result.
     LeSupportedFeaturesResult(Result<LeSupportedFeatures, String>),
+
+    /// [`ListOf128BitServiceSolicitationUUIDs`]'s [`TryFrom::try_from`] result.
+    ListOf128BitServiceSolicitationUUIDsResult(
+        Result<ListOf128BitServiceSolicitationUUIDs, String>,
+    ),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -616,6 +624,32 @@ impl DataTypeParseResult {
     pub fn is_le_supported_features(&self) -> bool {
         matches!(self, DataTypeParseResult::LeSupportedFeaturesResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::ListOf128BitServiceSolicitationUUIDsResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{list_of_128bit_service_solicitation_uuids::ListOf128BitServiceSolicitationUUIDs, parser::DataTypeParseResult};
+    ///
+    /// let uuids: Vec<Uuid> = [
+    ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+    ///     uuid!("00000002-0000-1000-8000-00805F9B34FB"),
+    /// ]
+    /// .to_vec();
+    /// let data = ListOf128BitServiceSolicitationUUIDs::new(&uuids).into();
+    /// assert!(DataTypeParseResult::from(&data).is_list_of_128bit_service_solicitation_uuids());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_list_of_128bit_service_solicitation_uuids());
+    /// ```
+    pub fn is_list_of_128bit_service_solicitation_uuids(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::ListOf128BitServiceSolicitationUUIDsResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -703,6 +737,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 )
             } else if is_le_supported_features(data_type.to_owned()) {
                 DataTypeParseResult::LeSupportedFeaturesResult(LeSupportedFeatures::try_from(value))
+            } else if is_list_of_128bit_service_solicitation_uuids(data_type.to_owned()) {
+                DataTypeParseResult::ListOf128BitServiceSolicitationUUIDsResult(
+                    ListOf128BitServiceSolicitationUUIDs::try_from(value),
+                )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -822,6 +860,7 @@ mod tests {
         le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue,
         le_secure_connections_random_value::LeSecureConnectionsRandomValue,
         le_supported_features::LeSupportedFeatures,
+        list_of_128bit_service_solicitation_uuids::ListOf128BitServiceSolicitationUUIDs,
         parser::DataTypeParseResult,
     };
 
@@ -1121,6 +1160,20 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_le_supported_features());
+    }
+
+    #[test]
+    fn test_is_list_of_128bit_service_solicitation_uuids() {
+        let uuids: Vec<Uuid> = [
+            uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+            uuid!("00000002-0000-1000-8000-00805F9B34FB"),
+        ]
+        .to_vec();
+        let data = ListOf128BitServiceSolicitationUUIDs::new(&uuids).into();
+        assert!(DataTypeParseResult::from(&data).is_list_of_128bit_service_solicitation_uuids());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_list_of_128bit_service_solicitation_uuids());
     }
 
     #[test]
