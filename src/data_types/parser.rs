@@ -37,6 +37,7 @@ use super::{
     le_secure_connections_random_value::{
         is_le_secure_connections_random_value, LeSecureConnectionsRandomValue,
     },
+    le_supported_features::{is_le_supported_features, LeSupportedFeatures},
 };
 
 /// Data type parse result.
@@ -102,6 +103,9 @@ pub enum DataTypeParseResult {
 
     /// [`LeSecureConnectionsRandomValue`]'s [`TryFrom::try_from`] result.
     LeSecureConnectionsRandomValueResult(Result<LeSecureConnectionsRandomValue, String>),
+
+    /// [`LeSupportedFeatures`]'s [`TryFrom::try_from`] result.
+    LeSupportedFeaturesResult(Result<LeSupportedFeatures, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -589,6 +593,29 @@ impl DataTypeParseResult {
             DataTypeParseResult::LeSecureConnectionsRandomValueResult(_)
         )
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::LeSupportedFeaturesResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{le_supported_features::LeSupportedFeatures, parser::DataTypeParseResult};
+    ///
+    /// let mut le_supported_features = [false; 48].to_vec();
+    /// for i in 0..44 {
+    ///     le_supported_features[i] = true;
+    ///     let data = LeSupportedFeatures::new(&le_supported_features).into();
+    ///     assert!(DataTypeParseResult::from(&data).is_le_supported_features());
+    ///     le_supported_features[i] = false;
+    /// }
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_le_supported_features());
+    /// ```
+    pub fn is_le_supported_features(&self) -> bool {
+        matches!(self, DataTypeParseResult::LeSupportedFeaturesResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -674,6 +701,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::LeSecureConnectionsRandomValueResult(
                     LeSecureConnectionsRandomValue::try_from(value),
                 )
+            } else if is_le_supported_features(data_type.to_owned()) {
+                DataTypeParseResult::LeSupportedFeaturesResult(LeSupportedFeatures::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -792,6 +821,7 @@ mod tests {
         le_role::{LeRole, ONLY_PERIPHERAL_ROLE_SUPPORTED},
         le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue,
         le_secure_connections_random_value::LeSecureConnectionsRandomValue,
+        le_supported_features::LeSupportedFeatures,
         parser::DataTypeParseResult,
     };
 
@@ -1077,6 +1107,20 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_le_secure_connections_random_value());
+    }
+
+    #[test]
+    fn test_is_le_supported_features() {
+        let mut le_supported_features = [false; 48].to_vec();
+        for i in 0..44 {
+            le_supported_features[i] = true;
+            let data = LeSupportedFeatures::new(&le_supported_features).into();
+            assert!(DataTypeParseResult::from(&data).is_le_supported_features());
+            le_supported_features[i] = false;
+        }
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_le_supported_features());
     }
 
     #[test]

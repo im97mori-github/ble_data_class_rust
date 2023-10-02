@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// LE Supported Features.
+#[derive(Debug)]
 pub struct LeSupportedFeatures {
     /// data length
     pub length: u8,
@@ -12,7 +13,7 @@ pub struct LeSupportedFeatures {
 }
 
 impl LeSupportedFeatures {
-    /// Create [LeSupportedFeatures] from `LE Supported Features`.
+    /// Create [`LeSupportedFeatures`] from `LE Supported Features`.
     ///
     /// # Examples
     ///
@@ -32,108 +33,6 @@ impl LeSupportedFeatures {
         Self {
             length: 1 + le_supported_features.len() as u8 / 8,
             le_supported_features: le_supported_features.clone(),
-        }
-    }
-
-    /// Create [LeSupportedFeatures] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::{BASE_UUID, data_types::{le_supported_features::LeSupportedFeatures, data_type::DataType}};
-    ///
-    /// let mut le_supported_features = [0u8; 6].to_vec();
-    ///
-    /// for i in 0..44 {
-    ///     le_supported_features[i / 8] = 0b1 << (i % 8);
-    ///
-    ///     let length = le_supported_features.len() as u8 + 1;
-    ///     let mut data: Vec<u8> = Vec::new();
-    ///     data.push(length);
-    ///     data.push(LeSupportedFeatures::data_type());
-    ///     data.append(&mut le_supported_features.clone());
-    ///
-    ///     let result = LeSupportedFeatures::from_with_offset(&data, 0);
-    ///     assert_eq!(length, result.length);
-    ///     let bool_vec: Vec<bool> = le_supported_features
-    ///         .clone()
-    ///         .iter()
-    ///         .flat_map(|x| {
-    ///             let mut data: Vec<bool> = Vec::new();
-    ///             data.push((x & 0b0000_0001) != 0);
-    ///             data.push((x & 0b0000_0010) != 0);
-    ///             data.push((x & 0b0000_0100) != 0);
-    ///             data.push((x & 0b0000_1000) != 0);
-    ///             data.push((x & 0b0001_0000) != 0);
-    ///             data.push((x & 0b0010_0000) != 0);
-    ///             data.push((x & 0b0100_0000) != 0);
-    ///             data.push((x & 0b1000_0000) != 0);
-    ///             data
-    ///         })
-    ///         .collect();
-    ///
-    ///     assert_eq!(bool_vec, result.le_supported_features);
-    ///
-    ///     le_supported_features[i / 8] = 0u8;
-    /// }
-    ///
-    /// let mut le_supported_features = [0u8; 6].to_vec();
-    ///
-    /// for i in 0..44 {
-    ///     le_supported_features[i / 8] = 0b1 << (i % 8);
-    ///
-    ///     let length = le_supported_features.len() as u8 + 1;
-    ///     let mut data: Vec<u8> = Vec::new();
-    ///     data.push(0);
-    ///     data.push(length);
-    ///     data.push(LeSupportedFeatures::data_type());
-    ///     data.append(&mut le_supported_features.clone());
-    ///
-    ///     let result = LeSupportedFeatures::from_with_offset(&data, 1);
-    ///     assert_eq!(length, result.length);
-    ///     let bool_vec: Vec<bool> = le_supported_features
-    ///         .clone()
-    ///         .iter()
-    ///         .flat_map(|x| {
-    ///             let mut data: Vec<bool> = Vec::new();
-    ///             data.push((x & 0b0000_0001) != 0);
-    ///             data.push((x & 0b0000_0010) != 0);
-    ///             data.push((x & 0b0000_0100) != 0);
-    ///             data.push((x & 0b0000_1000) != 0);
-    ///             data.push((x & 0b0001_0000) != 0);
-    ///             data.push((x & 0b0010_0000) != 0);
-    ///             data.push((x & 0b0100_0000) != 0);
-    ///             data.push((x & 0b1000_0000) != 0);
-    ///             data
-    ///         })
-    ///         .collect();
-    ///
-    ///     assert_eq!(bool_vec, result.le_supported_features);
-    ///
-    ///     le_supported_features[i / 8] = 0u8;
-    /// }
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        let le_supported_features: Vec<bool> = data[2..]
-            .iter()
-            .flat_map(|x| {
-                let mut data: Vec<bool> = Vec::new();
-                data.push(x & 0b0000_0001 != 0);
-                data.push(x & 0b0000_0010 != 0);
-                data.push(x & 0b0000_0100 != 0);
-                data.push(x & 0b0000_1000 != 0);
-                data.push(x & 0b0001_0000 != 0);
-                data.push(x & 0b0010_0000 != 0);
-                data.push(x & 0b0100_0000 != 0);
-                data.push(x & 0b1000_0000 != 0);
-                data
-            })
-            .collect();
-        Self {
-            length,
-            le_supported_features: le_supported_features.to_vec(),
         }
     }
 
@@ -832,8 +731,9 @@ impl LeSupportedFeatures {
     }
 }
 
-impl From<&Vec<u8>> for LeSupportedFeatures {
-    /// Create [LeSupportedFeatures] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for LeSupportedFeatures {
+    type Error = String;
+    /// Create [`LeSupportedFeatures`] from `Vec<u8>`.
     ///
     /// [`LeSupportedFeatures::from_with_offset`]
     ///
@@ -853,8 +753,10 @@ impl From<&Vec<u8>> for LeSupportedFeatures {
     ///     data.push(LeSupportedFeatures::data_type());
     ///     data.append(&mut le_supported_features.clone());
     ///
-    ///     let result = LeSupportedFeatures::from(&data);
-    ///     assert_eq!(length, result.length);
+    ///     let result = LeSupportedFeatures::try_from(&data);
+    ///     assert!(result.is_ok());
+    ///     let data_type = result.unwrap();
+    ///     assert_eq!(length, data_type.length);
     ///     let bool_vec: Vec<bool> = le_supported_features
     ///         .clone()
     ///         .iter()
@@ -872,18 +774,49 @@ impl From<&Vec<u8>> for LeSupportedFeatures {
     ///         })
     ///         .collect();
     ///
-    ///     assert_eq!(bool_vec, result.le_supported_features);
+    ///     assert_eq!(bool_vec, data_type.le_supported_features);
     ///
     ///     le_supported_features[i / 8] = 0u8;
     /// }
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = LeSupportedFeatures::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 7 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        let le_supported_features: Vec<bool> = value[2..]
+            .iter()
+            .flat_map(|x| {
+                let mut data: Vec<bool> = Vec::new();
+                data.push(x & 0b0000_0001 != 0);
+                data.push(x & 0b0000_0010 != 0);
+                data.push(x & 0b0000_0100 != 0);
+                data.push(x & 0b0000_1000 != 0);
+                data.push(x & 0b0001_0000 != 0);
+                data.push(x & 0b0010_0000 != 0);
+                data.push(x & 0b0100_0000 != 0);
+                data.push(x & 0b1000_0000 != 0);
+                data
+            })
+            .collect();
+        Ok(Self {
+            length,
+            le_supported_features: le_supported_features.to_vec(),
+        })
     }
 }
 
 impl Into<Vec<u8>> for LeSupportedFeatures {
-    /// Create `Vec<u8>` from [LeSupportedFeatures].
+    /// Create `Vec<u8>` from [`LeSupportedFeatures`].
     ///
     /// # Examples
     ///
@@ -894,7 +827,7 @@ impl Into<Vec<u8>> for LeSupportedFeatures {
     /// for i in 0..44 {
     ///     le_supported_features[i] = true;
     ///     let result1 = LeSupportedFeatures::new(&le_supported_features);
-
+    ///
     ///     let mut data: Vec<u8> = Vec::new();
     ///     data.push(le_supported_features.len() as u8 / 8 + 1);
     ///     data.push(LeSupportedFeatures::data_type());
@@ -905,14 +838,16 @@ impl Into<Vec<u8>> for LeSupportedFeatures {
     ///         }
     ///     }
     ///     data.append(&mut u8_vec.clone().to_vec());
-
+    ///
     ///     let into_data: Vec<u8> = result1.into();
     ///     assert_eq!(data, into_data);
-
-    ///     let result2 = LeSupportedFeatures::from(&data);
-    ///     let into_data: Vec<u8> = result2.into();
+    ///
+    ///     let result2 = LeSupportedFeatures::try_from(&data);
+    ///     assert!(result2.is_ok());
+    ///     let data_type = result2.unwrap();
+    ///     let into_data: Vec<u8> = data_type.into();
     ///     assert_eq!(data, into_data);
-
+    ///
     ///     le_supported_features[i] = false;
     /// }
     /// ```
@@ -986,80 +921,6 @@ mod tests {
             assert_eq!(7, result.length);
             assert_eq!(le_supported_features, result.le_supported_features);
             le_supported_features[i] = false;
-        }
-    }
-
-    #[test]
-    fn test_from_with_offset() {
-        let mut le_supported_features = [0u8; 6].to_vec();
-
-        for i in 0..44 {
-            le_supported_features[i / 8] = 0b1 << (i % 8);
-
-            let length = le_supported_features.len() as u8 + 1;
-            let mut data: Vec<u8> = Vec::new();
-            data.push(length);
-            data.push(LeSupportedFeatures::data_type());
-            data.append(&mut le_supported_features.clone());
-
-            let result = LeSupportedFeatures::from_with_offset(&data, 0);
-            assert_eq!(length, result.length);
-            let bool_vec: Vec<bool> = le_supported_features
-                .clone()
-                .iter()
-                .flat_map(|x| {
-                    let mut data: Vec<bool> = Vec::new();
-                    data.push((x & 0b0000_0001) != 0);
-                    data.push((x & 0b0000_0010) != 0);
-                    data.push((x & 0b0000_0100) != 0);
-                    data.push((x & 0b0000_1000) != 0);
-                    data.push((x & 0b0001_0000) != 0);
-                    data.push((x & 0b0010_0000) != 0);
-                    data.push((x & 0b0100_0000) != 0);
-                    data.push((x & 0b1000_0000) != 0);
-                    data
-                })
-                .collect();
-
-            assert_eq!(bool_vec, result.le_supported_features);
-
-            le_supported_features[i / 8] = 0u8;
-        }
-
-        let mut le_supported_features = [0u8; 6].to_vec();
-
-        for i in 0..44 {
-            le_supported_features[i / 8] = 0b1 << (i % 8);
-
-            let length = le_supported_features.len() as u8 + 1;
-            let mut data: Vec<u8> = Vec::new();
-            data.push(0);
-            data.push(length);
-            data.push(LeSupportedFeatures::data_type());
-            data.append(&mut le_supported_features.clone());
-
-            let result = LeSupportedFeatures::from_with_offset(&data, 1);
-            assert_eq!(length, result.length);
-            let bool_vec: Vec<bool> = le_supported_features
-                .clone()
-                .iter()
-                .flat_map(|x| {
-                    let mut data: Vec<bool> = Vec::new();
-                    data.push((x & 0b0000_0001) != 0);
-                    data.push((x & 0b0000_0010) != 0);
-                    data.push((x & 0b0000_0100) != 0);
-                    data.push((x & 0b0000_1000) != 0);
-                    data.push((x & 0b0001_0000) != 0);
-                    data.push((x & 0b0010_0000) != 0);
-                    data.push((x & 0b0100_0000) != 0);
-                    data.push((x & 0b1000_0000) != 0);
-                    data
-                })
-                .collect();
-
-            assert_eq!(bool_vec, result.le_supported_features);
-
-            le_supported_features[i / 8] = 0u8;
         }
     }
 
@@ -1413,7 +1274,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from() {
+    fn test_try_from() {
         let mut le_supported_features = [0u8; 6].to_vec();
 
         for i in 0..44 {
@@ -1425,8 +1286,10 @@ mod tests {
             data.push(LeSupportedFeatures::data_type());
             data.append(&mut le_supported_features.clone());
 
-            let result = LeSupportedFeatures::from(&data);
-            assert_eq!(length, result.length);
+            let result = LeSupportedFeatures::try_from(&data);
+            assert!(result.is_ok());
+            let data_type = result.unwrap();
+            assert_eq!(length, data_type.length);
             let bool_vec: Vec<bool> = le_supported_features
                 .clone()
                 .iter()
@@ -1444,10 +1307,18 @@ mod tests {
                 })
                 .collect();
 
-            assert_eq!(bool_vec, result.le_supported_features);
+            assert_eq!(bool_vec, data_type.le_supported_features);
 
             le_supported_features[i / 8] = 0u8;
         }
+
+        let data: Vec<u8> = Vec::new();
+        let result = LeSupportedFeatures::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -1471,8 +1342,10 @@ mod tests {
             let into_data: Vec<u8> = result1.into();
             assert_eq!(data, into_data);
 
-            let result2 = LeSupportedFeatures::from(&data);
-            let into_data: Vec<u8> = result2.into();
+            let result2 = LeSupportedFeatures::try_from(&data);
+            assert!(result2.is_ok());
+            let data_type = result2.unwrap();
+            let into_data: Vec<u8> = data_type.into();
             assert_eq!(data, into_data);
 
             le_supported_features[i] = false;
