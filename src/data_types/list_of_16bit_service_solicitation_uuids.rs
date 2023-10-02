@@ -5,6 +5,7 @@ use uuid::Uuid;
 use crate::{data_types::data_type::DataType, BASE_UUID};
 
 /// List of 16-bit Service Solicitation UUIDs.
+#[derive(Debug)]
 pub struct ListOf16BitServiceSolicitationUUIDs {
     /// data length
     pub length: u8,
@@ -37,63 +38,10 @@ impl ListOf16BitServiceSolicitationUUIDs {
             uuids: uuids.clone(),
         }
     }
-
-    /// Create [ListOf16BitServiceSolicitationUUIDs] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::{BASE_UUID, data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type::DataType}};
-    /// use uuid::{uuid, Uuid};
-    ///
-    /// let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
-    /// let uuids: Vec<Uuid> = uuid_bytes
-    ///     .windows(2)
-    ///     .step_by(2)
-    ///     .map(|f| {
-    ///         let (d1, d2, d3, d4) = BASE_UUID.as_fields();
-    ///         Uuid::from_fields(d1 | ((f[0] as u32) << 0) | ((f[1] as u32) << 8), d2, d3, d4)
-    ///     })
-    ///     .collect();
-    /// let length = uuid_bytes.len() as u8 + 1;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(ListOf16BitServiceSolicitationUUIDs::data_type());
-    /// data.append(&mut uuid_bytes.clone());
-    ///
-    /// let result = ListOf16BitServiceSolicitationUUIDs::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(uuids, result.uuids);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(ListOf16BitServiceSolicitationUUIDs::data_type());
-    /// data.append(&mut uuid_bytes.clone());
-    /// let result = ListOf16BitServiceSolicitationUUIDs::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(uuids, result.uuids);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            uuids: data[2..2 + length as usize - 1]
-                .windows(2)
-                .step_by(2)
-                .map(|w| {
-                    let mut bytes = BASE_UUID.to_bytes_le();
-                    bytes[0] = w[0];
-                    bytes[1] = w[1];
-                    Uuid::from_bytes_le(bytes)
-                })
-                .collect(),
-        }
-    }
 }
 
-impl From<&Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
+impl TryFrom<&Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
+    type Error = String;
     /// Create [ListOf16BitServiceSolicitationUUIDs] from `Vec<u8>`.
     ///
     /// [`ListOf16BitServiceSolicitationUUIDs::from_with_offset`]
@@ -119,21 +67,39 @@ impl From<&Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
     /// data.push(ListOf16BitServiceSolicitationUUIDs::data_type());
     /// data.append(&mut uuid_bytes.clone());
     ///
-    /// let result = ListOf16BitServiceSolicitationUUIDs::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(uuids, result.uuids);
+    /// let result = ListOf16BitServiceSolicitationUUIDs::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type: ListOf16BitServiceSolicitationUUIDs = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(uuids, data_type.uuids);
     ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(ListOf16BitServiceSolicitationUUIDs::data_type());
-    /// data.append(&mut uuid_bytes.clone());
-    /// let result = ListOf16BitServiceSolicitationUUIDs::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(uuids, result.uuids);
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = ListOf16BitServiceSolicitationUUIDs::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 4 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            uuids: value[2..2 + length as usize - 1]
+                .windows(2)
+                .step_by(2)
+                .map(|w| {
+                    let mut bytes = BASE_UUID.to_bytes_le();
+                    bytes[0] = w[0];
+                    bytes[1] = w[1];
+                    Uuid::from_bytes_le(bytes)
+                })
+                .collect(),
+        })
     }
 }
 
@@ -156,18 +122,20 @@ impl Into<Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
     ///     })
     ///     .collect();
     /// let result1 = ListOf16BitServiceSolicitationUUIDs::new(&uuids);
-    ///
+
     /// let length = uuid_bytes.len() as u8 + 1;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(ListOf16BitServiceSolicitationUUIDs::data_type());
     /// data.append(&mut uuid_bytes.clone());
-    ///
+
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    ///
-    /// let result2 = ListOf16BitServiceSolicitationUUIDs::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+
+    /// let result2 = ListOf16BitServiceSolicitationUUIDs::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -238,37 +206,6 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
-        let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
-        let uuids: Vec<Uuid> = uuid_bytes
-            .windows(2)
-            .step_by(2)
-            .map(|f| {
-                let (d1, d2, d3, d4) = BASE_UUID.as_fields();
-                Uuid::from_fields(d1 | ((f[0] as u32) << 0) | ((f[1] as u32) << 8), d2, d3, d4)
-            })
-            .collect();
-        let length = uuid_bytes.len() as u8 + 1;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(ListOf16BitServiceSolicitationUUIDs::data_type());
-        data.append(&mut uuid_bytes.clone());
-
-        let result = ListOf16BitServiceSolicitationUUIDs::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(uuids, result.uuids);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(ListOf16BitServiceSolicitationUUIDs::data_type());
-        data.append(&mut uuid_bytes.clone());
-        let result = ListOf16BitServiceSolicitationUUIDs::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(uuids, result.uuids);
-    }
-
-    #[test]
     fn test_from() {
         let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
         let uuids: Vec<Uuid> = uuid_bytes
@@ -285,9 +222,19 @@ mod tests {
         data.push(ListOf16BitServiceSolicitationUUIDs::data_type());
         data.append(&mut uuid_bytes.clone());
 
-        let result = ListOf16BitServiceSolicitationUUIDs::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(uuids, result.uuids);
+        let result = ListOf16BitServiceSolicitationUUIDs::try_from(&data);
+        assert!(result.is_ok());
+        let data_type: ListOf16BitServiceSolicitationUUIDs = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(uuids, data_type.uuids);
+
+        let data: Vec<u8> = Vec::new();
+        let result = ListOf16BitServiceSolicitationUUIDs::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -312,8 +259,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = ListOf16BitServiceSolicitationUUIDs::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = ListOf16BitServiceSolicitationUUIDs::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 
