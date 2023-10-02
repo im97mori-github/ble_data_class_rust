@@ -3,6 +3,8 @@
 use crate::data_types::data_type::DataType;
 
 /// Manufacturer Specific Data.
+
+#[derive(Debug)]
 pub struct ManufacturerSpecificData {
     /// data length
     pub length: u8,
@@ -39,58 +41,10 @@ impl ManufacturerSpecificData {
             manufacturer_specific_data: manufacturer_specific_data.clone(),
         }
     }
-
-    /// Create [ManufacturerSpecificData] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type::DataType};
-    ///
-    /// let company_identifier = 0x0ca8u16;
-    /// let manufacturer_specific_data = [0x03u8].to_vec();
-    /// let length = manufacturer_specific_data.len() as u8 + 3;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(ManufacturerSpecificData::data_type());
-    /// data.append(&mut u16::to_le_bytes(company_identifier).try_into().unwrap());
-    /// data.append(&mut manufacturer_specific_data.clone());
-    ///
-    /// let result = ManufacturerSpecificData::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(company_identifier, result.company_identifier);
-    /// assert_eq!(
-    ///     manufacturer_specific_data,
-    ///     result.manufacturer_specific_data
-    /// );
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(ManufacturerSpecificData::data_type());
-    /// data.append(&mut u16::to_le_bytes(company_identifier).try_into().unwrap());
-    /// data.append(&mut manufacturer_specific_data.clone());
-    ///
-    /// let result = ManufacturerSpecificData::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(company_identifier, result.company_identifier);
-    /// assert_eq!(
-    ///     manufacturer_specific_data,
-    ///     result.manufacturer_specific_data
-    /// );
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            company_identifier: u16::from_le_bytes(data[2..4].try_into().unwrap()),
-            manufacturer_specific_data: data[4..1 + length as usize].to_vec(),
-        }
-    }
 }
 
-impl From<&Vec<u8>> for ManufacturerSpecificData {
+impl TryFrom<&Vec<u8>> for ManufacturerSpecificData {
+    type Error = String;
     /// Create [ManufacturerSpecificData] from `Vec<u8>`.
     ///
     /// [`ManufacturerSpecificData::from_with_offset`]
@@ -109,16 +63,35 @@ impl From<&Vec<u8>> for ManufacturerSpecificData {
     /// data.append(&mut u16::to_le_bytes(company_identifier).try_into().unwrap());
     /// data.append(&mut manufacturer_specific_data.clone());
     ///
-    /// let result = ManufacturerSpecificData::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(company_identifier, result.company_identifier);
+    /// let result = ManufacturerSpecificData::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(company_identifier, data_type.company_identifier);
     /// assert_eq!(
     ///     manufacturer_specific_data,
-    ///     result.manufacturer_specific_data
+    ///     data_type.manufacturer_specific_data
+    /// );
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = ManufacturerSpecificData::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
     /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 4 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            company_identifier: u16::from_le_bytes(value[2..4].try_into().unwrap()),
+            manufacturer_specific_data: value[4..1 + length as usize].to_vec(),
+        })
     }
 }
 
@@ -145,8 +118,10 @@ impl Into<Vec<u8>> for ManufacturerSpecificData {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     ///
-    /// let result2 = ManufacturerSpecificData::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = ManufacturerSpecificData::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -208,7 +183,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let company_identifier = 0x0ca8u16;
         let manufacturer_specific_data = [0x03u8].to_vec();
         let length = manufacturer_specific_data.len() as u8 + 3;
@@ -218,47 +193,22 @@ mod tests {
         data.append(&mut u16::to_le_bytes(company_identifier).try_into().unwrap());
         data.append(&mut manufacturer_specific_data.clone());
 
-        let result = ManufacturerSpecificData::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(company_identifier, result.company_identifier);
+        let result = ManufacturerSpecificData::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(company_identifier, data_type.company_identifier);
         assert_eq!(
             manufacturer_specific_data,
-            result.manufacturer_specific_data
+            data_type.manufacturer_specific_data
         );
 
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(ManufacturerSpecificData::data_type());
-        data.append(&mut u16::to_le_bytes(company_identifier).try_into().unwrap());
-        data.append(&mut manufacturer_specific_data.clone());
-
-        let result = ManufacturerSpecificData::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(company_identifier, result.company_identifier);
+        let data: Vec<u8> = Vec::new();
+        let result = ManufacturerSpecificData::try_from(&data);
+        assert!(result.is_err());
         assert_eq!(
-            manufacturer_specific_data,
-            result.manufacturer_specific_data
-        );
-    }
-
-    #[test]
-    fn test_from() {
-        let company_identifier = 0x0ca8u16;
-        let manufacturer_specific_data = [0x03u8].to_vec();
-        let length = manufacturer_specific_data.len() as u8 + 3;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(ManufacturerSpecificData::data_type());
-        data.append(&mut u16::to_le_bytes(company_identifier).try_into().unwrap());
-        data.append(&mut manufacturer_specific_data.clone());
-
-        let result = ManufacturerSpecificData::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(company_identifier, result.company_identifier);
-        assert_eq!(
-            manufacturer_specific_data,
-            result.manufacturer_specific_data
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
         );
     }
 
@@ -279,8 +229,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = ManufacturerSpecificData::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = ManufacturerSpecificData::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 

@@ -47,6 +47,7 @@ use super::{
     list_of_32bit_service_solicitation_uuids::{
         is_list_of_32bit_service_solicitation_uuids, ListOf32BitServiceSolicitationUUIDs,
     },
+    manufacturer_specific_data::{is_manufacturer_specific_data, ManufacturerSpecificData},
 };
 
 /// Data type parse result.
@@ -126,6 +127,9 @@ pub enum DataTypeParseResult {
 
     /// [`ListOf32BitServiceSolicitationUUIDs`]'s [`TryFrom::try_from`] result.
     ListOf32BitServiceSolicitationUUIDsResult(Result<ListOf32BitServiceSolicitationUUIDs, String>),
+
+    /// [`ManufacturerSpecificData`]'s [`TryFrom::try_from`] result.
+    ManufacturerSpecificDataResult(Result<ManufacturerSpecificData, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -689,7 +693,7 @@ impl DataTypeParseResult {
         )
     }
 
-    /// Returns `true` if the result is [`DataTypeParseResult::ListOf16BitServiceSolicitationUUIDsResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::ListOf32BitServiceSolicitationUUIDsResult`].
     ///
     /// # Examples
     ///
@@ -704,7 +708,7 @@ impl DataTypeParseResult {
     /// .to_vec();
     /// let data = ListOf32BitServiceSolicitationUUIDs::new(&uuids).into();
     /// assert!(DataTypeParseResult::from(&data).is_list_of_32bit_service_solicitation_uuids());
-    /// 
+    ///
     /// let data: Vec<u8> = Vec::new();
     /// assert!(!DataTypeParseResult::from(&data).is_list_of_32bit_service_solicitation_uuids());
     /// ```
@@ -713,6 +717,27 @@ impl DataTypeParseResult {
             self,
             DataTypeParseResult::ListOf32BitServiceSolicitationUUIDsResult(_)
         )
+    }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::ManufacturerSpecificDataResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, parser::DataTypeParseResult};
+    ///
+    /// let company_identifier = 0x0ca8u16;
+    /// let manufacturer_specific_data = [0x03u8].to_vec();
+    /// let data =
+    ///     ManufacturerSpecificData::new(company_identifier, &manufacturer_specific_data).into();
+    /// assert!(DataTypeParseResult::from(&data).is_manufacturer_specific_data());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_manufacturer_specific_data());
+    /// ```
+    pub fn is_manufacturer_specific_data(&self) -> bool {
+        matches!(self, DataTypeParseResult::ManufacturerSpecificDataResult(_))
     }
 }
 
@@ -812,6 +837,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_list_of_32bit_service_solicitation_uuids(data_type.to_owned()) {
                 DataTypeParseResult::ListOf32BitServiceSolicitationUUIDsResult(
                     ListOf32BitServiceSolicitationUUIDs::try_from(value),
+                )
+            } else if is_manufacturer_specific_data(data_type.to_owned()) {
+                DataTypeParseResult::ManufacturerSpecificDataResult(
+                    ManufacturerSpecificData::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -935,6 +964,7 @@ mod tests {
         list_of_128bit_service_solicitation_uuids::ListOf128BitServiceSolicitationUUIDs,
         list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs,
         list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs,
+        manufacturer_specific_data::ManufacturerSpecificData,
         parser::DataTypeParseResult,
     };
 
@@ -1276,6 +1306,18 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_list_of_32bit_service_solicitation_uuids());
+    }
+
+    #[test]
+    fn test_is_manufacturer_specific_data() {
+        let company_identifier = 0x0ca8u16;
+        let manufacturer_specific_data = [0x03u8].to_vec();
+        let data =
+            ManufacturerSpecificData::new(company_identifier, &manufacturer_specific_data).into();
+        assert!(DataTypeParseResult::from(&data).is_manufacturer_specific_data());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_manufacturer_specific_data());
     }
 
     #[test]
