@@ -31,6 +31,9 @@ use super::{
     },
     le_bluetooth_device_address::{is_le_bluetooth_device_address, LeBluetoothDeviceAddress},
     le_role::{is_le_role, LeRole},
+    le_secure_connections_confirmation_value::{
+        is_le_secure_connections_confirmation_value, LeSecureConnectionsConfirmationValue,
+    },
 };
 
 /// Data type parse result.
@@ -88,6 +91,11 @@ pub enum DataTypeParseResult {
 
     /// [`LeRole`]'s [`TryFrom::try_from`] result.
     LeRoleResult(Result<LeRole, String>),
+
+    /// [`LeSecureConnectionsConfirmationValue`]'s [`TryFrom::try_from`] result.
+    LeSecureConnectionsConfirmationValueResult(
+        Result<LeSecureConnectionsConfirmationValue, String>,
+    ),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -528,6 +536,30 @@ impl DataTypeParseResult {
     pub fn is_le_role(&self) -> bool {
         matches!(self, DataTypeParseResult::LeRoleResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::LeSecureConnectionsConfirmationValueResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, parser::DataTypeParseResult};
+    ///
+    /// let le_secure_connections_confirmation_value = 0x0102030405060708090a0b0c0d0e0f10u128;
+    /// let data =
+    ///     LeSecureConnectionsConfirmationValue::new(le_secure_connections_confirmation_value)
+    ///         .into();
+    /// assert!(DataTypeParseResult::from(&data).is_le_secure_connections_confirmation_value());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_le_secure_connections_confirmation_value());
+    /// ```
+    pub fn is_le_secure_connections_confirmation_value(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::LeSecureConnectionsConfirmationValueResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -605,6 +637,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 )
             } else if is_le_role(data_type.to_owned()) {
                 DataTypeParseResult::LeRoleResult(LeRole::try_from(value))
+            } else if is_le_secure_connections_confirmation_value(data_type.to_owned()) {
+                DataTypeParseResult::LeSecureConnectionsConfirmationValueResult(
+                    LeSecureConnectionsConfirmationValue::try_from(value),
+                )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -721,6 +757,7 @@ mod tests {
         incomplete_list_of_32bit_service_uuids::IncompleteListOf32BitServiceUuids,
         le_bluetooth_device_address::LeBluetoothDeviceAddress,
         le_role::{LeRole, ONLY_PERIPHERAL_ROLE_SUPPORTED},
+        le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue,
         parser::DataTypeParseResult,
     };
 
@@ -983,6 +1020,18 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_le_role());
+    }
+
+    #[test]
+    fn test_is_le_secure_connections_confirmation_value() {
+        let le_secure_connections_confirmation_value = 0x0102030405060708090a0b0c0d0e0f10u128;
+        let data =
+            LeSecureConnectionsConfirmationValue::new(le_secure_connections_confirmation_value)
+                .into();
+        assert!(DataTypeParseResult::from(&data).is_le_secure_connections_confirmation_value());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_le_secure_connections_confirmation_value());
     }
 
     #[test]
