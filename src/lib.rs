@@ -36,7 +36,7 @@ pub mod data_types {
     pub mod secure_simple_pairing_randomizer_r256;
     pub mod security_manager_oob;
     pub mod security_manager_tk_value;
-    // pub mod service_data_128bit_uuid;
+    pub mod service_data_128bit_uuid;
     // pub mod service_data_16bit_uuid;
     // pub mod service_data_32bit_uuid;
     // pub mod shortened_local_name;
