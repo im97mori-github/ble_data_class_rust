@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Tx Power Level.
+#[derive(Debug)]
 pub struct TxPowerLevel {
     /// data length
     pub length: u8,
@@ -12,7 +13,7 @@ pub struct TxPowerLevel {
 }
 
 impl TxPowerLevel {
-    /// Create [TxPowerLevel] from `Tx Power Level`.
+    /// Create [`TxPowerLevel`] from `Tx Power Level`.
     ///
     /// # Examples
     ///
@@ -23,7 +24,7 @@ impl TxPowerLevel {
     /// let result = TxPowerLevel::new(tx_power_level);
     /// assert_eq!(2, result.length);
     /// assert_eq!(tx_power_level, result.tx_power_level);
-    /// 
+    ///
     /// let tx_power_level = 127;
     /// let result = TxPowerLevel::new(tx_power_level);
     /// assert_eq!(2, result.length);
@@ -35,65 +36,11 @@ impl TxPowerLevel {
             tx_power_level,
         }
     }
-
-    /// Create [TxPowerLevel] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{tx_power_level::TxPowerLevel, data_type::DataType};
-    ///
-    /// let tx_power_level = -127;
-    /// let length = 2;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(TxPowerLevel::data_type());
-    /// data.push(tx_power_level as u8);
-    /// 
-    /// let result = TxPowerLevel::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(tx_power_level, result.tx_power_level);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(TxPowerLevel::data_type());
-    /// data.push(tx_power_level as u8);
-    /// let result = TxPowerLevel::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(tx_power_level, result.tx_power_level);
-    /// 
-    /// let tx_power_level = 127;
-    /// let length = 2;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(TxPowerLevel::data_type());
-    /// data.push(tx_power_level as u8);
-    /// 
-    /// let result = TxPowerLevel::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(tx_power_level, result.tx_power_level);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(TxPowerLevel::data_type());
-    /// data.push(tx_power_level as u8);
-    /// let result = TxPowerLevel::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(tx_power_level, result.tx_power_level);
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            tx_power_level: data[2] as i8,
-        }
-    }
 }
 
-impl From<&Vec<u8>> for TxPowerLevel {
-    /// Create [TxPowerLevel] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for TxPowerLevel {
+    type Error = String;
+    /// Create [`TxPowerLevel`] from `Vec<u8>`.
     ///
     /// [`TxPowerLevel::from_with_offset`]
     ///
@@ -108,29 +55,49 @@ impl From<&Vec<u8>> for TxPowerLevel {
     /// data.push(length);
     /// data.push(TxPowerLevel::data_type());
     /// data.push(tx_power_level as u8);
-    /// 
-    /// let result = TxPowerLevel::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(tx_power_level, result.tx_power_level);
-    /// 
+    ///
+    /// let result = TxPowerLevel::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(tx_power_level, data_type.tx_power_level);
+    ///
     /// let tx_power_level = 127;
     /// let length = 2;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(TxPowerLevel::data_type());
     /// data.push(tx_power_level as u8);
-    /// 
-    /// let result = TxPowerLevel::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(tx_power_level, result.tx_power_level);
+    ///
+    /// let result = TxPowerLevel::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(tx_power_level, data_type.tx_power_level);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = TxPowerLevel::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 3 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            tx_power_level: value[2] as i8,
+        })
     }
 }
 
 impl Into<Vec<u8>> for TxPowerLevel {
-    /// Create `Vec<u8>` from [TxPowerLevel].
+    /// Create `Vec<u8>` from [`TxPowerLevel`].
     ///
     /// # Examples
     ///
@@ -139,32 +106,36 @@ impl Into<Vec<u8>> for TxPowerLevel {
     ///
     /// let tx_power_level = -127;
     /// let result1 = TxPowerLevel::new(tx_power_level);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(2);
     /// data.push(TxPowerLevel::data_type());
     /// data.push(tx_power_level as u8);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
-    /// let result2 = TxPowerLevel::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    ///
+    /// let result2 = TxPowerLevel::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let tx_power_level = 127;
     /// let result1 = TxPowerLevel::new(tx_power_level);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(2);
     /// data.push(TxPowerLevel::data_type());
     /// data.push(tx_power_level as u8);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
-    /// let result2 = TxPowerLevel::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    ///
+    /// let result2 = TxPowerLevel::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -224,49 +195,6 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
-        let tx_power_level = -127;
-        let length = 2;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(TxPowerLevel::data_type());
-        data.push(tx_power_level as u8);
-
-        let result = TxPowerLevel::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(tx_power_level, result.tx_power_level);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(TxPowerLevel::data_type());
-        data.push(tx_power_level as u8);
-        let result = TxPowerLevel::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(tx_power_level, result.tx_power_level);
-
-        let tx_power_level = 127;
-        let length = 2;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(TxPowerLevel::data_type());
-        data.push(tx_power_level as u8);
-
-        let result = TxPowerLevel::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(tx_power_level, result.tx_power_level);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(TxPowerLevel::data_type());
-        data.push(tx_power_level as u8);
-        let result = TxPowerLevel::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(tx_power_level, result.tx_power_level);
-    }
-
-    #[test]
     fn test_from() {
         let tx_power_level = -127;
         let length = 2;
@@ -275,9 +203,11 @@ mod tests {
         data.push(TxPowerLevel::data_type());
         data.push(tx_power_level as u8);
 
-        let result = TxPowerLevel::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(tx_power_level, result.tx_power_level);
+        let result = TxPowerLevel::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(tx_power_level, data_type.tx_power_level);
 
         let tx_power_level = 127;
         let length = 2;
@@ -286,9 +216,19 @@ mod tests {
         data.push(TxPowerLevel::data_type());
         data.push(tx_power_level as u8);
 
-        let result = TxPowerLevel::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(tx_power_level, result.tx_power_level);
+        let result = TxPowerLevel::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(tx_power_level, data_type.tx_power_level);
+
+        let data: Vec<u8> = Vec::new();
+        let result = TxPowerLevel::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -304,8 +244,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = TxPowerLevel::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = TxPowerLevel::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
 
         let tx_power_level = 127;
@@ -319,8 +261,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = TxPowerLevel::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = TxPowerLevel::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 

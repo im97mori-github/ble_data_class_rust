@@ -75,6 +75,7 @@ use super::{
     service_data_16bit_uuid::{is_service_data_16bit_uuid, ServiceData16BitUUID},
     service_data_32bit_uuid::{is_service_data_32bit_uuid, ServiceData32BitUUID},
     shortened_local_name::{is_shortened_local_name, ShortenedLocalName},
+    tx_power_level::{is_tx_power_level, TxPowerLevel},
 };
 
 /// Data type parse result.
@@ -201,6 +202,9 @@ pub enum DataTypeParseResult {
 
     /// [`ShortenedLocalName`]'s [`TryFrom::try_from`] result.
     ShortenedLocalNameResult(Result<ShortenedLocalName, String>),
+
+    /// [`TxPowerLevel`]'s [`TryFrom::try_from`] result.
+    TxPowerLevelResult(Result<TxPowerLevel, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -1107,6 +1111,24 @@ impl DataTypeParseResult {
     pub fn is_shortened_local_name(&self) -> bool {
         matches!(self, DataTypeParseResult::ShortenedLocalNameResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::TxPowerLevelResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{tx_power_level::TxPowerLevel, parser::DataTypeParseResult};
+    ///
+    /// let tx_power_level = -127;
+    /// let data = TxPowerLevel::new(tx_power_level).into();
+    /// assert!(DataTypeParseResult::from(&data).is_tx_power_level());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_tx_power_level());
+    /// ```
+    pub fn is_tx_power_level(&self) -> bool {
+        matches!(self, DataTypeParseResult::TxPowerLevelResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -1260,6 +1282,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 ))
             } else if is_shortened_local_name(data_type.to_owned()) {
                 DataTypeParseResult::ShortenedLocalNameResult(ShortenedLocalName::try_from(value))
+            } else if is_tx_power_level(data_type.to_owned()) {
+                DataTypeParseResult::TxPowerLevelResult(TxPowerLevel::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -1398,6 +1422,7 @@ mod tests {
         service_data_16bit_uuid::ServiceData16BitUUID,
         service_data_32bit_uuid::ServiceData32BitUUID,
         shortened_local_name::ShortenedLocalName,
+        tx_power_level::TxPowerLevel,
     };
 
     use super::DataTypeParseResults;
@@ -1927,6 +1952,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_shortened_local_name());
+    }
+
+    #[test]
+    fn test_is_tx_power_level() {
+        let tx_power_level = -127;
+        let data = TxPowerLevel::new(tx_power_level).into();
+        assert!(DataTypeParseResult::from(&data).is_tx_power_level());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_tx_power_level());
     }
 
     #[test]
