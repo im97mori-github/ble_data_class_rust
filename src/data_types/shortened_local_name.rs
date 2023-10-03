@@ -3,6 +3,8 @@
 use crate::data_types::data_type::DataType;
 
 /// Shortened Local Name.
+
+#[derive(Debug)]
 pub struct ShortenedLocalName {
     /// data length
     pub length: u8,
@@ -12,7 +14,7 @@ pub struct ShortenedLocalName {
 }
 
 impl ShortenedLocalName {
-    /// Create [ShortenedLocalName] from `utf8`.
+    /// Create [`ShortenedLocalName`] from `utf8`.
     ///
     /// # Examples
     ///
@@ -30,47 +32,11 @@ impl ShortenedLocalName {
             shortened_local_name: shortened_local_name.to_string(),
         }
     }
-
-    /// Create [ShortenedLocalName] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{shortened_local_name::ShortenedLocalName, data_type::DataType};
-    ///
-    /// let name = "shortened_local_name".to_string();
-    /// let length = name.as_bytes().len() as u8 + 1;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(ShortenedLocalName::data_type());
-    /// data.append(&mut name.to_string().into_bytes());
-    ///
-    /// let result = ShortenedLocalName::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(name, result.shortened_local_name);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(ShortenedLocalName::data_type());
-    /// data.append(&mut name.to_string().into_bytes());
-    /// let result = ShortenedLocalName::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(name, result.shortened_local_name);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            shortened_local_name: String::from_utf8(data[2..1 + usize::from(length)].to_vec())
-                .unwrap(),
-        }
-    }
 }
 
-impl From<&Vec<u8>> for ShortenedLocalName {
-    /// Create [ShortenedLocalName] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for ShortenedLocalName {
+    type Error = String;
+    /// Create [`ShortenedLocalName`] from `Vec<u8>`.
     ///
     /// [`ShortenedLocalName::from_with_offset`]
     ///
@@ -85,17 +51,37 @@ impl From<&Vec<u8>> for ShortenedLocalName {
     /// data.push(length);
     /// data.push(ShortenedLocalName::data_type());
     /// data.append(&mut name.to_string().into_bytes());
-    /// let result = ShortenedLocalName::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(name, result.shortened_local_name);
+    ///
+    /// let result = ShortenedLocalName::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(name, data_type.shortened_local_name);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = ShortenedLocalName::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 2 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            shortened_local_name: String::from_utf8(value[2..1 + usize::from(length)].to_vec())
+                .unwrap(),
+        })
     }
 }
 
 impl Into<Vec<u8>> for ShortenedLocalName {
-    /// Create `Vec<u8>` from [ShortenedLocalName].
+    /// Create `Vec<u8>` from [`ShortenedLocalName`].
     ///
     /// # Examples
     ///
@@ -111,6 +97,12 @@ impl Into<Vec<u8>> for ShortenedLocalName {
     /// data.append(&mut name.to_string().into_bytes());
     ///
     /// let into_data: Vec<u8> = result1.into();
+    /// assert_eq!(data, into_data);
+    ///
+    /// let result2 = ShortenedLocalName::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -154,7 +146,7 @@ pub fn is_shortened_local_name(data_type: u8) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::data_types::{shortened_local_name::*, data_type::DataType};
+    use crate::data_types::{data_type::DataType, shortened_local_name::*};
 
     #[test]
     fn test_new() {
@@ -165,7 +157,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let name = "shortened_local_name".to_string();
         let length = name.as_bytes().len() as u8 + 1;
         let mut data: Vec<u8> = Vec::new();
@@ -173,31 +165,19 @@ mod tests {
         data.push(ShortenedLocalName::data_type());
         data.append(&mut name.to_string().into_bytes());
 
-        let result = ShortenedLocalName::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(name, result.shortened_local_name);
+        let result = ShortenedLocalName::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(name, data_type.shortened_local_name);
 
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(ShortenedLocalName::data_type());
-        data.append(&mut name.to_string().into_bytes());
-        let result = ShortenedLocalName::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(name, result.shortened_local_name);
-    }
-
-    #[test]
-    fn test_from() {
-        let name = "shortened_local_name".to_string();
-        let length = name.as_bytes().len() as u8 + 1;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(ShortenedLocalName::data_type());
-        data.append(&mut name.to_string().into_bytes());
-        let result = ShortenedLocalName::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(name, result.shortened_local_name);
+        let data: Vec<u8> = Vec::new();
+        let result = ShortenedLocalName::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -213,8 +193,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = ShortenedLocalName::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = ShortenedLocalName::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 

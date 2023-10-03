@@ -74,6 +74,7 @@ use super::{
     service_data_128bit_uuid::{is_service_data_128bit_uuid, ServiceData128BitUUID},
     service_data_16bit_uuid::{is_service_data_16bit_uuid, ServiceData16BitUUID},
     service_data_32bit_uuid::{is_service_data_32bit_uuid, ServiceData32BitUUID},
+    shortened_local_name::{is_shortened_local_name, ShortenedLocalName},
 };
 
 /// Data type parse result.
@@ -197,6 +198,9 @@ pub enum DataTypeParseResult {
 
     /// [`ServiceData32BitUUID`]'s [`TryFrom::try_from`] result.
     ServiceData32BitUUIDResult(Result<ServiceData32BitUUID, String>),
+
+    /// [`ShortenedLocalName`]'s [`TryFrom::try_from`] result.
+    ShortenedLocalNameResult(Result<ShortenedLocalName, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -1085,6 +1089,24 @@ impl DataTypeParseResult {
     pub fn is_service_data_32bit_uuid(&self) -> bool {
         matches!(self, DataTypeParseResult::ServiceData32BitUUIDResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::ShortenedLocalNameResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{shortened_local_name::ShortenedLocalName, parser::DataTypeParseResult};
+    ///
+    /// let name = "shortened_local_name".to_string();
+    /// let data = ShortenedLocalName::new(&name).into();
+    /// assert!(DataTypeParseResult::from(&data).is_shortened_local_name());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_shortened_local_name());
+    /// ```
+    pub fn is_shortened_local_name(&self) -> bool {
+        matches!(self, DataTypeParseResult::ShortenedLocalNameResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -1236,6 +1258,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::ServiceData32BitUUIDResult(ServiceData32BitUUID::try_from(
                     value,
                 ))
+            } else if is_shortened_local_name(data_type.to_owned()) {
+                DataTypeParseResult::ShortenedLocalNameResult(ShortenedLocalName::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -1373,6 +1397,7 @@ mod tests {
         service_data_128bit_uuid::ServiceData128BitUUID,
         service_data_16bit_uuid::ServiceData16BitUUID,
         service_data_32bit_uuid::ServiceData32BitUUID,
+        shortened_local_name::ShortenedLocalName,
     };
 
     use super::DataTypeParseResults;
@@ -1892,6 +1917,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_service_data_32bit_uuid());
+    }
+
+    #[test]
+    fn test_is_shortened_local_name() {
+        let name = "shortened_local_name".to_string();
+        let data = ShortenedLocalName::new(&name).into();
+        assert!(DataTypeParseResult::from(&data).is_shortened_local_name());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_shortened_local_name());
     }
 
     #[test]
