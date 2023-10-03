@@ -69,6 +69,7 @@ use super::{
     secure_simple_pairing_randomizer_r256::{
         is_secure_simple_pairing_randomizer_r256, SecureSimplePairingRandomizerR256,
     },
+    security_manager_oob::{is_security_manager_oob, SecurityManagerOutOfBand},
 };
 
 /// Data type parse result.
@@ -177,6 +178,9 @@ pub enum DataTypeParseResult {
 
     /// [`SecureSimplePairingRandomizerR256`]'s [`TryFrom::try_from`] result.
     SecureSimplePairingRandomizerR256Result(Result<SecureSimplePairingRandomizerR256, String>),
+
+    /// [`SecurityManagerOutOfBand`]'s [`TryFrom::try_from`] result.
+    SecurityManagerOutOfBandResult(Result<SecurityManagerOutOfBand, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -884,7 +888,7 @@ impl DataTypeParseResult {
         matches!(self, DataTypeParseResult::RandomTargetAddressResult(_))
     }
 
-    /// Returns `true` if the result is [`DataTypeParseResult::RandomTargetAddressResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::SecureSimplePairingHashC192Result`].
     ///
     /// # Examples
     ///
@@ -905,7 +909,7 @@ impl DataTypeParseResult {
         )
     }
 
-    /// Returns `true` if the result is [`DataTypeParseResult::RandomTargetAddressResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::SecureSimplePairingHashC256Result`].
     ///
     /// # Examples
     ///
@@ -926,7 +930,7 @@ impl DataTypeParseResult {
         )
     }
 
-    /// Returns `true` if the result is [`DataTypeParseResult::RandomTargetAddressResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::SecureSimplePairingRandomizerR192Result`].
     ///
     /// # Examples
     ///
@@ -948,7 +952,7 @@ impl DataTypeParseResult {
         )
     }
 
-    /// Returns `true` if the result is [`DataTypeParseResult::RandomTargetAddressResult`].
+    /// Returns `true` if the result is [`DataTypeParseResult::SecureSimplePairingRandomizerR256Result`].
     ///
     /// # Examples
     ///
@@ -968,6 +972,24 @@ impl DataTypeParseResult {
             self,
             DataTypeParseResult::SecureSimplePairingRandomizerR256Result(_)
         )
+    }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::SecurityManagerOutOfBandResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{security_manager_oob::SecurityManagerOutOfBand, parser::DataTypeParseResult};
+    ///
+    /// let security_manager_oob = [true, false, false, false, false, false, false, false];
+    /// let data = SecurityManagerOutOfBand::new(&security_manager_oob).into();
+    /// assert!(DataTypeParseResult::from(&data).is_security_manager_oob());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_security_manager_oob());
+    /// ```
+    pub fn is_security_manager_oob(&self) -> bool {
+        matches!(self, DataTypeParseResult::SecurityManagerOutOfBandResult(_))
     }
 }
 
@@ -1099,6 +1121,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_secure_simple_pairing_randomizer_r256(data_type.to_owned()) {
                 DataTypeParseResult::SecureSimplePairingRandomizerR256Result(
                     SecureSimplePairingRandomizerR256::try_from(value),
+                )
+            } else if is_security_manager_oob(data_type.to_owned()) {
+                DataTypeParseResult::SecurityManagerOutOfBandResult(
+                    SecurityManagerOutOfBand::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -1232,6 +1258,7 @@ mod tests {
         secure_simple_pairing_hash_c256::SecureSimplePairingHashC256,
         secure_simple_pairing_randomizer_r192::SecureSimplePairingRandomizerR192,
         secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256,
+        security_manager_oob::SecurityManagerOutOfBand,
     };
 
     use super::DataTypeParseResults;
@@ -1698,6 +1725,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_secure_simple_pairing_randomizer_r256());
+    }
+
+    #[test]
+    fn test_is_security_manager_oob() {
+        let security_manager_oob = [true, false, false, false, false, false, false, false];
+        let data = SecurityManagerOutOfBand::new(&security_manager_oob).into();
+        assert!(DataTypeParseResult::from(&data).is_security_manager_oob());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_security_manager_oob());
     }
 
     #[test]

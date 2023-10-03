@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Security Manager Out of Band.
+#[derive(Debug)]
 pub struct SecurityManagerOutOfBand {
     /// data length
     pub length: u8,
@@ -12,7 +13,7 @@ pub struct SecurityManagerOutOfBand {
 }
 
 impl SecurityManagerOutOfBand {
-    /// Create [SecurityManagerOutOfBand] from `Security Manager Out of Band`.
+    /// Create [`SecurityManagerOutOfBand`] from `Security Manager Out of Band`.
     ///
     /// # Examples
     ///
@@ -23,12 +24,12 @@ impl SecurityManagerOutOfBand {
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert_eq!(2, result.length);
     /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
+    ///
     /// let security_manager_oob = [false, true, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert_eq!(2, result.length);
     /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
+    ///
     /// let security_manager_oob = [false, false, false, true, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert_eq!(2, result.length);
@@ -38,92 +39,6 @@ impl SecurityManagerOutOfBand {
         Self {
             length: 2,
             security_manager_oob: security_manager_oob.clone(),
-        }
-    }
-
-    /// Create [SecurityManagerOutOfBand] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{security_manager_oob::*, data_type::DataType};
-    ///
-    /// let security_manager_oob_byte = SECURITY_MANAGER_OUT_OF_BAND_FLAG_OOB_FLAGS;
-    /// let mut security_manager_oob = [false; 8];
-    /// security_manager_oob[0] = true;
-    /// let length = 2;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(SecurityManagerOutOfBand::data_type());
-    /// data.push(security_manager_oob_byte);
-    /// 
-    /// let result = SecurityManagerOutOfBand::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(SecurityManagerOutOfBand::data_type());
-    /// data.push(security_manager_oob_byte);
-    /// let result = SecurityManagerOutOfBand::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
-    /// let security_manager_oob_byte = SECURITY_MANAGER_LE_SUPPORTED;
-    /// let mut security_manager_oob = [false; 8];
-    /// security_manager_oob[1] = true;
-    /// let length = 2;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(SecurityManagerOutOfBand::data_type());
-    /// data.push(security_manager_oob_byte);
-    /// 
-    /// let result = SecurityManagerOutOfBand::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(SecurityManagerOutOfBand::data_type());
-    /// data.push(security_manager_oob_byte);
-    /// let result = SecurityManagerOutOfBand::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
-    /// let security_manager_oob_byte = SECURITY_MANAGER_ADDRESS_TYPE;
-    /// let mut security_manager_oob = [false; 8];
-    /// security_manager_oob[3] = true;
-    /// let length = 4;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(SecurityManagerOutOfBand::data_type());
-    /// data.push(security_manager_oob_byte);
-    /// 
-    /// let result = SecurityManagerOutOfBand::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(SecurityManagerOutOfBand::data_type());
-    /// data.push(security_manager_oob_byte);
-    /// let result = SecurityManagerOutOfBand::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        let mut security_manager_oob = [false; 8];
-        security_manager_oob[0] = data[2] & SECURITY_MANAGER_OUT_OF_BAND_FLAG_OOB_FLAGS != 0;
-        security_manager_oob[1] = data[2] & SECURITY_MANAGER_LE_SUPPORTED != 0;
-        security_manager_oob[3] = data[2] & SECURITY_MANAGER_ADDRESS_TYPE != 0;
-        Self {
-            length,
-            security_manager_oob,
         }
     }
 
@@ -137,11 +52,11 @@ impl SecurityManagerOutOfBand {
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(result.is_oob_flags_field());
-    /// 
+    ///
     /// let security_manager_oob = [false, true, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_oob_flags_field());
-    /// 
+    ///
     /// let security_manager_oob = [false, false, false, true, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_oob_flags_field());
@@ -160,11 +75,11 @@ impl SecurityManagerOutOfBand {
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_le_supported());
-    /// 
+    ///
     /// let security_manager_oob = [false, true, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(result.is_le_supported());
-    /// 
+    ///
     /// let security_manager_oob = [false, false, false, true, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_le_supported());
@@ -183,11 +98,11 @@ impl SecurityManagerOutOfBand {
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_le_supported());
-    /// 
+    ///
     /// let security_manager_oob = [false, true, false, false, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(result.is_le_supported());
-    /// 
+    ///
     /// let security_manager_oob = [false, false, false, true, false, false, false, false];
     /// let result = SecurityManagerOutOfBand::new(&security_manager_oob);
     /// assert!(!result.is_le_supported());
@@ -209,8 +124,9 @@ pub const SECURITY_MANAGER_LE_SUPPORTED: u8 = 0b00000010u8;
 /// (0 = Public Address, 1 = Random Address)
 pub const SECURITY_MANAGER_ADDRESS_TYPE: u8 = 0b00001000u8;
 
-impl From<&Vec<u8>> for SecurityManagerOutOfBand {
-    /// Create [SecurityManagerOutOfBand] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for SecurityManagerOutOfBand {
+    type Error = String;
+    /// Create [`SecurityManagerOutOfBand`] from `Vec<u8>`.
     ///
     /// [`SecurityManagerOutOfBand::from_with_offset`]
     ///
@@ -227,11 +143,13 @@ impl From<&Vec<u8>> for SecurityManagerOutOfBand {
     /// data.push(length);
     /// data.push(SecurityManagerOutOfBand::data_type());
     /// data.push(security_manager_oob_byte);
-    /// 
-    /// let result = SecurityManagerOutOfBand::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
+    ///
+    /// let result = SecurityManagerOutOfBand::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(security_manager_oob, data_type.security_manager_oob);
+    ///
     /// let security_manager_oob_byte = SECURITY_MANAGER_LE_SUPPORTED;
     /// let mut security_manager_oob = [false; 8];
     /// security_manager_oob[1] = true;
@@ -240,11 +158,13 @@ impl From<&Vec<u8>> for SecurityManagerOutOfBand {
     /// data.push(length);
     /// data.push(SecurityManagerOutOfBand::data_type());
     /// data.push(security_manager_oob_byte);
-    /// 
-    /// let result = SecurityManagerOutOfBand::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
-    /// 
+    ///
+    /// let result = SecurityManagerOutOfBand::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(security_manager_oob, data_type.security_manager_oob);
+    ///
     /// let security_manager_oob_byte = SECURITY_MANAGER_ADDRESS_TYPE;
     /// let mut security_manager_oob = [false; 8];
     /// security_manager_oob[3] = true;
@@ -253,18 +173,40 @@ impl From<&Vec<u8>> for SecurityManagerOutOfBand {
     /// data.push(length);
     /// data.push(SecurityManagerOutOfBand::data_type());
     /// data.push(security_manager_oob_byte);
-    /// 
-    /// let result = SecurityManagerOutOfBand::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(security_manager_oob, result.security_manager_oob);
+    ///
+    /// let result = SecurityManagerOutOfBand::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(security_manager_oob, data_type.security_manager_oob);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = SecurityManagerOutOfBand::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 3 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        let mut security_manager_oob = [false; 8];
+        security_manager_oob[0] = value[2] & SECURITY_MANAGER_OUT_OF_BAND_FLAG_OOB_FLAGS != 0;
+        security_manager_oob[1] = value[2] & SECURITY_MANAGER_LE_SUPPORTED != 0;
+        security_manager_oob[3] = value[2] & SECURITY_MANAGER_ADDRESS_TYPE != 0;
+        Ok(Self {
+            length,
+            security_manager_oob,
+        })
     }
 }
 
 impl Into<Vec<u8>> for SecurityManagerOutOfBand {
-    /// Create `Vec<u8>` from [SecurityManagerOutOfBand].
+    /// Create `Vec<u8>` from [`SecurityManagerOutOfBand`].
     ///
     /// # Examples
     ///
@@ -293,8 +235,10 @@ impl Into<Vec<u8>> for SecurityManagerOutOfBand {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     /// 
-    /// let result2 = SecurityManagerOutOfBand::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = SecurityManagerOutOfBand::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// 
     /// let security_manager_oob = [false, true, false, false, false, false, false, false];
@@ -319,8 +263,10 @@ impl Into<Vec<u8>> for SecurityManagerOutOfBand {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     /// 
-    /// let result2 = SecurityManagerOutOfBand::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = SecurityManagerOutOfBand::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// 
     /// let security_manager_oob = [false, false, false, true, false, false, false, false];
@@ -345,8 +291,10 @@ impl Into<Vec<u8>> for SecurityManagerOutOfBand {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     /// 
-    /// let result2 = SecurityManagerOutOfBand::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = SecurityManagerOutOfBand::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -422,75 +370,6 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
-        let security_manager_oob_byte = SECURITY_MANAGER_OUT_OF_BAND_FLAG_OOB_FLAGS;
-        let mut security_manager_oob = [false; 8];
-        security_manager_oob[0] = true;
-        let length = 2;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(SecurityManagerOutOfBand::data_type());
-        data.push(security_manager_oob_byte);
-
-        let result = SecurityManagerOutOfBand::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(SecurityManagerOutOfBand::data_type());
-        data.push(security_manager_oob_byte);
-        let result = SecurityManagerOutOfBand::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
-
-        let security_manager_oob_byte = SECURITY_MANAGER_LE_SUPPORTED;
-        let mut security_manager_oob = [false; 8];
-        security_manager_oob[1] = true;
-        let length = 2;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(SecurityManagerOutOfBand::data_type());
-        data.push(security_manager_oob_byte);
-
-        let result = SecurityManagerOutOfBand::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(SecurityManagerOutOfBand::data_type());
-        data.push(security_manager_oob_byte);
-        let result = SecurityManagerOutOfBand::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
-
-        let security_manager_oob_byte = SECURITY_MANAGER_ADDRESS_TYPE;
-        let mut security_manager_oob = [false; 8];
-        security_manager_oob[3] = true;
-        let length = 4;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(SecurityManagerOutOfBand::data_type());
-        data.push(security_manager_oob_byte);
-
-        let result = SecurityManagerOutOfBand::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(SecurityManagerOutOfBand::data_type());
-        data.push(security_manager_oob_byte);
-        let result = SecurityManagerOutOfBand::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
-    }
-
-    #[test]
     fn test_is_oob_flags_field() {
         let security_manager_oob = [true, false, false, false, false, false, false, false];
         let result = SecurityManagerOutOfBand::new(&security_manager_oob);
@@ -536,7 +415,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from() {
+    fn test_try_from() {
         let security_manager_oob_byte = SECURITY_MANAGER_OUT_OF_BAND_FLAG_OOB_FLAGS;
         let mut security_manager_oob = [false; 8];
         security_manager_oob[0] = true;
@@ -546,9 +425,11 @@ mod tests {
         data.push(SecurityManagerOutOfBand::data_type());
         data.push(security_manager_oob_byte);
 
-        let result = SecurityManagerOutOfBand::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
+        let result = SecurityManagerOutOfBand::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(security_manager_oob, data_type.security_manager_oob);
 
         let security_manager_oob_byte = SECURITY_MANAGER_LE_SUPPORTED;
         let mut security_manager_oob = [false; 8];
@@ -559,9 +440,11 @@ mod tests {
         data.push(SecurityManagerOutOfBand::data_type());
         data.push(security_manager_oob_byte);
 
-        let result = SecurityManagerOutOfBand::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
+        let result = SecurityManagerOutOfBand::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(security_manager_oob, data_type.security_manager_oob);
 
         let security_manager_oob_byte = SECURITY_MANAGER_ADDRESS_TYPE;
         let mut security_manager_oob = [false; 8];
@@ -572,9 +455,19 @@ mod tests {
         data.push(SecurityManagerOutOfBand::data_type());
         data.push(security_manager_oob_byte);
 
-        let result = SecurityManagerOutOfBand::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(security_manager_oob, result.security_manager_oob);
+        let result = SecurityManagerOutOfBand::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(security_manager_oob, data_type.security_manager_oob);
+
+        let data: Vec<u8> = Vec::new();
+        let result = SecurityManagerOutOfBand::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -601,8 +494,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = SecurityManagerOutOfBand::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = SecurityManagerOutOfBand::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
 
         let security_manager_oob = [false, true, false, false, false, false, false, false];
@@ -627,8 +522,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = SecurityManagerOutOfBand::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = SecurityManagerOutOfBand::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
 
         let security_manager_oob = [false, false, false, true, false, false, false, false];
@@ -653,8 +550,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = SecurityManagerOutOfBand::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = SecurityManagerOutOfBand::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 
