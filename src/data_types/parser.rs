@@ -70,6 +70,7 @@ use super::{
         is_secure_simple_pairing_randomizer_r256, SecureSimplePairingRandomizerR256,
     },
     security_manager_oob::{is_security_manager_oob, SecurityManagerOutOfBand},
+    security_manager_tk_value::{is_security_manager_tk_value, SecurityManagerTkValue},
 };
 
 /// Data type parse result.
@@ -181,6 +182,9 @@ pub enum DataTypeParseResult {
 
     /// [`SecurityManagerOutOfBand`]'s [`TryFrom::try_from`] result.
     SecurityManagerOutOfBandResult(Result<SecurityManagerOutOfBand, String>),
+
+    /// [`SecurityManagerTkValue`]'s [`TryFrom::try_from`] result.
+    SecurityManagerTkValueResult(Result<SecurityManagerTkValue, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -991,6 +995,24 @@ impl DataTypeParseResult {
     pub fn is_security_manager_oob(&self) -> bool {
         matches!(self, DataTypeParseResult::SecurityManagerOutOfBandResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::SecurityManagerTkValueResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{security_manager_tk_value::SecurityManagerTkValue, parser::DataTypeParseResult};
+    ///
+    /// let security_manager_tk_value = 0x0102030405060708090a0b0c0d0e0f10u128;
+    /// let data = SecurityManagerTkValue::new(security_manager_tk_value).into();
+    /// assert!(DataTypeParseResult::from(&data).is_security_manager_tk_value());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_security_manager_tk_value());
+    /// ```
+    pub fn is_security_manager_tk_value(&self) -> bool {
+        matches!(self, DataTypeParseResult::SecurityManagerTkValueResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -1126,6 +1148,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::SecurityManagerOutOfBandResult(
                     SecurityManagerOutOfBand::try_from(value),
                 )
+            } else if is_security_manager_tk_value(data_type.to_owned()) {
+                DataTypeParseResult::SecurityManagerTkValueResult(SecurityManagerTkValue::try_from(
+                    value,
+                ))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -1259,6 +1285,7 @@ mod tests {
         secure_simple_pairing_randomizer_r192::SecureSimplePairingRandomizerR192,
         secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256,
         security_manager_oob::SecurityManagerOutOfBand,
+        security_manager_tk_value::SecurityManagerTkValue,
     };
 
     use super::DataTypeParseResults;
@@ -1735,6 +1762,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_security_manager_oob());
+    }
+
+    #[test]
+    fn test_is_security_manager_tk_value() {
+        let security_manager_tk_value = 0x0102030405060708090a0b0c0d0e0f10u128;
+        let data = SecurityManagerTkValue::new(security_manager_tk_value).into();
+        assert!(DataTypeParseResult::from(&data).is_security_manager_tk_value());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_security_manager_tk_value());
     }
 
     #[test]
