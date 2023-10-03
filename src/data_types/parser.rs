@@ -66,6 +66,9 @@ use super::{
     secure_simple_pairing_randomizer_r192::{
         is_secure_simple_pairing_randomizer_r192, SecureSimplePairingRandomizerR192,
     },
+    secure_simple_pairing_randomizer_r256::{
+        is_secure_simple_pairing_randomizer_r256, SecureSimplePairingRandomizerR256,
+    },
 };
 
 /// Data type parse result.
@@ -171,6 +174,9 @@ pub enum DataTypeParseResult {
 
     /// [`SecureSimplePairingRandomizerR192`]'s [`TryFrom::try_from`] result.
     SecureSimplePairingRandomizerR192Result(Result<SecureSimplePairingRandomizerR192, String>),
+
+    /// [`SecureSimplePairingRandomizerR256`]'s [`TryFrom::try_from`] result.
+    SecureSimplePairingRandomizerR256Result(Result<SecureSimplePairingRandomizerR256, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -941,6 +947,28 @@ impl DataTypeParseResult {
             DataTypeParseResult::SecureSimplePairingRandomizerR192Result(_)
         )
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::RandomTargetAddressResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, parser::DataTypeParseResult};
+    ///
+    /// let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
+    /// let data =
+    ///     SecureSimplePairingRandomizerR256::new(secure_simple_pairing_randomizer_r256).into();
+    /// assert!(DataTypeParseResult::from(&data).is_secure_simple_pairing_randomizer_r256());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_secure_simple_pairing_randomizer_r256());
+    /// ```
+    pub fn is_secure_simple_pairing_randomizer_r256(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::SecureSimplePairingRandomizerR256Result(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -1067,6 +1095,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_secure_simple_pairing_randomizer_r192(data_type.to_owned()) {
                 DataTypeParseResult::SecureSimplePairingRandomizerR192Result(
                     SecureSimplePairingRandomizerR192::try_from(value),
+                )
+            } else if is_secure_simple_pairing_randomizer_r256(data_type.to_owned()) {
+                DataTypeParseResult::SecureSimplePairingRandomizerR256Result(
+                    SecureSimplePairingRandomizerR256::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -1199,6 +1231,7 @@ mod tests {
         secure_simple_pairing_hash_c192::SecureSimplePairingHashC192,
         secure_simple_pairing_hash_c256::SecureSimplePairingHashC256,
         secure_simple_pairing_randomizer_r192::SecureSimplePairingRandomizerR192,
+        secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256,
     };
 
     use super::DataTypeParseResults;
@@ -1654,6 +1687,17 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_secure_simple_pairing_randomizer_r192());
+    }
+
+    #[test]
+    fn test_is_secure_simple_pairing_randomizer_r256() {
+        let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
+        let data =
+            SecureSimplePairingRandomizerR256::new(secure_simple_pairing_randomizer_r256).into();
+        assert!(DataTypeParseResult::from(&data).is_secure_simple_pairing_randomizer_r256());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_secure_simple_pairing_randomizer_r256());
     }
 
     #[test]

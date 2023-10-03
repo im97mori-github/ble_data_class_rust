@@ -1,8 +1,9 @@
-//! Secure Simple Pairing Randomizer R-256 (Data Type Value: 0x0f) module.
+//! Secure Simple Pairing Randomizer R-256 (Data Type Value: 0x1e) module.
 
 use crate::data_types::data_type::DataType;
 
 /// Secure Simple Pairing Randomizer R-256.
+#[derive(Debug)]
 pub struct SecureSimplePairingRandomizerR256 {
     /// data length
     pub length: u8,
@@ -12,7 +13,7 @@ pub struct SecureSimplePairingRandomizerR256 {
 }
 
 impl SecureSimplePairingRandomizerR256 {
-    /// Create [SecureSimplePairingRandomizerR256] from `Secure Simple Pairing Randomizer R-256`.
+    /// Create [`SecureSimplePairingRandomizerR256`] from `Secure Simple Pairing Randomizer R-256`.
     ///
     /// # Examples
     ///
@@ -30,46 +31,11 @@ impl SecureSimplePairingRandomizerR256 {
             secure_simple_pairing_randomizer_r256,
         }
     }
-
-    /// Create [SecureSimplePairingRandomizerR256] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::{BASE_UUID, data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType}};
-    ///
-    /// let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
-    /// let length = 17;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(SecureSimplePairingRandomizerR256::data_type());
-    /// data.append(&mut secure_simple_pairing_randomizer_r256.to_le_bytes().to_vec());
-    /// 
-    /// let result = SecureSimplePairingRandomizerR256::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(secure_simple_pairing_randomizer_r256, result.secure_simple_pairing_randomizer_r256);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(SecureSimplePairingRandomizerR256::data_type());
-    /// data.append(&mut secure_simple_pairing_randomizer_r256.to_le_bytes().to_vec());
-    /// let result = SecureSimplePairingRandomizerR256::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(secure_simple_pairing_randomizer_r256, result.secure_simple_pairing_randomizer_r256);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            secure_simple_pairing_randomizer_r256: u128::from_le_bytes(data[2..18].try_into().unwrap()),
-        }
-    }
 }
 
-impl From<&Vec<u8>> for SecureSimplePairingRandomizerR256 {
-    /// Create [SecureSimplePairingRandomizerR256] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for SecureSimplePairingRandomizerR256 {
+    type Error = String;
+    /// Create [`SecureSimplePairingRandomizerR256`] from `Vec<u8>`.
     ///
     /// [`SecureSimplePairingRandomizerR256::from_with_offset`]
     ///
@@ -84,18 +50,41 @@ impl From<&Vec<u8>> for SecureSimplePairingRandomizerR256 {
     /// data.push(length);
     /// data.push(SecureSimplePairingRandomizerR256::data_type());
     /// data.append(&mut secure_simple_pairing_randomizer_r256.to_le_bytes().to_vec());
-    /// 
-    /// let result = SecureSimplePairingRandomizerR256::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(secure_simple_pairing_randomizer_r256, result.secure_simple_pairing_randomizer_r256);
+    ///
+    /// let result = SecureSimplePairingRandomizerR256::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(
+    ///     secure_simple_pairing_randomizer_r256,
+    ///     data_type.secure_simple_pairing_randomizer_r256
+    /// );
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = SecureSimplePairingRandomizerR256::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 18 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            secure_simple_pairing_randomizer_r256: u128::from_le_bytes(
+                value[2..18].try_into().unwrap(),
+            ),
+        })
     }
 }
 
 impl Into<Vec<u8>> for SecureSimplePairingRandomizerR256 {
-    /// Create `Vec<u8>` from [SecureSimplePairingRandomizerR256].
+    /// Create `Vec<u8>` from [`SecureSimplePairingRandomizerR256`].
     ///
     /// # Examples
     ///
@@ -104,41 +93,48 @@ impl Into<Vec<u8>> for SecureSimplePairingRandomizerR256 {
     ///
     /// let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let result1 = SecureSimplePairingRandomizerR256::new(secure_simple_pairing_randomizer_r256);
-    /// 
+    ///
     /// let length = 17;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(SecureSimplePairingRandomizerR256::data_type());
     /// data.append(&mut secure_simple_pairing_randomizer_r256.to_le_bytes().to_vec());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
-    /// let result2 = SecureSimplePairingRandomizerR256::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    ///
+    /// let result2 = SecureSimplePairingRandomizerR256::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
         data.push(self.length);
         data.push(Self::data_type());
-        data.append(&mut self.secure_simple_pairing_randomizer_r256.to_le_bytes().to_vec());
+        data.append(
+            &mut self
+                .secure_simple_pairing_randomizer_r256
+                .to_le_bytes()
+                .to_vec(),
+        );
         return data;
     }
 }
 
 impl DataType for SecureSimplePairingRandomizerR256 {
-    /// return `0x0f`.
+    /// return `0x1e`.
     ///
     /// # Examples
     ///
     /// ```
     /// use ble_data_struct::data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type::DataType};
     ///
-    /// assert_eq!(0x0f, SecureSimplePairingRandomizerR256::data_type());
+    /// assert_eq!(0x1e, SecureSimplePairingRandomizerR256::data_type());
     /// ```
     fn data_type() -> u8 {
-        0x0f
+        0x1e
     }
 }
 
@@ -150,7 +146,7 @@ impl DataType for SecureSimplePairingRandomizerR256 {
 /// use ble_data_struct::data_types::secure_simple_pairing_randomizer_r256::*;
 /// use ble_data_struct::data_types::data_type::DataType;
 ///
-/// assert!(is_secure_simple_pairing_randomizer_r256(0x0f));
+/// assert!(is_secure_simple_pairing_randomizer_r256(0x1e));
 /// assert!(!is_secure_simple_pairing_randomizer_r256(0x00));
 /// ```
 pub fn is_secure_simple_pairing_randomizer_r256(data_type: u8) -> bool {
@@ -166,11 +162,14 @@ mod tests {
         let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
         let result = SecureSimplePairingRandomizerR256::new(secure_simple_pairing_randomizer_r256);
         assert_eq!(17, result.length);
-        assert_eq!(secure_simple_pairing_randomizer_r256, result.secure_simple_pairing_randomizer_r256);
+        assert_eq!(
+            secure_simple_pairing_randomizer_r256,
+            result.secure_simple_pairing_randomizer_r256
+        );
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
         let length = 17;
         let mut data: Vec<u8> = Vec::new();
@@ -178,32 +177,22 @@ mod tests {
         data.push(SecureSimplePairingRandomizerR256::data_type());
         data.append(&mut secure_simple_pairing_randomizer_r256.to_le_bytes().to_vec());
 
-        let result = SecureSimplePairingRandomizerR256::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(secure_simple_pairing_randomizer_r256, result.secure_simple_pairing_randomizer_r256);
+        let result = SecureSimplePairingRandomizerR256::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(
+            secure_simple_pairing_randomizer_r256,
+            data_type.secure_simple_pairing_randomizer_r256
+        );
 
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(SecureSimplePairingRandomizerR256::data_type());
-        data.append(&mut secure_simple_pairing_randomizer_r256.to_le_bytes().to_vec());
-        let result = SecureSimplePairingRandomizerR256::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(secure_simple_pairing_randomizer_r256, result.secure_simple_pairing_randomizer_r256);
-    }
-
-    #[test]
-    fn test_from() {
-        let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
-        let length = 17;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(SecureSimplePairingRandomizerR256::data_type());
-        data.append(&mut secure_simple_pairing_randomizer_r256.to_le_bytes().to_vec());
-
-        let result = SecureSimplePairingRandomizerR256::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(secure_simple_pairing_randomizer_r256, result.secure_simple_pairing_randomizer_r256);
+        let data: Vec<u8> = Vec::new();
+        let result = SecureSimplePairingRandomizerR256::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -220,19 +209,21 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = SecureSimplePairingRandomizerR256::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = SecureSimplePairingRandomizerR256::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 
     #[test]
     fn test_data_type() {
-        assert_eq!(0x0f, SecureSimplePairingRandomizerR256::data_type());
+        assert_eq!(0x1e, SecureSimplePairingRandomizerR256::data_type());
     }
 
     #[test]
     fn test_is_secure_simple_pairing_randomizer_r256() {
-        assert!(is_secure_simple_pairing_randomizer_r256(0x0f));
+        assert!(is_secure_simple_pairing_randomizer_r256(0x1e));
         assert!(!is_secure_simple_pairing_randomizer_r256(0x00));
     }
 }
