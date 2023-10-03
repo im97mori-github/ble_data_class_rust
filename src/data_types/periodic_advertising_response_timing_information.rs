@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Peripheral Connection Interval Range.
+#[derive(Debug)]
 pub struct PeriodicAdvertisingResponseTimingInformation {
     /// data length
     pub length: u8,
@@ -24,7 +25,7 @@ pub struct PeriodicAdvertisingResponseTimingInformation {
 }
 
 impl PeriodicAdvertisingResponseTimingInformation {
-    /// Create [PeriodicAdvertisingResponseTimingInformation] from Parameters.
+    /// Create [`PeriodicAdvertisingResponseTimingInformation`] from Parameters.
     ///
     /// # Examples
     ///
@@ -66,70 +67,11 @@ impl PeriodicAdvertisingResponseTimingInformation {
             response_slot_spacing,
         }
     }
-
-    /// Create [PeriodicAdvertisingResponseTimingInformation] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type::DataType};
-    ///
-    /// let rsp_aa: [u8; 4] = [1, 2, 3, 4];
-    /// let num_subevents = 6u8;
-    /// let subevent_interval = 7u8;
-    /// let response_slot_delay = 8u8;
-    /// let response_slot_spacing = 9u8;
-    /// let length = 9;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(PeriodicAdvertisingResponseTimingInformation::data_type());
-    /// data.append(&mut rsp_aa.to_vec());
-    /// data.push(num_subevents);
-    /// data.push(subevent_interval);
-    /// data.push(response_slot_delay);
-    /// data.push(response_slot_spacing);
-    /// 
-    /// let result = PeriodicAdvertisingResponseTimingInformation::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(rsp_aa, result.rsp_aa);
-    /// assert_eq!(num_subevents, result.num_subevents);
-    /// assert_eq!(subevent_interval, result.subevent_interval);
-    /// assert_eq!(response_slot_delay, result.response_slot_delay);
-    /// assert_eq!(response_slot_spacing, result.response_slot_spacing);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(PeriodicAdvertisingResponseTimingInformation::data_type());
-    /// data.append(&mut rsp_aa.to_vec());
-    /// data.push(num_subevents);
-    /// data.push(subevent_interval);
-    /// data.push(response_slot_delay);
-    /// data.push(response_slot_spacing);
-    /// let result = PeriodicAdvertisingResponseTimingInformation::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(rsp_aa, result.rsp_aa);
-    /// assert_eq!(num_subevents, result.num_subevents);
-    /// assert_eq!(subevent_interval, result.subevent_interval);
-    /// assert_eq!(response_slot_delay, result.response_slot_delay);
-    /// assert_eq!(response_slot_spacing, result.response_slot_spacing);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            rsp_aa: data[2..6].try_into().unwrap(),
-            num_subevents: data[6],
-            subevent_interval: data[7],
-            response_slot_delay: data[8],
-            response_slot_spacing: data[9],
-        }
-    }
 }
 
-impl From<&Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
-    /// Create [PeriodicAdvertisingResponseTimingInformation] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
+    type Error = String;
+    /// Create [`PeriodicAdvertisingResponseTimingInformation`] from `Vec<u8>`.
     ///
     /// [`PeriodicAdvertisingResponseTimingInformation::from_with_offset`]
     ///
@@ -152,22 +94,44 @@ impl From<&Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
     /// data.push(subevent_interval);
     /// data.push(response_slot_delay);
     /// data.push(response_slot_spacing);
+    ///
+    /// let result = PeriodicAdvertisingResponseTimingInformation::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(rsp_aa, data_type.rsp_aa);
+    /// assert_eq!(num_subevents, data_type.num_subevents);
+    /// assert_eq!(subevent_interval, data_type.subevent_interval);
+    /// assert_eq!(response_slot_delay, data_type.response_slot_delay);
+    /// assert_eq!(response_slot_spacing, data_type.response_slot_spacing);
     /// 
-    /// let result = PeriodicAdvertisingResponseTimingInformation::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(rsp_aa, result.rsp_aa);
-    /// assert_eq!(num_subevents, result.num_subevents);
-    /// assert_eq!(subevent_interval, result.subevent_interval);
-    /// assert_eq!(response_slot_delay, result.response_slot_delay);
-    /// assert_eq!(response_slot_spacing, result.response_slot_spacing);
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = PeriodicAdvertisingResponseTimingInformation::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 10 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            rsp_aa: value[2..6].try_into().unwrap(),
+            num_subevents: value[6],
+            subevent_interval: value[7],
+            response_slot_delay: value[8],
+            response_slot_spacing: value[9],
+        })
     }
 }
 
 impl Into<Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
-    /// Create `Vec<u8>` from [PeriodicAdvertisingResponseTimingInformation].
+    /// Create `Vec<u8>` from [`PeriodicAdvertisingResponseTimingInformation`].
     ///
     /// # Examples
     ///
@@ -195,12 +159,14 @@ impl Into<Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
     /// data.push(subevent_interval);
     /// data.push(response_slot_delay);
     /// data.push(response_slot_spacing);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
-    /// let result2 = PeriodicAdvertisingResponseTimingInformation::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    ///
+    /// let result2 = PeriodicAdvertisingResponseTimingInformation::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -275,7 +241,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let rsp_aa: [u8; 4] = [1, 2, 3, 4];
         let num_subevents = 6u8;
         let subevent_interval = 7u8;
@@ -291,56 +257,23 @@ mod tests {
         data.push(response_slot_delay);
         data.push(response_slot_spacing);
 
-        let result = PeriodicAdvertisingResponseTimingInformation::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(rsp_aa, result.rsp_aa);
-        assert_eq!(num_subevents, result.num_subevents);
-        assert_eq!(subevent_interval, result.subevent_interval);
-        assert_eq!(response_slot_delay, result.response_slot_delay);
-        assert_eq!(response_slot_spacing, result.response_slot_spacing);
+        let result = PeriodicAdvertisingResponseTimingInformation::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(rsp_aa, data_type.rsp_aa);
+        assert_eq!(num_subevents, data_type.num_subevents);
+        assert_eq!(subevent_interval, data_type.subevent_interval);
+        assert_eq!(response_slot_delay, data_type.response_slot_delay);
+        assert_eq!(response_slot_spacing, data_type.response_slot_spacing);
 
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(PeriodicAdvertisingResponseTimingInformation::data_type());
-        data.append(&mut rsp_aa.to_vec());
-        data.push(num_subevents);
-        data.push(subevent_interval);
-        data.push(response_slot_delay);
-        data.push(response_slot_spacing);
-        let result = PeriodicAdvertisingResponseTimingInformation::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(rsp_aa, result.rsp_aa);
-        assert_eq!(num_subevents, result.num_subevents);
-        assert_eq!(subevent_interval, result.subevent_interval);
-        assert_eq!(response_slot_delay, result.response_slot_delay);
-        assert_eq!(response_slot_spacing, result.response_slot_spacing);
-    }
-
-    #[test]
-    fn test_from() {
-        let rsp_aa: [u8; 4] = [1, 2, 3, 4];
-        let num_subevents = 6u8;
-        let subevent_interval = 7u8;
-        let response_slot_delay = 8u8;
-        let response_slot_spacing = 9u8;
-        let length = 9;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(PeriodicAdvertisingResponseTimingInformation::data_type());
-        data.append(&mut rsp_aa.to_vec());
-        data.push(num_subevents);
-        data.push(subevent_interval);
-        data.push(response_slot_delay);
-        data.push(response_slot_spacing);
-
-        let result = PeriodicAdvertisingResponseTimingInformation::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(rsp_aa, result.rsp_aa);
-        assert_eq!(num_subevents, result.num_subevents);
-        assert_eq!(subevent_interval, result.subevent_interval);
-        assert_eq!(response_slot_delay, result.response_slot_delay);
-        assert_eq!(response_slot_spacing, result.response_slot_spacing);
+        let data: Vec<u8> = Vec::new();
+        let result = PeriodicAdvertisingResponseTimingInformation::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -370,8 +303,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = PeriodicAdvertisingResponseTimingInformation::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = PeriodicAdvertisingResponseTimingInformation::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 

@@ -48,6 +48,10 @@ use super::{
         is_list_of_32bit_service_solicitation_uuids, ListOf32BitServiceSolicitationUUIDs,
     },
     manufacturer_specific_data::{is_manufacturer_specific_data, ManufacturerSpecificData},
+    periodic_advertising_response_timing_information::{
+        is_periodic_advertising_response_timing_information,
+        PeriodicAdvertisingResponseTimingInformation,
+    },
 };
 
 /// Data type parse result.
@@ -130,6 +134,11 @@ pub enum DataTypeParseResult {
 
     /// [`ManufacturerSpecificData`]'s [`TryFrom::try_from`] result.
     ManufacturerSpecificDataResult(Result<ManufacturerSpecificData, String>),
+
+    /// [`PeriodicAdvertisingResponseTimingInformation`]'s [`TryFrom::try_from`] result.
+    PeriodicAdvertisingResponseTimingInformationResult(
+        Result<PeriodicAdvertisingResponseTimingInformation, String>,
+    ),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -400,7 +409,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, parser::DataTypeParseResult};
     ///
     /// let name = "complete_local_name".to_string();
@@ -419,7 +427,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, parser::DataTypeParseResult};
     ///
     /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
@@ -440,7 +447,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{flags::Flags, parser::DataTypeParseResult};
     ///
     /// let flags = [true, false, false, false, false, false, false, false].to_vec();
@@ -537,7 +543,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, parser::DataTypeParseResult};
     ///
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
@@ -557,7 +562,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{le_role::*, parser::DataTypeParseResult};
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
@@ -576,7 +580,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, parser::DataTypeParseResult};
     ///
     /// let le_secure_connections_confirmation_value = 0x0102030405060708090a0b0c0d0e0f10u128;
@@ -600,7 +603,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, parser::DataTypeParseResult};
     ///
     /// let le_secure_connections_random_value = 0x0102030405060708090a0b0c0d0e0f10u128;
@@ -623,7 +625,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{le_supported_features::LeSupportedFeatures, parser::DataTypeParseResult};
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
@@ -724,7 +725,6 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use uuid::{uuid, Uuid};
     /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, parser::DataTypeParseResult};
     ///
     /// let company_identifier = 0x0ca8u16;
@@ -738,6 +738,38 @@ impl DataTypeParseResult {
     /// ```
     pub fn is_manufacturer_specific_data(&self) -> bool {
         matches!(self, DataTypeParseResult::ManufacturerSpecificDataResult(_))
+    }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::PeriodicAdvertisingResponseTimingInformationResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, parser::DataTypeParseResult};
+    ///
+    /// let rsp_aa: [u8; 4] = [1, 2, 3, 4];
+    /// let num_subevents = 6u8;
+    /// let subevent_interval = 7u8;
+    /// let response_slot_delay = 8u8;
+    /// let response_slot_spacing = 9u8;
+    /// let data = PeriodicAdvertisingResponseTimingInformation::new(
+    ///     &rsp_aa,
+    ///     num_subevents,
+    ///     subevent_interval,
+    ///     response_slot_delay,
+    ///     response_slot_spacing,
+    /// )
+    /// .into();
+    /// assert!(DataTypeParseResult::from(&data).is_periodic_advertising_response_timing_information());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_periodic_advertising_response_timing_information());
+    /// ```
+    pub fn is_periodic_advertising_response_timing_information(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::PeriodicAdvertisingResponseTimingInformationResult(_)
+        )
     }
 }
 
@@ -841,6 +873,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_manufacturer_specific_data(data_type.to_owned()) {
                 DataTypeParseResult::ManufacturerSpecificDataResult(
                     ManufacturerSpecificData::try_from(value),
+                )
+            } else if is_periodic_advertising_response_timing_information(data_type.to_owned()) {
+                DataTypeParseResult::PeriodicAdvertisingResponseTimingInformationResult(
+                    PeriodicAdvertisingResponseTimingInformation::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -966,6 +1002,7 @@ mod tests {
         list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs,
         manufacturer_specific_data::ManufacturerSpecificData,
         parser::DataTypeParseResult,
+        periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation,
     };
 
     use super::DataTypeParseResults;
@@ -1318,6 +1355,31 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_manufacturer_specific_data());
+    }
+
+    #[test]
+    fn test_is_periodic_advertising_response_timing_information() {
+        let rsp_aa: [u8; 4] = [1, 2, 3, 4];
+        let num_subevents = 6u8;
+        let subevent_interval = 7u8;
+        let response_slot_delay = 8u8;
+        let response_slot_spacing = 9u8;
+        let data = PeriodicAdvertisingResponseTimingInformation::new(
+            &rsp_aa,
+            num_subevents,
+            subevent_interval,
+            response_slot_delay,
+            response_slot_spacing,
+        )
+        .into();
+        assert!(
+            DataTypeParseResult::from(&data).is_periodic_advertising_response_timing_information()
+        );
+
+        let data: Vec<u8> = Vec::new();
+        assert!(
+            !DataTypeParseResult::from(&data).is_periodic_advertising_response_timing_information()
+        );
     }
 
     #[test]
