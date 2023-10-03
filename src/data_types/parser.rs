@@ -57,6 +57,9 @@ use super::{
     },
     public_target_address::{is_public_target_address, PublicTargetAddress},
     random_target_address::{is_random_target_address, RandomTargetAddress},
+    secure_simple_pairing_hash_c192::{
+        is_secure_simple_pairing_hash_c192, SecureSimplePairingHashC192,
+    },
 };
 
 /// Data type parse result.
@@ -153,6 +156,9 @@ pub enum DataTypeParseResult {
 
     /// [`RandomTargetAddress`]'s [`TryFrom::try_from`] result.
     RandomTargetAddressResult(Result<RandomTargetAddress, String>),
+
+    /// [`SecureSimplePairingHashC192`]'s [`TryFrom::try_from`] result.
+    SecureSimplePairingHashC192Result(Result<SecureSimplePairingHashC192, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -859,6 +865,27 @@ impl DataTypeParseResult {
     pub fn is_random_target_address(&self) -> bool {
         matches!(self, DataTypeParseResult::RandomTargetAddressResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::RandomTargetAddressResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, parser::DataTypeParseResult};
+    ///
+    /// let secure_simple_pairing_hash_c192 = 0x0102030405060708090a0b0c0d0e0f10u128;
+    /// let data = SecureSimplePairingHashC192::new(secure_simple_pairing_hash_c192).into();
+    /// assert!(DataTypeParseResult::from(&data).is_secure_simple_pairing_hash_c192());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_secure_simple_pairing_hash_c192());
+    /// ```
+    pub fn is_secure_simple_pairing_hash_c192(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::SecureSimplePairingHashC192Result(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -974,6 +1001,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::PublicTargetAddressResult(PublicTargetAddress::try_from(value))
             } else if is_random_target_address(data_type.to_owned()) {
                 DataTypeParseResult::RandomTargetAddressResult(RandomTargetAddress::try_from(value))
+            } else if is_secure_simple_pairing_hash_c192(data_type.to_owned()) {
+                DataTypeParseResult::SecureSimplePairingHashC192Result(
+                    SecureSimplePairingHashC192::try_from(value),
+                )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -1102,6 +1133,7 @@ mod tests {
         peripheral_connection_interval_range::PeripheralConnectionIntervalRange,
         public_target_address::PublicTargetAddress,
         random_target_address::RandomTargetAddress,
+        secure_simple_pairing_hash_c192::SecureSimplePairingHashC192,
     };
 
     use super::DataTypeParseResults;
@@ -1526,6 +1558,16 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_random_target_address());
+    }
+
+    #[test]
+    fn test_is_secure_simple_pairing_hash_c192() {
+        let secure_simple_pairing_hash_c192 = 0x0102030405060708090a0b0c0d0e0f10u128;
+        let data = SecureSimplePairingHashC192::new(secure_simple_pairing_hash_c192).into();
+        assert!(DataTypeParseResult::from(&data).is_secure_simple_pairing_hash_c192());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_secure_simple_pairing_hash_c192());
     }
 
     #[test]
