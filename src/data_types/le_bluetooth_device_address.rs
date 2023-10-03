@@ -1,4 +1,4 @@
-//! LE Bluetooth Device Address (Data Type Value:0x17) module.
+//! LE Bluetooth Device Address (Data Type Value:0x1b) module.
 
 use crate::data_types::data_type::DataType;
 
@@ -194,17 +194,17 @@ impl Into<Vec<u8>> for LeBluetoothDeviceAddress {
 }
 
 impl DataType for LeBluetoothDeviceAddress {
-    /// return `0x17`.
+    /// return `0x1b`.
     ///
     /// # Examples
     ///
     /// ```
     /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type::DataType};
     ///
-    /// assert_eq!(0x17, LeBluetoothDeviceAddress::data_type());
+    /// assert_eq!(0x1b, LeBluetoothDeviceAddress::data_type());
     /// ```
     fn data_type() -> u8 {
-        0x17
+        0x1b
     }
 }
 
@@ -216,7 +216,7 @@ impl DataType for LeBluetoothDeviceAddress {
 /// use ble_data_struct::data_types::le_bluetooth_device_address::*;
 /// use ble_data_struct::data_types::data_type::DataType;
 ///
-/// assert!(is_le_bluetooth_device_address(0x17));
+/// assert!(is_le_bluetooth_device_address(0x1b));
 /// assert!(!is_le_bluetooth_device_address(0x00));
 /// ```
 pub fn is_le_bluetooth_device_address(data_type: u8) -> bool {
@@ -337,12 +337,12 @@ mod tests {
 
     #[test]
     fn test_data_type() {
-        assert_eq!(0x17, LeBluetoothDeviceAddress::data_type());
+        assert_eq!(0x1b, LeBluetoothDeviceAddress::data_type());
     }
 
     #[test]
     fn test_is_le_bluetooth_device_address() {
-        assert!(is_le_bluetooth_device_address(0x17));
+        assert!(is_le_bluetooth_device_address(0x1b));
         assert!(!is_le_bluetooth_device_address(0x00));
     }
 }

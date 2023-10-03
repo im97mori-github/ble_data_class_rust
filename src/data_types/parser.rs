@@ -55,6 +55,7 @@ use super::{
     peripheral_connection_interval_range::{
         is_peripheral_connection_interval_range, PeripheralConnectionIntervalRange,
     },
+    public_target_address::{is_public_target_address, PublicTargetAddress},
 };
 
 /// Data type parse result.
@@ -145,6 +146,9 @@ pub enum DataTypeParseResult {
 
     /// [`PeripheralConnectionIntervalRange`]'s [`TryFrom::try_from`] result.
     PeripheralConnectionIntervalRangeResult(Result<PeripheralConnectionIntervalRange, String>),
+
+    /// [`PublicTargetAddress`]'s [`TryFrom::try_from`] result.
+    PublicTargetAddressResult(Result<PublicTargetAddress, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -799,6 +803,32 @@ impl DataTypeParseResult {
             DataTypeParseResult::PeripheralConnectionIntervalRangeResult(_)
         )
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::PublicTargetAddressResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{public_target_address::PublicTargetAddress, parser::DataTypeParseResult};
+    ///
+    /// let public_target_address: Vec<u64> = [
+    ///     u64::from_le_bytes([
+    ///         0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x00u8, 0x00u8,
+    ///     ]),
+    ///     u64::from_le_bytes([
+    ///         0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8, 0x0cu8, 0x00u8, 0x00u8,
+    ///     ]),
+    /// ]
+    /// .to_vec();
+    /// let data = PublicTargetAddress::new(&public_target_address).into();
+    /// assert!(DataTypeParseResult::from(&data).is_public_target_address());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_public_target_address());
+    /// ```
+    pub fn is_public_target_address(&self) -> bool {
+        matches!(self, DataTypeParseResult::PublicTargetAddressResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -910,6 +940,8 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::PeripheralConnectionIntervalRangeResult(
                     PeripheralConnectionIntervalRange::try_from(value),
                 )
+            } else if is_public_target_address(data_type.to_owned()) {
+                DataTypeParseResult::PublicTargetAddressResult(PublicTargetAddress::try_from(value))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -1036,6 +1068,7 @@ mod tests {
         parser::DataTypeParseResult,
         periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation,
         peripheral_connection_interval_range::PeripheralConnectionIntervalRange,
+        public_target_address::PublicTargetAddress,
     };
 
     use super::DataTypeParseResults;
@@ -1424,6 +1457,24 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_peripheral_connection_interval_range());
+    }
+
+    #[test]
+    fn test_is_public_target_address() {
+        let public_target_address: Vec<u64> = [
+            u64::from_le_bytes([
+                0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x00u8, 0x00u8,
+            ]),
+            u64::from_le_bytes([
+                0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8, 0x0cu8, 0x00u8, 0x00u8,
+            ]),
+        ]
+        .to_vec();
+        let data = PublicTargetAddress::new(&public_target_address).into();
+        assert!(DataTypeParseResult::from(&data).is_public_target_address());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_public_target_address());
     }
 
     #[test]
