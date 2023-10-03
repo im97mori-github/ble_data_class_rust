@@ -52,6 +52,9 @@ use super::{
         is_periodic_advertising_response_timing_information,
         PeriodicAdvertisingResponseTimingInformation,
     },
+    peripheral_connection_interval_range::{
+        is_peripheral_connection_interval_range, PeripheralConnectionIntervalRange,
+    },
 };
 
 /// Data type parse result.
@@ -139,6 +142,9 @@ pub enum DataTypeParseResult {
     PeriodicAdvertisingResponseTimingInformationResult(
         Result<PeriodicAdvertisingResponseTimingInformation, String>,
     ),
+
+    /// [`PeripheralConnectionIntervalRange`]'s [`TryFrom::try_from`] result.
+    PeripheralConnectionIntervalRangeResult(Result<PeripheralConnectionIntervalRange, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -771,6 +777,28 @@ impl DataTypeParseResult {
             DataTypeParseResult::PeriodicAdvertisingResponseTimingInformationResult(_)
         )
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::PeripheralConnectionIntervalRangeResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, parser::DataTypeParseResult};
+    ///
+    /// let minimum_value = 0x0006u16;
+    /// let maximum_value = 0x0C80u16;
+    /// let data = PeripheralConnectionIntervalRange::new(minimum_value, maximum_value).into();
+    /// assert!(DataTypeParseResult::from(&data).is_peripheral_connection_interval_range());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_peripheral_connection_interval_range());
+    /// ```
+    pub fn is_peripheral_connection_interval_range(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::PeripheralConnectionIntervalRangeResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -877,6 +905,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
             } else if is_periodic_advertising_response_timing_information(data_type.to_owned()) {
                 DataTypeParseResult::PeriodicAdvertisingResponseTimingInformationResult(
                     PeriodicAdvertisingResponseTimingInformation::try_from(value),
+                )
+            } else if is_peripheral_connection_interval_range(data_type.to_owned()) {
+                DataTypeParseResult::PeripheralConnectionIntervalRangeResult(
+                    PeripheralConnectionIntervalRange::try_from(value),
                 )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
@@ -1003,6 +1035,7 @@ mod tests {
         manufacturer_specific_data::ManufacturerSpecificData,
         parser::DataTypeParseResult,
         periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation,
+        peripheral_connection_interval_range::PeripheralConnectionIntervalRange,
     };
 
     use super::DataTypeParseResults;
@@ -1380,6 +1413,17 @@ mod tests {
         assert!(
             !DataTypeParseResult::from(&data).is_periodic_advertising_response_timing_information()
         );
+    }
+
+    #[test]
+    fn test_is_peripheral_connection_interval_range() {
+        let minimum_value = 0x0006u16;
+        let maximum_value = 0x0C80u16;
+        let data = PeripheralConnectionIntervalRange::new(minimum_value, maximum_value).into();
+        assert!(DataTypeParseResult::from(&data).is_peripheral_connection_interval_range());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_peripheral_connection_interval_range());
     }
 
     #[test]

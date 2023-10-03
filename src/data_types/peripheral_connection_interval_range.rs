@@ -3,6 +3,8 @@
 use crate::data_types::data_type::DataType;
 
 /// Peripheral Connection Interval Range.
+
+#[derive(Debug)]
 pub struct PeripheralConnectionIntervalRange {
     /// data length
     pub length: u8,
@@ -15,7 +17,7 @@ pub struct PeripheralConnectionIntervalRange {
 }
 
 impl PeripheralConnectionIntervalRange {
-    /// Create [PeripheralConnectionIntervalRange] from `Peripheral Connection Interval Range`.
+    /// Create [`PeripheralConnectionIntervalRange`] from `Peripheral Connection Interval Range`.
     ///
     /// # Examples
     ///
@@ -34,50 +36,6 @@ impl PeripheralConnectionIntervalRange {
             length: 5,
             minimum_value,
             maximum_value,
-        }
-    }
-
-    /// Create [PeripheralConnectionIntervalRange] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type::DataType};
-    ///
-    /// let minimum_value = 0x0006u16;
-    /// let maximum_value = 0x0C80u16;
-    /// let length = 5;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(PeripheralConnectionIntervalRange::data_type());
-    /// data.append(&mut minimum_value.to_le_bytes().to_vec());
-    /// data.append(&mut maximum_value.to_le_bytes().to_vec());
-    ///
-    /// let result = PeripheralConnectionIntervalRange::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(minimum_value, result.minimum_value);
-    /// assert_eq!(maximum_value, result.maximum_value);
-    ///
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(PeripheralConnectionIntervalRange::data_type());
-    /// data.append(&mut minimum_value.to_le_bytes().to_vec());
-    /// data.append(&mut maximum_value.to_le_bytes().to_vec());
-    /// assert_eq!(minimum_value, result.minimum_value);
-    /// assert_eq!(maximum_value, result.maximum_value);
-    /// let result = PeripheralConnectionIntervalRange::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// data.append(&mut minimum_value.to_le_bytes().to_vec());
-    /// data.append(&mut maximum_value.to_le_bytes().to_vec());
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        Self {
-            length,
-            minimum_value: u16::from_le_bytes(data[2..4].try_into().unwrap()),
-            maximum_value: u16::from_le_bytes(data[4..6].try_into().unwrap()),
         }
     }
 
@@ -182,8 +140,9 @@ pub const CONNECTION_INTERVAL_RANGE: f32 = 1.25;
 /// no specific minimum / maximum values
 pub const CONNECTION_INTERVAL_NO_SPECIFIC_VALUE: u16 = 0xffff;
 
-impl From<&Vec<u8>> for PeripheralConnectionIntervalRange {
-    /// Create [PeripheralConnectionIntervalRange] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for PeripheralConnectionIntervalRange {
+    type Error = String;
+    /// Create [`PeripheralConnectionIntervalRange`] from `Vec<u8>`.
     ///
     /// [`PeripheralConnectionIntervalRange::from_with_offset`]
     ///
@@ -201,18 +160,37 @@ impl From<&Vec<u8>> for PeripheralConnectionIntervalRange {
     /// data.append(&mut minimum_value.to_le_bytes().to_vec());
     /// data.append(&mut maximum_value.to_le_bytes().to_vec());
     ///
-    /// let result = PeripheralConnectionIntervalRange::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(minimum_value, result.minimum_value);
-    /// assert_eq!(maximum_value, result.maximum_value);
+    /// let result = PeripheralConnectionIntervalRange::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(minimum_value, data_type.minimum_value);
+    /// assert_eq!(maximum_value, data_type.maximum_value);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = PeripheralConnectionIntervalRange::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 6 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        Ok(Self {
+            length,
+            minimum_value: u16::from_le_bytes(value[2..4].try_into().unwrap()),
+            maximum_value: u16::from_le_bytes(value[4..6].try_into().unwrap()),
+        })
     }
 }
 
 impl Into<Vec<u8>> for PeripheralConnectionIntervalRange {
-    /// Create `Vec<u8>` from [PeripheralConnectionIntervalRange].
+    /// Create `Vec<u8>` from [`PeripheralConnectionIntervalRange`].
     ///
     /// # Examples
     ///
@@ -232,8 +210,10 @@ impl Into<Vec<u8>> for PeripheralConnectionIntervalRange {
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
     ///
-    /// let result2 = PeripheralConnectionIntervalRange::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
+    /// let result2 = PeripheralConnectionIntervalRange::try_from(&data);
+    /// assert!(result2.is_ok());
+    /// let data_type = result2.unwrap();
+    /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
@@ -291,34 +271,6 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
-        let minimum_value = 0x0006u16;
-        let maximum_value = 0x0C80u16;
-        let length = 5;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(PeripheralConnectionIntervalRange::data_type());
-        data.append(&mut minimum_value.to_le_bytes().to_vec());
-        data.append(&mut maximum_value.to_le_bytes().to_vec());
-
-        let result = PeripheralConnectionIntervalRange::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(minimum_value, result.minimum_value);
-        assert_eq!(maximum_value, result.maximum_value);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(PeripheralConnectionIntervalRange::data_type());
-        data.append(&mut minimum_value.to_le_bytes().to_vec());
-        data.append(&mut maximum_value.to_le_bytes().to_vec());
-        let result = PeripheralConnectionIntervalRange::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        data.append(&mut minimum_value.to_le_bytes().to_vec());
-        data.append(&mut maximum_value.to_le_bytes().to_vec());
-    }
-
-    #[test]
     fn test_minimum_value_millis() {
         let minimum_value = 0x0006u16;
         let maximum_value = 0x0C80u16;
@@ -367,7 +319,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from() {
+    fn test_try_from() {
         let minimum_value = 0x0006u16;
         let maximum_value = 0x0C80u16;
         let length = 5;
@@ -377,10 +329,20 @@ mod tests {
         data.append(&mut minimum_value.to_le_bytes().to_vec());
         data.append(&mut maximum_value.to_le_bytes().to_vec());
 
-        let result = PeripheralConnectionIntervalRange::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(minimum_value, result.minimum_value);
-        assert_eq!(maximum_value, result.maximum_value);
+        let result = PeripheralConnectionIntervalRange::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(minimum_value, data_type.minimum_value);
+        assert_eq!(maximum_value, data_type.maximum_value);
+
+        let data: Vec<u8> = Vec::new();
+        let result = PeripheralConnectionIntervalRange::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -398,8 +360,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = PeripheralConnectionIntervalRange::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = PeripheralConnectionIntervalRange::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 

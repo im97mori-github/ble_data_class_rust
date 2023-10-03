@@ -27,7 +27,7 @@ pub mod data_types {
     pub mod list_of_32bit_service_solicitation_uuids;
     pub mod manufacturer_specific_data;
     pub mod periodic_advertising_response_timing_information;
-    // pub mod peripheral_connection_interval_range;
+    pub mod peripheral_connection_interval_range;
     // pub mod public_target_address;
     // pub mod random_target_address;
     // pub mod secure_simple_pairing_hash_c192;
