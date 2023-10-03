@@ -31,7 +31,7 @@ pub mod data_types {
     pub mod public_target_address;
     pub mod random_target_address;
     pub mod secure_simple_pairing_hash_c192;
-    // pub mod secure_simple_pairing_hash_c256;
+    pub mod secure_simple_pairing_hash_c256;
     // pub mod secure_simple_pairing_randomizer_r192;
     // pub mod secure_simple_pairing_randomizer_r256;
     // pub mod security_manager_oob;
