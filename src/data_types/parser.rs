@@ -72,6 +72,7 @@ use super::{
     security_manager_oob::{is_security_manager_oob, SecurityManagerOutOfBand},
     security_manager_tk_value::{is_security_manager_tk_value, SecurityManagerTkValue},
     service_data_128bit_uuid::{is_service_data_128bit_uuid, ServiceData128BitUUID},
+    service_data_16bit_uuid::{is_service_data_16bit_uuid, ServiceData16BitUUID},
 };
 
 /// Data type parse result.
@@ -189,6 +190,9 @@ pub enum DataTypeParseResult {
 
     /// [`ServiceData128BitUUID`]'s [`TryFrom::try_from`] result.
     ServiceData128BitUUIDResult(Result<ServiceData128BitUUID, String>),
+
+    /// [`ServiceData16BitUUID`]'s [`TryFrom::try_from`] result.
+    ServiceData16BitUUIDResult(Result<ServiceData16BitUUID, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -1037,6 +1041,26 @@ impl DataTypeParseResult {
     pub fn is_service_data_128bit_uuid(&self) -> bool {
         matches!(self, DataTypeParseResult::ServiceData128BitUUIDResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::ServiceData16BitUUIDResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uuid::{uuid, Uuid};
+    /// use ble_data_struct::data_types::{service_data_16bit_uuid::ServiceData16BitUUID, parser::DataTypeParseResult};
+    ///
+    /// let uuid = uuid!("00000201-0000-1000-8000-00805F9B34FB");
+    /// let additional_service_data = [0x03u8].to_vec();
+    /// let data = ServiceData16BitUUID::new(&uuid, &additional_service_data).into();
+    /// assert!(DataTypeParseResult::from(&data).is_service_data_16bit_uuid());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_service_data_16bit_uuid());
+    /// ```
+    pub fn is_service_data_16bit_uuid(&self) -> bool {
+        matches!(self, DataTypeParseResult::ServiceData16BitUUIDResult(_))
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -1180,6 +1204,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::ServiceData128BitUUIDResult(ServiceData128BitUUID::try_from(
                     value,
                 ))
+            } else if is_service_data_16bit_uuid(data_type.to_owned()) {
+                DataTypeParseResult::ServiceData16BitUUIDResult(ServiceData16BitUUID::try_from(
+                    value,
+                ))
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -1315,6 +1343,7 @@ mod tests {
         security_manager_oob::SecurityManagerOutOfBand,
         security_manager_tk_value::SecurityManagerTkValue,
         service_data_128bit_uuid::ServiceData128BitUUID,
+        service_data_16bit_uuid::ServiceData16BitUUID,
     };
 
     use super::DataTypeParseResults;
@@ -1812,6 +1841,17 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_service_data_128bit_uuid());
+    }
+
+    #[test]
+    fn test_is_service_data_16bit_uuid() {
+        let uuid = uuid!("00000201-0000-1000-8000-00805F9B34FB");
+        let additional_service_data = [0x03u8].to_vec();
+        let data = ServiceData16BitUUID::new(&uuid, &additional_service_data).into();
+        assert!(DataTypeParseResult::from(&data).is_service_data_16bit_uuid());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_service_data_16bit_uuid());
     }
 
     #[test]
