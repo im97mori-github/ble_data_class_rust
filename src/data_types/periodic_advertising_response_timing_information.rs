@@ -102,7 +102,7 @@ impl TryFrom<&Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
     /// assert_eq!(subevent_interval, data_type.subevent_interval);
     /// assert_eq!(response_slot_delay, data_type.response_slot_delay);
     /// assert_eq!(response_slot_spacing, data_type.response_slot_spacing);
-    /// 
+    ///
     /// let data: Vec<u8> = Vec::new();
     /// let result = PeriodicAdvertisingResponseTimingInformation::try_from(&data);
     /// assert!(result.is_err());
@@ -265,7 +265,8 @@ mod tests {
         assert_eq!(response_slot_delay, data_type.response_slot_delay);
         assert_eq!(response_slot_spacing, data_type.response_slot_spacing);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 9];
+        data[0] = data.len() as u8 - 1;
         let result = PeriodicAdvertisingResponseTimingInformation::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

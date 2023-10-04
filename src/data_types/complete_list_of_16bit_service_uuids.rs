@@ -228,6 +228,15 @@ mod tests {
         let data_type = result.unwrap();
         assert_eq!(length, data_type.length);
         assert_eq!(uuids, data_type.uuids);
+
+        let mut data: Vec<u8> = vec![0u8; 3];
+        data[0] = data.len() as u8 - 1;
+        let result = CompleteListOf16BitServiceUuids::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]

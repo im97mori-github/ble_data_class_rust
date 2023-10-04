@@ -1310,7 +1310,8 @@ mod tests {
             le_supported_features[i / 8] = 0u8;
         }
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 6];
+        data[0] = data.len() as u8 - 1;
         let result = LeSupportedFeatures::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

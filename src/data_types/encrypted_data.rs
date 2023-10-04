@@ -64,7 +64,7 @@ impl TryFrom<&Vec<u8>> for EncryptedData {
     /// data.append(&mut randomizer.to_vec());
     /// data.append(&mut payload.clone());
     /// data.append(&mut mic.to_vec());
-    /// 
+    ///
     /// let result = EncryptedData::try_from(&data);
     /// assert!(result.is_ok());
     /// let data_type = result.unwrap();
@@ -72,7 +72,7 @@ impl TryFrom<&Vec<u8>> for EncryptedData {
     /// assert_eq!(randomizer, data_type.randomizer);
     /// assert_eq!(payload, data_type.payload);
     /// assert_eq!(mic, data_type.mic);
-    /// 
+    ///
     /// let data: Vec<u8> = Vec::new();
     /// let result = EncryptedData::try_from(&data);
     /// assert!(result.is_err());
@@ -119,17 +119,17 @@ impl Into<Vec<u8>> for EncryptedData {
     /// let mic: [u8; 4] = [7, 8, 9, 10];
     /// let length = 11;
     /// let result1 = EncryptedData::new(&randomizer, &payload, mic);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(EncryptedData::data_type());
     /// data.append(&mut randomizer.to_vec());
     /// data.append(&mut payload.clone());
     /// data.append(&mut mic.to_vec());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = EncryptedData::try_from(&data);
     /// assert!(result2.is_ok());
     /// let data_type = result2.unwrap();
@@ -213,8 +213,9 @@ mod tests {
         assert_eq!(randomizer, data_type.randomizer);
         assert_eq!(payload, data_type.payload);
         assert_eq!(mic, data_type.mic);
-        
-        let data: Vec<u8> = Vec::new();
+
+        let mut data: Vec<u8> = vec![0u8; 10];
+        data[0] = data.len() as u8 - 1;
         let result = EncryptedData::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

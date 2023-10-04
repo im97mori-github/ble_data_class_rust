@@ -83,7 +83,7 @@ impl TryFrom<&Vec<u8>> for IncompleteListOf128BitServiceUuids {
     /// ```
     fn try_from(value: &Vec<u8>) -> Result<Self, String> {
         let len = value.len();
-        if len < 17 {
+        if len < 18 {
             return Err(format!("Invalid data size :{}", len).to_string());
         }
         let length = value[0];
@@ -224,7 +224,8 @@ mod tests {
         assert_eq!(length, data_type.length);
         assert_eq!(uuids, data_type.uuids);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 17];
+        data[0] = data.len() as u8 - 1;
         let result = IncompleteListOf128BitServiceUuids::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

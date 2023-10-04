@@ -130,56 +130,56 @@ impl Into<Vec<u8>> for BroadcastCode {
     ///
     /// let broadcast_code = [0x00u8; 4].to_vec();
     /// let result1 = BroadcastCode::new(&broadcast_code);
-    /// 
+    ///
     /// let length = broadcast_code.len() as u8 + 1;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(BroadcastCode::data_type());
     /// data.append(&mut broadcast_code.clone());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = BroadcastCode::try_from(&data);
     /// assert!(result2.is_ok());
     /// let data_type = result2.unwrap();
     /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let broadcast_code = [0x3fu8, 0x42u8, 0x0fu8, 0x00u8].to_vec();
     /// let result1 = BroadcastCode::new(&broadcast_code);
-    /// 
+    ///
     /// let length = broadcast_code.len() as u8 + 1;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(BroadcastCode::data_type());
     /// data.append(&mut broadcast_code.clone());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = BroadcastCode::try_from(&data);
     /// assert!(result2.is_ok());
     /// let data_type = result2.unwrap();
     /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let broadcast_code = [
     ///     0x00u8, 0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
     ///     0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8,
     /// ]
     /// .to_vec();
     /// let result1 = BroadcastCode::new(&broadcast_code);
-    /// 
+    ///
     /// let length = broadcast_code.len() as u8 + 1;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(BroadcastCode::data_type());
     /// data.append(&mut broadcast_code.clone());
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = BroadcastCode::try_from(&data);
     /// assert!(result2.is_ok());
     /// let data_type = result2.unwrap();
@@ -297,7 +297,8 @@ mod tests {
         assert_eq!(length, data_type.length);
         assert_eq!(broadcast_code, data_type.broadcast_code);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 5];
+        data[0] = data.len() as u8 - 1;
         let result = BroadcastCode::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

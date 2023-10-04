@@ -126,13 +126,13 @@ impl TryFrom<&Vec<u8>> for ClassOfDevice {
     /// data.push(class_of_device as u8);
     /// data.push((class_of_device >> 8) as u8);
     /// data.push((class_of_device >> 16) as u8);
-    /// 
+    ///
     /// let result = ClassOfDevice::try_from(&data);
     /// assert!(result.is_ok());
     /// let data_type = result.unwrap();
     /// assert_eq!(length, data_type.length);
     /// assert_eq!(class_of_device, data_type.class_of_device);
-    /// 
+    ///
     /// let data: Vec<u8> = Vec::new();
     /// let result = ClassOfDevice::try_from(&data);
     /// assert!(result.is_err());
@@ -169,17 +169,17 @@ impl Into<Vec<u8>> for ClassOfDevice {
     /// let minor_device_class = 0b00000000_00000000_00000100;
     /// let class_of_device = major_service_classes | major_device_class | minor_device_class;
     /// let result1 = ClassOfDevice::new(class_of_device);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(4);
     /// data.push(ClassOfDevice::data_type());
     /// data.push(class_of_device as u8);
     /// data.push((class_of_device >> 8) as u8);
     /// data.push((class_of_device >> 16) as u8);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = ClassOfDevice::try_from(&data);
     /// assert!(result2.is_ok());
     /// let data_type = result2.unwrap();
@@ -298,7 +298,8 @@ mod tests {
         assert_eq!(length, data_type.length);
         assert_eq!(class_of_device, data_type.class_of_device);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 4];
+        data[0] = data.len() as u8 - 1;
         let result = ClassOfDevice::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

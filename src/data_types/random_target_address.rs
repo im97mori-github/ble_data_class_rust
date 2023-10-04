@@ -90,7 +90,7 @@ impl TryFrom<&Vec<u8>> for RandomTargetAddress {
     /// ```
     fn try_from(value: &Vec<u8>) -> Result<Self, String> {
         let len = value.len();
-        if len < 6 {
+        if len < 8 {
             return Err(format!("Invalid data size :{}", len).to_string());
         }
         let length = value[0];
@@ -258,7 +258,8 @@ mod tests {
         assert_eq!(length, data_type.length);
         assert_eq!(random_target_address, data_type.random_target_address);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 7];
+        data[0] = data.len() as u8 - 1;
         let result = RandomTargetAddress::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

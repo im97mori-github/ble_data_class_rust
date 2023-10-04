@@ -523,7 +523,8 @@ mod tests {
         assert_eq!(length, data_type.length);
         assert_eq!(le_role, data_type.le_role);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 2];
+        data[0] = data.len() as u8 - 1;
         let result = LeRole::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

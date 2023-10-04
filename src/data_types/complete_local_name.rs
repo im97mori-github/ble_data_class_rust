@@ -65,7 +65,7 @@ impl TryFrom<&Vec<u8>> for CompleteLocalName {
     /// ```
     fn try_from(value: &Vec<u8>) -> Result<Self, String> {
         let len = value.len();
-        if len < 2 {
+        if len < 3 {
             return Err(format!("Invalid data size :{}", len).to_string());
         }
         let length = value[0];
@@ -168,7 +168,8 @@ mod tests {
         assert_eq!(length, data_type.length);
         assert_eq!(name, data_type.complete_local_name);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 2];
+        data[0] = data.len() as u8 - 1;
         let result = CompleteLocalName::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

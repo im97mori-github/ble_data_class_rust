@@ -184,7 +184,8 @@ mod tests {
             data_type.secure_simple_pairing_randomizer_r192
         );
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 17];
+        data[0] = data.len() as u8 - 1;
         let result = SecureSimplePairingRandomizerR192::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

@@ -214,7 +214,7 @@ impl Into<Vec<u8>> for SecurityManagerOutOfBand {
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let length = 2;
     /// let result1 = SecurityManagerOutOfBand::new(&security_manager_oob);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(SecurityManagerOutOfBand::data_type());
@@ -229,20 +229,20 @@ impl Into<Vec<u8>> for SecurityManagerOutOfBand {
     ///     security_manager_oob_byte |= SECURITY_MANAGER_ADDRESS_TYPE;
     /// }
     /// data.push(security_manager_oob_byte);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = SecurityManagerOutOfBand::try_from(&data);
     /// assert!(result2.is_ok());
     /// let data_type = result2.unwrap();
     /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let security_manager_oob = [false, true, false, false, false, false, false, false];
     /// let length = 2;
     /// let result1 = SecurityManagerOutOfBand::new(&security_manager_oob);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(SecurityManagerOutOfBand::data_type());
@@ -257,20 +257,20 @@ impl Into<Vec<u8>> for SecurityManagerOutOfBand {
     ///     security_manager_oob_byte |= SECURITY_MANAGER_ADDRESS_TYPE;
     /// }
     /// data.push(security_manager_oob_byte);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = SecurityManagerOutOfBand::try_from(&data);
     /// assert!(result2.is_ok());
     /// let data_type = result2.unwrap();
     /// let into_data: Vec<u8> = data_type.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let security_manager_oob = [false, false, false, true, false, false, false, false];
     /// let length = 2;
     /// let result1 = SecurityManagerOutOfBand::new(&security_manager_oob);
-    /// 
+    ///
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
     /// data.push(SecurityManagerOutOfBand::data_type());
@@ -285,10 +285,10 @@ impl Into<Vec<u8>> for SecurityManagerOutOfBand {
     ///     security_manager_oob_byte |= SECURITY_MANAGER_ADDRESS_TYPE;
     /// }
     /// data.push(security_manager_oob_byte);
-    /// 
+    ///
     /// let into_data: Vec<u8> = result1.into();
     /// assert_eq!(data, into_data);
-    /// 
+    ///
     /// let result2 = SecurityManagerOutOfBand::try_from(&data);
     /// assert!(result2.is_ok());
     /// let data_type = result2.unwrap();
@@ -459,7 +459,8 @@ mod tests {
         assert_eq!(length, data_type.length);
         assert_eq!(security_manager_oob, data_type.security_manager_oob);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 2];
+        data[0] = data.len() as u8 - 1;
         let result = SecurityManagerOutOfBand::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

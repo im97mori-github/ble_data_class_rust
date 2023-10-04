@@ -43,8 +43,8 @@ impl ChannelMapUpdateIndication {
 }
 
 impl TryFrom<&Vec<u8>> for ChannelMapUpdateIndication {
-
-    type Error = String;    /// Create [`ChannelMapUpdateIndication`] from `Vec<u8>`.
+    type Error = String;
+    /// Create [`ChannelMapUpdateIndication`] from `Vec<u8>`.
     ///
     /// # Examples
     ///
@@ -54,17 +54,17 @@ impl TryFrom<&Vec<u8>> for ChannelMapUpdateIndication {
     /// let mut ch_m = [0u8; 5].to_vec();
     ///
     /// let mut ch_m = [0u8; 5].to_vec();
-    /// 
+    ///
     /// for i in 0..37 {
     ///     ch_m[i / 8] = 0b1 << (i % 8);
-    /// 
+    ///
     ///     let length = 8;
     ///     let mut data: Vec<u8> = Vec::new();
     ///     data.push(length);
     ///     data.push(ChannelMapUpdateIndication::data_type());
     ///     data.append(&mut ch_m.clone());
     ///     data.append(&mut (i as u16).to_le_bytes().to_vec());
-    /// 
+    ///
     ///     let result = ChannelMapUpdateIndication::try_from(&data);
     ///     assert!(result.is_ok());
     ///     let data_type = result.unwrap();
@@ -85,12 +85,12 @@ impl TryFrom<&Vec<u8>> for ChannelMapUpdateIndication {
     ///             data
     ///         })
     ///         .collect();
-    /// 
+    ///
     ///     assert_eq!(bool_vec, data_type.ch_m);
-    /// 
+    ///
     ///     ch_m[i / 8] = 0u8;
     /// }
-    /// 
+    ///
     /// let data: Vec<u8> = Vec::new();
     /// let result = ChannelMapUpdateIndication::try_from(&data);
     /// assert!(result.is_err());
@@ -140,7 +140,7 @@ impl Into<Vec<u8>> for ChannelMapUpdateIndication {
     /// for i in 0..37 {
     ///     ch_m[i] = true;
     ///     let result1 = ChannelMapUpdateIndication::new(&ch_m, i as u16);
-    /// 
+    ///
     ///     let mut data: Vec<u8> = Vec::new();
     ///     data.push(8);
     ///     data.push(ChannelMapUpdateIndication::data_type());
@@ -152,16 +152,16 @@ impl Into<Vec<u8>> for ChannelMapUpdateIndication {
     ///     }
     ///     data.append(&mut u8_vec.clone().to_vec());
     ///     data.append(&mut (i as u16).to_le_bytes().to_vec());
-    /// 
+    ///
     ///     let into_data: Vec<u8> = result1.into();
     ///     assert_eq!(data, into_data);
-    /// 
+    ///
     ///     let result2 = ChannelMapUpdateIndication::try_from(&data);
     ///     assert!(result2.is_ok());
     ///     let data_type = result2.unwrap();
     ///     let into_data: Vec<u8> = data_type.into();
     ///     assert_eq!(data, into_data);
-    /// 
+    ///
     ///     ch_m[i] = false;
     /// }
     /// ```
@@ -268,7 +268,8 @@ mod tests {
             ch_m[i / 8] = 0u8;
         }
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 8];
+        data[0] = data.len() as u8 - 1;
         let result = ChannelMapUpdateIndication::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

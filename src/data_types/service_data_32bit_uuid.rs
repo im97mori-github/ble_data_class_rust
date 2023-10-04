@@ -210,7 +210,8 @@ mod tests {
         assert_eq!(uuid, data_type.uuid);
         assert_eq!(additional_service_data, data_type.additional_service_data);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 5];
+        data[0] = data.len() as u8 - 1;
         let result = ServiceData32BitUUID::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

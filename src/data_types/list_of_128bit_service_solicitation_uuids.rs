@@ -224,7 +224,8 @@ mod tests {
         assert_eq!(length, data_type.length);
         assert_eq!(uuids, data_type.uuids);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 17];
+        data[0] = data.len() as u8 - 1;
         let result = ListOf128BitServiceSolicitationUUIDs::try_from(&data);
         assert!(result.is_err());
         assert_eq!(

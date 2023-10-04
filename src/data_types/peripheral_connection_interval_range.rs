@@ -334,7 +334,8 @@ mod tests {
         assert_eq!(minimum_value, data_type.minimum_value);
         assert_eq!(maximum_value, data_type.maximum_value);
 
-        let data: Vec<u8> = Vec::new();
+        let mut data: Vec<u8> = vec![0u8; 5];
+        data[0] = data.len() as u8 - 1;
         let result = PeripheralConnectionIntervalRange::try_from(&data);
         assert!(result.is_err());
         assert_eq!(
