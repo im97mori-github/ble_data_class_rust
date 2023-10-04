@@ -3,6 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Uniform Resource Identifier.
+#[derive(Debug)]
 pub struct UniformResourceIdentifier {
     /// data length
     pub length: u8,
@@ -15,7 +16,7 @@ pub struct UniformResourceIdentifier {
 }
 
 impl UniformResourceIdentifier {
-    /// Create [UniformResourceIdentifier] from `utf8`.
+    /// Create [`UniformResourceIdentifier`] from `utf8`.
     ///
     /// # Examples
     ///
@@ -29,7 +30,7 @@ impl UniformResourceIdentifier {
     /// assert_eq!(uri.as_bytes().len() as u8 + 1, result.length);
     /// assert_eq!(scheme, result.scheme);
     /// assert_eq!(body, result.uniform_resource_identifier);
-    /// 
+    ///
     /// let scheme = '\u{0001}';
     /// let body = "empty:uniform_resource_identifier";
     /// let uri = scheme.to_string() + body;
@@ -45,77 +46,11 @@ impl UniformResourceIdentifier {
             uniform_resource_identifier: uniform_resource_identifier.split_at(1).1.to_string(),
         }
     }
-
-    /// Create [UniformResourceIdentifier] from `Vec<u8>` with offset.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
-    ///
-    /// let scheme = '\u{0016}';
-    /// let body = "uniform_resource_identifier";
-    /// let uri = scheme.to_string() + body;
-    /// let length = uri.as_bytes().len() as u8 + 1;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(UniformResourceIdentifier::data_type());
-    /// data.append(&mut uri.to_string().into_bytes());
-    /// 
-    /// let result = UniformResourceIdentifier::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(scheme, result.scheme);
-    /// assert_eq!(body, result.uniform_resource_identifier);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(UniformResourceIdentifier::data_type());
-    /// data.append(&mut uri.to_string().into_bytes());
-    /// let result = UniformResourceIdentifier::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(scheme, result.scheme);
-    /// assert_eq!(body, result.uniform_resource_identifier);
-    /// 
-    /// let scheme = '\u{0001}';
-    /// let body = "empty:uniform_resource_identifier";
-    /// let uri = scheme.to_string() + body;
-    /// let length = uri.as_bytes().len() as u8 + 1;
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(UniformResourceIdentifier::data_type());
-    /// data.append(&mut uri.to_string().into_bytes());
-    /// 
-    /// let result = UniformResourceIdentifier::from_with_offset(&data, 0);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(scheme, result.scheme);
-    /// assert_eq!(body, result.uniform_resource_identifier);
-    /// 
-    /// data = Vec::new();
-    /// data.push(0);
-    /// data.push(length);
-    /// data.push(UniformResourceIdentifier::data_type());
-    /// data.append(&mut uri.to_string().into_bytes());
-    /// let result = UniformResourceIdentifier::from_with_offset(&data, 1);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(scheme, result.scheme);
-    /// assert_eq!(body, result.uniform_resource_identifier);
-    /// ```
-    pub fn from_with_offset(data: &Vec<u8>, offset: usize) -> Self {
-        let data = data[offset..].to_vec();
-        let length = data[0];
-        let uniform_resource_identifier =
-            String::from_utf8(data[2..1 + usize::from(length)].to_vec()).unwrap();
-        Self {
-            length,
-            scheme: uniform_resource_identifier.chars().next().unwrap(),
-            uniform_resource_identifier: uniform_resource_identifier.split_at(1).1.to_string(),
-        }
-    }
 }
 
-impl From<&Vec<u8>> for UniformResourceIdentifier {
-    /// Create [UniformResourceIdentifier] from `Vec<u8>`.
+impl TryFrom<&Vec<u8>> for UniformResourceIdentifier {
+    type Error = String;
+    /// Create [`UniformResourceIdentifier`] from `Vec<u8>`.
     ///
     /// [`UniformResourceIdentifier::from_with_offset`]
     ///
@@ -132,12 +67,14 @@ impl From<&Vec<u8>> for UniformResourceIdentifier {
     /// data.push(length);
     /// data.push(UniformResourceIdentifier::data_type());
     /// data.append(&mut uri.to_string().into_bytes());
-    /// 
-    /// let result = UniformResourceIdentifier::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(scheme, result.scheme);
-    /// assert_eq!(body, result.uniform_resource_identifier);
-    /// 
+    ///
+    /// let result = UniformResourceIdentifier::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(scheme, data_type.scheme);
+    /// assert_eq!(body, data_type.uniform_resource_identifier);
+    ///
     /// let scheme = '\u{0001}';
     /// let body = "empty:uniform_resource_identifier";
     /// let uri = scheme.to_string() + body;
@@ -146,60 +83,85 @@ impl From<&Vec<u8>> for UniformResourceIdentifier {
     /// data.push(length);
     /// data.push(UniformResourceIdentifier::data_type());
     /// data.append(&mut uri.to_string().into_bytes());
-    /// 
-    /// let result = UniformResourceIdentifier::from(&data);
-    /// assert_eq!(length, result.length);
-    /// assert_eq!(scheme, result.scheme);
-    /// assert_eq!(body, result.uniform_resource_identifier);
+    ///
+    /// let result = UniformResourceIdentifier::try_from(&data);
+    /// assert!(result.is_ok());
+    /// let data_type = result.unwrap();
+    /// assert_eq!(length, data_type.length);
+    /// assert_eq!(scheme, data_type.scheme);
+    /// assert_eq!(body, data_type.uniform_resource_identifier);
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// let result = UniformResourceIdentifier::try_from(&data);
+    /// assert!(result.is_err());
+    /// assert_eq!(
+    ///     format!("Invalid data size :{}", data.len()),
+    ///     result.unwrap_err()
+    /// );
     /// ```
-    fn from(data: &Vec<u8>) -> Self {
-        Self::from_with_offset(data, 0)
+    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
+        let len = value.len();
+        if len < 4 {
+            return Err(format!("Invalid data size :{}", len).to_string());
+        }
+        let length = value[0];
+        let uniform_resource_identifier =
+            String::from_utf8(value[2..1 + usize::from(length)].to_vec()).unwrap();
+        Ok(Self {
+            length,
+            scheme: uniform_resource_identifier.chars().next().unwrap(),
+            uniform_resource_identifier: uniform_resource_identifier.split_at(1).1.to_string(),
+        })
     }
 }
 
 impl Into<Vec<u8>> for UniformResourceIdentifier {
-    /// Create `Vec<u8>` from [UniformResourceIdentifier].
+    /// Create `Vec<u8>` from [`UniformResourceIdentifier`].
     ///
     /// # Examples
     ///
     /// ```
     /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type::DataType};
     ///
-    /// let scheme = '\u{0016}';
-    /// let body = "uniform_resource_identifier";
-    /// let uri = scheme.to_string() + body;
-    /// let length = uri.as_bytes().len() as u8 + 1;
-    /// let result1 = UniformResourceIdentifier::new(&uri);
-    /// 
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(UniformResourceIdentifier::data_type());
-    /// data.append(&mut uri.to_string().into_bytes());
-    /// 
-    /// let into_data: Vec<u8> = result1.into();
-    /// assert_eq!(data, into_data);
-    /// 
-    /// let result2 = UniformResourceIdentifier::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
-    /// assert_eq!(data, into_data);
-    /// 
-    /// let scheme = '\u{0001}';
-    /// let body = "empty:uniform_resource_identifier";
-    /// let uri = scheme.to_string() + body;
-    /// let length = uri.as_bytes().len() as u8 + 1;
-    /// let result1 = UniformResourceIdentifier::new(&uri);
-    /// 
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(length);
-    /// data.push(UniformResourceIdentifier::data_type());
-    /// data.append(&mut uri.to_string().into_bytes());
-    /// 
-    /// let into_data: Vec<u8> = result1.into();
-    /// assert_eq!(data, into_data);
-    /// 
-    /// let result2 = UniformResourceIdentifier::from(&data);
-    /// let into_data: Vec<u8> = result2.into();
-    /// assert_eq!(data, into_data);
+   /// let scheme = '\u{0016}';
+   /// let body = "uniform_resource_identifier";
+   /// let uri = scheme.to_string() + body;
+   /// let length = uri.as_bytes().len() as u8 + 1;
+   /// let result1 = UniformResourceIdentifier::new(&uri);
+   /// 
+   /// let mut data: Vec<u8> = Vec::new();
+   /// data.push(length);
+   /// data.push(UniformResourceIdentifier::data_type());
+   /// data.append(&mut uri.to_string().into_bytes());
+   /// 
+   /// let into_data: Vec<u8> = result1.into();
+   /// assert_eq!(data, into_data);
+   /// 
+   /// let result2 = UniformResourceIdentifier::try_from(&data);
+   /// assert!(result2.is_ok());
+   /// let data_type = result2.unwrap();
+   /// let into_data: Vec<u8> = data_type.into();
+   /// assert_eq!(data, into_data);
+   /// 
+   /// let scheme = '\u{0001}';
+   /// let body = "empty:uniform_resource_identifier";
+   /// let uri = scheme.to_string() + body;
+   /// let length = uri.as_bytes().len() as u8 + 1;
+   /// let result1 = UniformResourceIdentifier::new(&uri);
+   /// 
+   /// let mut data: Vec<u8> = Vec::new();
+   /// data.push(length);
+   /// data.push(UniformResourceIdentifier::data_type());
+   /// data.append(&mut uri.to_string().into_bytes());
+   /// 
+   /// let into_data: Vec<u8> = result1.into();
+   /// assert_eq!(data, into_data);
+   /// 
+   /// let result2 = UniformResourceIdentifier::try_from(&data);
+   /// assert!(result2.is_ok());
+   /// let data_type = result2.unwrap();
+   /// let into_data: Vec<u8> = data_type.into();
+   /// assert_eq!(data, into_data);
     /// ```
     fn into(self) -> Vec<u8> {
         let mut data: Vec<u8> = Vec::new();
@@ -265,7 +227,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_with_offset() {
+    fn test_try_from() {
         let scheme = '\u{0016}';
         let body = "uniform_resource_identifier";
         let uri = scheme.to_string() + body;
@@ -275,20 +237,12 @@ mod tests {
         data.push(UniformResourceIdentifier::data_type());
         data.append(&mut uri.to_string().into_bytes());
 
-        let result = UniformResourceIdentifier::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(scheme, result.scheme);
-        assert_eq!(body, result.uniform_resource_identifier);
-
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(UniformResourceIdentifier::data_type());
-        data.append(&mut uri.to_string().into_bytes());
-        let result = UniformResourceIdentifier::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(scheme, result.scheme);
-        assert_eq!(body, result.uniform_resource_identifier);
+        let result = UniformResourceIdentifier::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(scheme, data_type.scheme);
+        assert_eq!(body, data_type.uniform_resource_identifier);
 
         let scheme = '\u{0001}';
         let body = "empty:uniform_resource_identifier";
@@ -299,51 +253,20 @@ mod tests {
         data.push(UniformResourceIdentifier::data_type());
         data.append(&mut uri.to_string().into_bytes());
 
-        let result = UniformResourceIdentifier::from_with_offset(&data, 0);
-        assert_eq!(length, result.length);
-        assert_eq!(scheme, result.scheme);
-        assert_eq!(body, result.uniform_resource_identifier);
+        let result = UniformResourceIdentifier::try_from(&data);
+        assert!(result.is_ok());
+        let data_type = result.unwrap();
+        assert_eq!(length, data_type.length);
+        assert_eq!(scheme, data_type.scheme);
+        assert_eq!(body, data_type.uniform_resource_identifier);
 
-        data = Vec::new();
-        data.push(0);
-        data.push(length);
-        data.push(UniformResourceIdentifier::data_type());
-        data.append(&mut uri.to_string().into_bytes());
-        let result = UniformResourceIdentifier::from_with_offset(&data, 1);
-        assert_eq!(length, result.length);
-        assert_eq!(scheme, result.scheme);
-        assert_eq!(body, result.uniform_resource_identifier);
-    }
-
-    #[test]
-    fn test_from() {
-        let scheme = '\u{0016}';
-        let body = "uniform_resource_identifier";
-        let uri = scheme.to_string() + body;
-        let length = uri.as_bytes().len() as u8 + 1;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(UniformResourceIdentifier::data_type());
-        data.append(&mut uri.to_string().into_bytes());
-
-        let result = UniformResourceIdentifier::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(scheme, result.scheme);
-        assert_eq!(body, result.uniform_resource_identifier);
-
-        let scheme = '\u{0001}';
-        let body = "empty:uniform_resource_identifier";
-        let uri = scheme.to_string() + body;
-        let length = uri.as_bytes().len() as u8 + 1;
-        let mut data: Vec<u8> = Vec::new();
-        data.push(length);
-        data.push(UniformResourceIdentifier::data_type());
-        data.append(&mut uri.to_string().into_bytes());
-
-        let result = UniformResourceIdentifier::from(&data);
-        assert_eq!(length, result.length);
-        assert_eq!(scheme, result.scheme);
-        assert_eq!(body, result.uniform_resource_identifier);
+        let data: Vec<u8> = Vec::new();
+        let result = UniformResourceIdentifier::try_from(&data);
+        assert!(result.is_err());
+        assert_eq!(
+            format!("Invalid data size :{}", data.len()),
+            result.unwrap_err()
+        );
     }
 
     #[test]
@@ -362,8 +285,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = UniformResourceIdentifier::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = UniformResourceIdentifier::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
 
         let scheme = '\u{0001}';
@@ -380,8 +305,10 @@ mod tests {
         let into_data: Vec<u8> = result1.into();
         assert_eq!(data, into_data);
 
-        let result2 = UniformResourceIdentifier::from(&data);
-        let into_data: Vec<u8> = result2.into();
+        let result2 = UniformResourceIdentifier::try_from(&data);
+        assert!(result2.is_ok());
+        let data_type = result2.unwrap();
+        let into_data: Vec<u8> = data_type.into();
         assert_eq!(data, into_data);
     }
 

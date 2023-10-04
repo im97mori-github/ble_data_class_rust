@@ -76,6 +76,7 @@ use super::{
     service_data_32bit_uuid::{is_service_data_32bit_uuid, ServiceData32BitUUID},
     shortened_local_name::{is_shortened_local_name, ShortenedLocalName},
     tx_power_level::{is_tx_power_level, TxPowerLevel},
+    uniform_resource_identifier::{is_uniform_resource_identifier, UniformResourceIdentifier},
 };
 
 /// Data type parse result.
@@ -205,6 +206,9 @@ pub enum DataTypeParseResult {
 
     /// [`TxPowerLevel`]'s [`TryFrom::try_from`] result.
     TxPowerLevelResult(Result<TxPowerLevel, String>),
+
+    /// [`UniformResourceIdentifier`]'s [`TryFrom::try_from`] result.
+    UniformResourceIdentifierResult(Result<UniformResourceIdentifier, String>),
 
     /// Occurs for unsupported data types.
     DataTypeParseErr(String),
@@ -1129,6 +1133,29 @@ impl DataTypeParseResult {
     pub fn is_tx_power_level(&self) -> bool {
         matches!(self, DataTypeParseResult::TxPowerLevelResult(_))
     }
+
+    /// Returns `true` if the result is [`DataTypeParseResult::UniformResourceIdentifierResult`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, parser::DataTypeParseResult};
+    ///
+    /// let scheme = '\u{0016}';
+    /// let body = "uniform_resource_identifier";
+    /// let uri = scheme.to_string() + body;
+    /// let data = UniformResourceIdentifier::new(&uri).into();
+    /// assert!(DataTypeParseResult::from(&data).is_uniform_resource_identifier());
+    ///
+    /// let data: Vec<u8> = Vec::new();
+    /// assert!(!DataTypeParseResult::from(&data).is_uniform_resource_identifier());
+    /// ```
+    pub fn is_uniform_resource_identifier(&self) -> bool {
+        matches!(
+            self,
+            DataTypeParseResult::UniformResourceIdentifierResult(_)
+        )
+    }
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
@@ -1284,6 +1311,10 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                 DataTypeParseResult::ShortenedLocalNameResult(ShortenedLocalName::try_from(value))
             } else if is_tx_power_level(data_type.to_owned()) {
                 DataTypeParseResult::TxPowerLevelResult(TxPowerLevel::try_from(value))
+            } else if is_uniform_resource_identifier(data_type.to_owned()) {
+                DataTypeParseResult::UniformResourceIdentifierResult(
+                    UniformResourceIdentifier::try_from(value),
+                )
             } else {
                 DataTypeParseResult::DataTypeParseErr(
                     format!("Unknown data type :{}", data_type).to_string(),
@@ -1423,6 +1454,7 @@ mod tests {
         service_data_32bit_uuid::ServiceData32BitUUID,
         shortened_local_name::ShortenedLocalName,
         tx_power_level::TxPowerLevel,
+        uniform_resource_identifier::UniformResourceIdentifier,
     };
 
     use super::DataTypeParseResults;
@@ -1962,6 +1994,18 @@ mod tests {
 
         let data: Vec<u8> = Vec::new();
         assert!(!DataTypeParseResult::from(&data).is_tx_power_level());
+    }
+
+    #[test]
+    fn test_is_uniform_resource_identifier() {
+        let scheme = '\u{0016}';
+        let body = "uniform_resource_identifier";
+        let uri = scheme.to_string() + body;
+        let data = UniformResourceIdentifier::new(&uri).into();
+        assert!(DataTypeParseResult::from(&data).is_uniform_resource_identifier());
+
+        let data: Vec<u8> = Vec::new();
+        assert!(!DataTypeParseResult::from(&data).is_uniform_resource_identifier());
     }
 
     #[test]
