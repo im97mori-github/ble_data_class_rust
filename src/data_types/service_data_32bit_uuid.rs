@@ -46,8 +46,6 @@ impl TryFrom<&Vec<u8>> for ServiceData32BitUUID {
     type Error = String;
     /// Create [`ServiceData32BitUUID`] from `Vec<u8>`.
     ///
-    /// [`ServiceData32BitUUID::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

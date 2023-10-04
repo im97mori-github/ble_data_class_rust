@@ -79,8 +79,6 @@ impl TryFrom<&Vec<u8>> for Appearance {
     type Error = String;
     /// Create [`Appearance`] from `Vec<u8>`.
     ///
-    /// [`Appearance::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

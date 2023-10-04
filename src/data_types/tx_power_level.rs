@@ -42,8 +42,6 @@ impl TryFrom<&Vec<u8>> for TxPowerLevel {
     type Error = String;
     /// Create [`TxPowerLevel`] from `Vec<u8>`.
     ///
-    /// [`TxPowerLevel::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```
@@ -195,7 +193,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from() {
+    fn test_try_from() {
         let tx_power_level = -127;
         let length = 2;
         let mut data: Vec<u8> = Vec::new();

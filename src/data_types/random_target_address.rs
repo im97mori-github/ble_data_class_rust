@@ -44,8 +44,6 @@ impl TryFrom<&Vec<u8>> for RandomTargetAddress {
     type Error = String;
     /// Create [`RandomTargetAddress`] from `Vec<u8>`.
     ///
-    /// [`RandomTargetAddress::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

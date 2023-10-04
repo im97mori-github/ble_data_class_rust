@@ -169,8 +169,6 @@ impl TryFrom<&Vec<u8>> for LeRole {
     type Error = String;
     /// Create [LE Role] from `Vec<u8>`.
     ///
-    /// [`LeRole::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

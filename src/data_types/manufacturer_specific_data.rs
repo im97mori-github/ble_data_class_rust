@@ -17,7 +17,7 @@ pub struct ManufacturerSpecificData {
 }
 
 impl ManufacturerSpecificData {
-    /// Create [ManufacturerSpecificData] from Parameters.
+    /// Create [`ManufacturerSpecificData`] from Parameters.
     ///
     /// # Examples
     ///
@@ -45,9 +45,7 @@ impl ManufacturerSpecificData {
 
 impl TryFrom<&Vec<u8>> for ManufacturerSpecificData {
     type Error = String;
-    /// Create [ManufacturerSpecificData] from `Vec<u8>`.
-    ///
-    /// [`ManufacturerSpecificData::from_with_offset`]
+    /// Create [`ManufacturerSpecificData`] from `Vec<u8>`.
     ///
     /// # Examples
     ///
@@ -96,7 +94,7 @@ impl TryFrom<&Vec<u8>> for ManufacturerSpecificData {
 }
 
 impl Into<Vec<u8>> for ManufacturerSpecificData {
-    /// Create `Vec<u8>` from [ManufacturerSpecificData].
+    /// Create `Vec<u8>` from [`ManufacturerSpecificData`].
     ///
     /// # Examples
     ///

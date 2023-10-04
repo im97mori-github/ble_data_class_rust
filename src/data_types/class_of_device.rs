@@ -110,8 +110,6 @@ impl TryFrom<&Vec<u8>> for ClassOfDevice {
     type Error = String;
     /// Create [`ClassOfDevice`] from `Vec<u8>`.
     ///
-    /// [`ClassOfDevice::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

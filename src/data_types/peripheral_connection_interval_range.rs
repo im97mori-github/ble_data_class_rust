@@ -144,8 +144,6 @@ impl TryFrom<&Vec<u8>> for PeripheralConnectionIntervalRange {
     type Error = String;
     /// Create [`PeripheralConnectionIntervalRange`] from `Vec<u8>`.
     ///
-    /// [`PeripheralConnectionIntervalRange::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

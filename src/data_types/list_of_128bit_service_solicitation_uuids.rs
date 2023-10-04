@@ -44,8 +44,6 @@ impl TryFrom<&Vec<u8>> for ListOf128BitServiceSolicitationUUIDs {
     type Error = String;
     /// Create [`ListOf128BitServiceSolicitationUUIDs`] from `Vec<u8>`.
     ///
-    /// [`ListOf128BitServiceSolicitationUUIDs::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

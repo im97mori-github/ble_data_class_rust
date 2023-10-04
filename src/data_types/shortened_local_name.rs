@@ -38,8 +38,6 @@ impl TryFrom<&Vec<u8>> for ShortenedLocalName {
     type Error = String;
     /// Create [`ShortenedLocalName`] from `Vec<u8>`.
     ///
-    /// [`ShortenedLocalName::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

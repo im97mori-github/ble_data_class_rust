@@ -735,8 +735,6 @@ impl TryFrom<&Vec<u8>> for LeSupportedFeatures {
     type Error = String;
     /// Create [`LeSupportedFeatures`] from `Vec<u8>`.
     ///
-    /// [`LeSupportedFeatures::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

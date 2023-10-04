@@ -37,8 +37,6 @@ impl TryFrom<&Vec<u8>> for SecureSimplePairingHashC256 {
     type Error = String;
     /// Create [`SecureSimplePairingHashC256`] from `Vec<u8>`.
     ///
-    /// [`SecureSimplePairingHashC256::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

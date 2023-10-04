@@ -37,8 +37,6 @@ impl TryFrom<&Vec<u8>> for SecureSimplePairingRandomizerR256 {
     type Error = String;
     /// Create [`SecureSimplePairingRandomizerR256`] from `Vec<u8>`.
     ///
-    /// [`SecureSimplePairingRandomizerR256::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

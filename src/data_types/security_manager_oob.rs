@@ -128,8 +128,6 @@ impl TryFrom<&Vec<u8>> for SecurityManagerOutOfBand {
     type Error = String;
     /// Create [`SecurityManagerOutOfBand`] from `Vec<u8>`.
     ///
-    /// [`SecurityManagerOutOfBand::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

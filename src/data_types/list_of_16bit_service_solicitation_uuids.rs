@@ -44,8 +44,6 @@ impl TryFrom<&Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
     type Error = String;
     /// Create [ListOf16BitServiceSolicitationUUIDs] from `Vec<u8>`.
     ///
-    /// [`ListOf16BitServiceSolicitationUUIDs::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```
@@ -206,7 +204,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from() {
+    fn test_try_from() {
         let uuid_bytes: Vec<u8> = [0x01u8, 0x02u8, 0x03u8, 0x04u8].to_vec();
         let uuids: Vec<Uuid> = uuid_bytes
             .windows(2)

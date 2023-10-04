@@ -52,8 +52,6 @@ impl TryFrom<&Vec<u8>> for UniformResourceIdentifier {
     type Error = String;
     /// Create [`UniformResourceIdentifier`] from `Vec<u8>`.
     ///
-    /// [`UniformResourceIdentifier::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

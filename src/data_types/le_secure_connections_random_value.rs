@@ -38,8 +38,6 @@ impl TryFrom<&Vec<u8>> for LeSecureConnectionsRandomValue {
     type Error = String;
     /// Create [`LeSecureConnectionsRandomValue`] from `Vec<u8>`.
     ///
-    /// [`LeSecureConnectionsRandomValue::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

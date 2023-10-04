@@ -45,8 +45,6 @@ impl TryFrom<&Vec<u8>> for PublicTargetAddress {
     type Error = String;
     /// Create [`PublicTargetAddress`] from `Vec<u8>`.
     ///
-    /// [`PublicTargetAddress::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

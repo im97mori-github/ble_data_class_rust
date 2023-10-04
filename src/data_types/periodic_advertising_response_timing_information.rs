@@ -73,8 +73,6 @@ impl TryFrom<&Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
     type Error = String;
     /// Create [`PeriodicAdvertisingResponseTimingInformation`] from `Vec<u8>`.
     ///
-    /// [`PeriodicAdvertisingResponseTimingInformation::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

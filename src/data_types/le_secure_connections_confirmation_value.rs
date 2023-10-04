@@ -38,8 +38,6 @@ impl TryFrom<&Vec<u8>> for LeSecureConnectionsConfirmationValue {
     type Error = String;
     /// Create [`LeSecureConnectionsConfirmationValue`] from `Vec<u8>`.
     ///
-    /// [`LeSecureConnectionsConfirmationValue::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```

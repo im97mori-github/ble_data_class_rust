@@ -37,8 +37,6 @@ impl TryFrom<&Vec<u8>> for SecurityManagerTkValue {
     type Error = String;
     /// Create [`SecurityManagerTkValue`] from `Vec<u8>`.
     ///
-    /// [`SecurityManagerTkValue::from_with_offset`]
-    ///
     /// # Examples
     ///
     /// ```
