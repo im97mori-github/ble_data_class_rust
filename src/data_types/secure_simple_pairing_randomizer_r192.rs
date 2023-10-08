@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Secure Simple Pairing Randomizer R-192.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct SecureSimplePairingRandomizerR192 {
     /// data length
     pub length: u8,

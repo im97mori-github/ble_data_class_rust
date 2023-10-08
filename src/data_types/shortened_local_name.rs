@@ -4,7 +4,7 @@ use crate::data_types::data_type::DataType;
 
 /// Shortened Local Name.
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct ShortenedLocalName {
     /// data length
     pub length: u8,

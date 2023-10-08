@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Channel Map Update Indication.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct ChannelMapUpdateIndication {
     /// data length
     pub length: u8,

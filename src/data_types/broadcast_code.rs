@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Broadcast_Code.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct BroadcastCode {
     /// data length
     pub length: u8,

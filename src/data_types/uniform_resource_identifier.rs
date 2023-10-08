@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Uniform Resource Identifier.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct UniformResourceIdentifier {
     /// data length
     pub length: u8,

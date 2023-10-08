@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Tx Power Level.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct TxPowerLevel {
     /// data length
     pub length: u8,

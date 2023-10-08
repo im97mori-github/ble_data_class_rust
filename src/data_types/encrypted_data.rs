@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Encrypted Data.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct EncryptedData {
     /// data length
     pub length: u8,

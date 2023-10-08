@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Peripheral Connection Interval Range.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct PeriodicAdvertisingResponseTimingInformation {
     /// data length
     pub length: u8,

@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Random Target Address.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct RandomTargetAddress {
     /// data length
     pub length: u8,

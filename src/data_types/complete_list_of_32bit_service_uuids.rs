@@ -5,7 +5,7 @@ use uuid::Uuid;
 use crate::{data_types::data_type::DataType, BASE_UUID};
 
 /// Complete List of 32-bit Service Class UUIDs.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct CompleteListOf32BitServiceUuids {
     /// data length
     pub length: u8,

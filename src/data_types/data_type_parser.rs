@@ -80,6 +80,7 @@ use super::{
 };
 
 /// Data type parse result.
+#[derive(Debug, PartialEq, Clone)]
 pub enum DataTypeParseResult {
     /// [`AdvertisingInterval`]'s [`TryFrom::try_from`] result.
     AdvertisingIntervalResult(Result<AdvertisingInterval, String>),
@@ -220,7 +221,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{advertising_interval::AdvertisingInterval, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{advertising_interval::AdvertisingInterval, data_type_parser::DataTypeParseResult};
     ///
     /// let advertising_interval = 0x01;
     /// let data: Vec<u8> = AdvertisingInterval::new(advertising_interval).into();
@@ -238,7 +239,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{advertising_interval_long::AdvertisingIntervalLong, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{advertising_interval_long::AdvertisingIntervalLong, data_type_parser::DataTypeParseResult};
     ///
     /// let advertising_interval_long: u32 = 0x01020304u32;
     /// let data: Vec<u8> = AdvertisingIntervalLong::new(true, advertising_interval_long).into();
@@ -256,7 +257,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{appearance::Appearance, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{appearance::Appearance, data_type_parser::DataTypeParseResult};
     ///
     /// let appearance: u16 = 0x1444;
     /// let data: Vec<u8> = Appearance::new(appearance).into();
@@ -274,7 +275,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{big_info::BigInfo, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{big_info::BigInfo, data_type_parser::DataTypeParseResult};
     ///
     /// let big_offset: u16 = 1;
     /// let big_offset_units: bool = true;
@@ -337,7 +338,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{broadcast_code::BroadcastCode, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{broadcast_code::BroadcastCode, data_type_parser::DataTypeParseResult};
     ///
     /// let broadcast_code = [0x00u8; 4].to_vec();
     /// let data: Vec<u8> = BroadcastCode::new(&broadcast_code).into();
@@ -355,7 +356,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{channel_map_update_indication::ChannelMapUpdateIndication, data_type_parser::DataTypeParseResult};
     ///
     /// let mut ch_m = [false; 37].to_vec();
     /// for i in 0..37 {
@@ -380,7 +381,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{class_of_device::ClassOfDevice, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{class_of_device::ClassOfDevice, data_type_parser::DataTypeParseResult};
     ///
     /// let major_service_classes = 0b10000000_00000000_00000000;
     /// let major_device_class = 0b00000000_00000001_00000000;
@@ -402,7 +403,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -428,7 +429,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -454,7 +455,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -479,7 +480,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{complete_local_name::CompleteLocalName, data_type_parser::DataTypeParseResult};
     ///
     /// let name = "complete_local_name".to_string();
     /// let data = CompleteLocalName::new(&name).into();
@@ -497,7 +498,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{encrypted_data::EncryptedData, data_type_parser::DataTypeParseResult};
     ///
     /// let randomizer: [u8; 5] = [1, 2, 3, 4, 5];
     /// let payload = [6].to_vec();
@@ -517,7 +518,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{flags::Flags, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{flags::Flags, data_type_parser::DataTypeParseResult};
     ///
     /// let flags = [true, false, false, false, false, false, false, false].to_vec();
     /// let data = Flags::new(&flags).into();
@@ -536,7 +537,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{incomplete_list_of_128bit_service_uuids::IncompleteListOf128BitServiceUuids, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{incomplete_list_of_128bit_service_uuids::IncompleteListOf128BitServiceUuids, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -562,7 +563,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{incomplete_list_of_16bit_service_uuids::IncompleteListOf16BitServiceUuids, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -588,7 +589,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{incomplete_list_of_32bit_service_uuids::IncompleteListOf32BitServiceUuids, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{incomplete_list_of_32bit_service_uuids::IncompleteListOf32BitServiceUuids, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -613,7 +614,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{le_bluetooth_device_address::LeBluetoothDeviceAddress, data_type_parser::DataTypeParseResult};
     ///
     /// let le_bluetooth_device_address = 0x0000060504030201u64;
     /// let address_type = false;
@@ -632,7 +633,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{le_role::*, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{le_role::*, data_type_parser::DataTypeParseResult};
     ///
     /// let le_role = ONLY_PERIPHERAL_ROLE_SUPPORTED;
     /// let data = LeRole::new(le_role).into();
@@ -650,7 +651,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{le_secure_connections_confirmation_value::LeSecureConnectionsConfirmationValue, data_type_parser::DataTypeParseResult};
     ///
     /// let le_secure_connections_confirmation_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let data =
@@ -673,7 +674,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{le_secure_connections_random_value::LeSecureConnectionsRandomValue, data_type_parser::DataTypeParseResult};
     ///
     /// let le_secure_connections_random_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     ///
@@ -695,7 +696,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{le_supported_features::LeSupportedFeatures, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{le_supported_features::LeSupportedFeatures, data_type_parser::DataTypeParseResult};
     ///
     /// let mut le_supported_features = [false; 48].to_vec();
     /// for i in 0..44 {
@@ -718,7 +719,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{list_of_128bit_service_solicitation_uuids::ListOf128BitServiceSolicitationUUIDs, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{list_of_128bit_service_solicitation_uuids::ListOf128BitServiceSolicitationUUIDs, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -744,7 +745,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -770,7 +771,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs, data_type_parser::DataTypeParseResult};
     ///
     /// let uuids: Vec<Uuid> = [
     ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
@@ -795,7 +796,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{manufacturer_specific_data::ManufacturerSpecificData, data_type_parser::DataTypeParseResult};
     ///
     /// let company_identifier = 0x0ca8u16;
     /// let manufacturer_specific_data = [0x03u8].to_vec();
@@ -815,7 +816,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation, data_type_parser::DataTypeParseResult};
     ///
     /// let rsp_aa: [u8; 4] = [1, 2, 3, 4];
     /// let num_subevents = 6u8;
@@ -847,7 +848,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{peripheral_connection_interval_range::PeripheralConnectionIntervalRange, data_type_parser::DataTypeParseResult};
     ///
     /// let minimum_value = 0x0006u16;
     /// let maximum_value = 0x0C80u16;
@@ -869,7 +870,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{public_target_address::PublicTargetAddress, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{public_target_address::PublicTargetAddress, data_type_parser::DataTypeParseResult};
     ///
     /// let public_target_address: Vec<u64> = [
     ///     u64::from_le_bytes([
@@ -895,7 +896,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{random_target_address::RandomTargetAddress, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{random_target_address::RandomTargetAddress, data_type_parser::DataTypeParseResult};
     ///
     /// let random_target_address: Vec<u64> = [
     ///     u64::from_le_bytes([
@@ -921,7 +922,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{secure_simple_pairing_hash_c192::SecureSimplePairingHashC192, data_type_parser::DataTypeParseResult};
     ///
     /// let secure_simple_pairing_hash_c192 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let data = SecureSimplePairingHashC192::new(secure_simple_pairing_hash_c192).into();
@@ -942,7 +943,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{secure_simple_pairing_hash_c256::SecureSimplePairingHashC256, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{secure_simple_pairing_hash_c256::SecureSimplePairingHashC256, data_type_parser::DataTypeParseResult};
     ///
     /// let secure_simple_pairing_hash_c256 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let data = SecureSimplePairingHashC256::new(secure_simple_pairing_hash_c256).into();
@@ -963,7 +964,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{secure_simple_pairing_randomizer_r192::SecureSimplePairingRandomizerR192, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{secure_simple_pairing_randomizer_r192::SecureSimplePairingRandomizerR192, data_type_parser::DataTypeParseResult};
     ///
     /// let secure_simple_pairing_randomizer_r192 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let data =
@@ -985,7 +986,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{secure_simple_pairing_randomizer_r256::SecureSimplePairingRandomizerR256, data_type_parser::DataTypeParseResult};
     ///
     /// let secure_simple_pairing_randomizer_r256 = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let data =
@@ -1007,7 +1008,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{security_manager_oob::SecurityManagerOutOfBand, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{security_manager_oob::SecurityManagerOutOfBand, data_type_parser::DataTypeParseResult};
     ///
     /// let security_manager_oob = [true, false, false, false, false, false, false, false];
     /// let data = SecurityManagerOutOfBand::new(&security_manager_oob).into();
@@ -1025,7 +1026,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{security_manager_tk_value::SecurityManagerTkValue, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{security_manager_tk_value::SecurityManagerTkValue, data_type_parser::DataTypeParseResult};
     ///
     /// let security_manager_tk_value = 0x0102030405060708090a0b0c0d0e0f10u128;
     /// let data = SecurityManagerTkValue::new(security_manager_tk_value).into();
@@ -1044,7 +1045,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{service_data_128bit_uuid::ServiceData128BitUUID, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type_parser::DataTypeParseResult};
     ///
     /// let uuid = uuid!("04030201-0000-1000-8000-00805F9B34FB");
     /// let additional_service_data = [0x05u8].to_vec();
@@ -1064,7 +1065,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{service_data_16bit_uuid::ServiceData16BitUUID, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{service_data_16bit_uuid::ServiceData16BitUUID, data_type_parser::DataTypeParseResult};
     ///
     /// let uuid = uuid!("00000201-0000-1000-8000-00805F9B34FB");
     /// let additional_service_data = [0x03u8].to_vec();
@@ -1084,7 +1085,7 @@ impl DataTypeParseResult {
     ///
     /// ```
     /// use uuid::{uuid, Uuid};
-    /// use ble_data_struct::data_types::{service_data_32bit_uuid::ServiceData32BitUUID, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{service_data_32bit_uuid::ServiceData32BitUUID, data_type_parser::DataTypeParseResult};
     ///
     /// let uuid = uuid!("04030201-0000-1000-8000-00805F9B34FB");
     /// let additional_service_data = [0x05u8].to_vec();
@@ -1103,7 +1104,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{shortened_local_name::ShortenedLocalName, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{shortened_local_name::ShortenedLocalName, data_type_parser::DataTypeParseResult};
     ///
     /// let name = "shortened_local_name".to_string();
     /// let data = ShortenedLocalName::new(&name).into();
@@ -1121,7 +1122,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{tx_power_level::TxPowerLevel, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{tx_power_level::TxPowerLevel, data_type_parser::DataTypeParseResult};
     ///
     /// let tx_power_level = -127;
     /// let data = TxPowerLevel::new(tx_power_level).into();
@@ -1139,7 +1140,7 @@ impl DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{uniform_resource_identifier::UniformResourceIdentifier, data_type_parser::DataTypeParseResult};
     ///
     /// let scheme = '\u{0016}';
     /// let body = "uniform_resource_identifier";
@@ -1164,7 +1165,7 @@ impl From<&Vec<u8>> for DataTypeParseResult {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{advertising_interval::AdvertisingInterval, parser::DataTypeParseResult};
+    /// use ble_data_struct::data_types::{advertising_interval::AdvertisingInterval, data_type_parser::DataTypeParseResult};
     ///
     /// let advertising_interval = 0x01;
     /// let data: Vec<u8> = AdvertisingInterval::new(advertising_interval).into();
@@ -1326,10 +1327,86 @@ impl From<&Vec<u8>> for DataTypeParseResult {
     }
 }
 
+// impl PartialEq for DataTypeParseResult {
+//     fn eq(&self, other: &Self) -> bool {
+//         match (self, other) {
+//             (Self::AdvertisingIntervalResult(l0), Self::AdvertisingIntervalResult(r0)) => l0 == r0,
+//             (Self::AdvertisingIntervalLongResult(l0), Self::AdvertisingIntervalLongResult(r0)) => l0 == r0,
+//             (Self::AppearanceResult(l0), Self::AppearanceResult(r0)) => l0 == r0,
+//             (Self::BigInfoResult(l0), Self::BigInfoResult(r0)) => l0 == r0,
+//             (Self::BroadcastCodeResult(l0), Self::BroadcastCodeResult(r0)) => l0 == r0,
+//             (Self::ChannelMapUpdateIndicationResult(l0), Self::ChannelMapUpdateIndicationResult(r0)) => l0 == r0,
+//             (Self::ClassOfDeviceResult(l0), Self::ClassOfDeviceResult(r0)) => l0 == r0,
+//             (Self::CompleteListOf128BitServiceUuidsResult(l0), Self::CompleteListOf128BitServiceUuidsResult(r0)) => l0 == r0,
+//             (Self::CompleteListOf16BitServiceUuidsResult(l0), Self::CompleteListOf16BitServiceUuidsResult(r0)) => l0 == r0,
+//             (Self::CompleteListOf32BitServiceUuidsResult(l0), Self::CompleteListOf32BitServiceUuidsResult(r0)) => l0 == r0,
+//             (Self::CompleteLocalNameResult(l0), Self::CompleteLocalNameResult(r0)) => l0 == r0,
+//             (Self::EncryptedDataResult(l0), Self::EncryptedDataResult(r0)) => l0 == r0,
+//             (Self::FlagsResult(l0), Self::FlagsResult(r0)) => l0 == r0,
+//             (Self::IncompleteListOf128BitServiceUuidsResult(l0), Self::IncompleteListOf128BitServiceUuidsResult(r0)) => l0 == r0,
+//             (Self::IncompleteListOf16BitServiceUuidsResult(l0), Self::IncompleteListOf16BitServiceUuidsResult(r0)) => l0 == r0,
+//             (Self::IncompleteListOf32BitServiceUuidsResult(l0), Self::IncompleteListOf32BitServiceUuidsResult(r0)) => l0 == r0,
+//             (Self::LeBluetoothDeviceAddressResult(l0), Self::LeBluetoothDeviceAddressResult(r0)) => l0 == r0,
+//             (Self::LeRoleResult(l0), Self::LeRoleResult(r0)) => l0 == r0,
+//             (Self::LeSecureConnectionsConfirmationValueResult(l0), Self::LeSecureConnectionsConfirmationValueResult(r0)) => l0 == r0,
+//             (Self::LeSecureConnectionsRandomValueResult(l0), Self::LeSecureConnectionsRandomValueResult(r0)) => l0 == r0,
+//             (Self::LeSupportedFeaturesResult(l0), Self::LeSupportedFeaturesResult(r0)) => l0 == r0,
+//             (Self::ListOf128BitServiceSolicitationUUIDsResult(l0), Self::ListOf128BitServiceSolicitationUUIDsResult(r0)) => l0 == r0,
+//             (Self::ListOf16BitServiceSolicitationUUIDsResult(l0), Self::ListOf16BitServiceSolicitationUUIDsResult(r0)) => l0 == r0,
+//             (Self::ListOf32BitServiceSolicitationUUIDsResult(l0), Self::ListOf32BitServiceSolicitationUUIDsResult(r0)) => l0 == r0,
+//             (Self::ManufacturerSpecificDataResult(l0), Self::ManufacturerSpecificDataResult(r0)) => l0 == r0,
+//             (Self::PeriodicAdvertisingResponseTimingInformationResult(l0), Self::PeriodicAdvertisingResponseTimingInformationResult(r0)) => l0 == r0,
+//             (Self::PeripheralConnectionIntervalRangeResult(l0), Self::PeripheralConnectionIntervalRangeResult(r0)) => l0 == r0,
+//             (Self::PublicTargetAddressResult(l0), Self::PublicTargetAddressResult(r0)) => l0 == r0,
+//             (Self::RandomTargetAddressResult(l0), Self::RandomTargetAddressResult(r0)) => l0 == r0,
+//             (Self::SecureSimplePairingHashC192Result(l0), Self::SecureSimplePairingHashC192Result(r0)) => l0 == r0,
+//             (Self::SecureSimplePairingHashC256Result(l0), Self::SecureSimplePairingHashC256Result(r0)) => l0 == r0,
+//             (Self::SecureSimplePairingRandomizerR192Result(l0), Self::SecureSimplePairingRandomizerR192Result(r0)) => l0 == r0,
+//             (Self::SecureSimplePairingRandomizerR256Result(l0), Self::SecureSimplePairingRandomizerR256Result(r0)) => l0 == r0,
+//             (Self::SecurityManagerOutOfBandResult(l0), Self::SecurityManagerOutOfBandResult(r0)) => l0 == r0,
+//             (Self::SecurityManagerTkValueResult(l0), Self::SecurityManagerTkValueResult(r0)) => l0 == r0,
+//             (Self::ServiceData128BitUUIDResult(l0), Self::ServiceData128BitUUIDResult(r0)) => l0 == r0,
+//             (Self::ServiceData16BitUUIDResult(l0), Self::ServiceData16BitUUIDResult(r0)) => l0 == r0,
+//             (Self::ServiceData32BitUUIDResult(l0), Self::ServiceData32BitUUIDResult(r0)) => l0 == r0,
+//             (Self::ShortenedLocalNameResult(l0), Self::ShortenedLocalNameResult(r0)) => l0 == r0,
+//             (Self::TxPowerLevelResult(l0), Self::TxPowerLevelResult(r0)) => l0 == r0,
+//             (Self::UniformResourceIdentifierResult(l0), Self::UniformResourceIdentifierResult(r0)) => l0 == r0,
+//             (Self::DataTypeParseErr(l0), Self::DataTypeParseErr(r0)) => l0 == r0,
+//             _ => false,
+//         }
+//     }
+// }
 /// Data types parse results.
 pub struct DataTypeParseResults {
     /// Parse results.
     pub results: Vec<DataTypeParseResult>,
+}
+
+impl DataTypeParseResults {
+    /// Create [`DataTypeParseResults`] from `Vec<DataTypeParseResult>`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use ble_data_struct::data_types::advertising_interval_long::AdvertisingIntervalLong;
+    ///
+    /// let advertising_interval_long: u32 = 0x01020304u32;
+    /// let result = AdvertisingIntervalLong::new(true, advertising_interval_long);
+    /// assert_eq!(5, result.length);
+    /// assert!(result.is_u32);
+    /// assert_eq!(advertising_interval_long, result.advertising_interval_long);
+    ///
+    /// let result = AdvertisingIntervalLong::new(false, advertising_interval_long);
+    /// assert_eq!(4, result.length);
+    /// assert!(!result.is_u32);
+    /// assert_eq!(
+    ///     advertising_interval_long & 0x00ffffff,
+    ///     result.advertising_interval_long
+    /// );
+    /// ```
+    pub fn new(results: Vec<DataTypeParseResult>) -> Self {
+        DataTypeParseResults { results }
+    }
 }
 
 impl From<&Vec<Vec<u8>>> for DataTypeParseResults {
@@ -1338,7 +1415,7 @@ impl From<&Vec<Vec<u8>>> for DataTypeParseResults {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{advertising_interval::AdvertisingInterval, parser::{DataTypeParseResult, DataTypeParseResults}};
+    /// use ble_data_struct::data_types::{advertising_interval::AdvertisingInterval, data_type_parser::{DataTypeParseResult, DataTypeParseResults}};
     ///
     /// let mut vec: Vec<Vec<u8>> = Vec::new();
     /// let advertising_interval = 0x01;
@@ -1373,7 +1450,7 @@ impl From<&Vec<u8>> for DataTypeParseResults {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::data_types::{advertising_interval::AdvertisingInterval, parser::{DataTypeParseResult, DataTypeParseResults}};
+    /// use ble_data_struct::data_types::{advertising_interval::AdvertisingInterval, data_type_parser::{DataTypeParseResult, DataTypeParseResults}};
     ///
     /// let mut vec: Vec<Vec<u8>> = Vec::new();
     /// let advertising_interval = 0x01;
@@ -1424,6 +1501,7 @@ mod tests {
         complete_list_of_16bit_service_uuids::CompleteListOf16BitServiceUuids,
         complete_list_of_32bit_service_uuids::CompleteListOf32BitServiceUuids,
         complete_local_name::CompleteLocalName,
+        data_type_parser::DataTypeParseResult,
         encrypted_data::EncryptedData,
         flags::Flags,
         incomplete_list_of_128bit_service_uuids::IncompleteListOf128BitServiceUuids,
@@ -1438,7 +1516,6 @@ mod tests {
         list_of_16bit_service_solicitation_uuids::ListOf16BitServiceSolicitationUUIDs,
         list_of_32bit_service_solicitation_uuids::ListOf32BitServiceSolicitationUUIDs,
         manufacturer_specific_data::ManufacturerSpecificData,
-        parser::DataTypeParseResult,
         periodic_advertising_response_timing_information::PeriodicAdvertisingResponseTimingInformation,
         peripheral_connection_interval_range::PeripheralConnectionIntervalRange,
         public_target_address::PublicTargetAddress,
@@ -1458,6 +1535,13 @@ mod tests {
     };
 
     use super::DataTypeParseResults;
+
+    #[test]
+    fn test_new() {
+        let vec = vec![DataTypeParseResult::DataTypeParseErr("".to_string())];
+        let results = DataTypeParseResults::new(vec.to_vec());
+        assert_eq!(vec, results.results);
+    }
 
     #[test]
     fn test_is_advertising_interval() {

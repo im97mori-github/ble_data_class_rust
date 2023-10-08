@@ -5,7 +5,7 @@ use uuid::Uuid;
 use crate::data_types::data_type::DataType;
 
 /// List of 128-bit Service Solicitation UUIDs.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct ListOf128BitServiceSolicitationUUIDs {
     /// data length
     pub length: u8,

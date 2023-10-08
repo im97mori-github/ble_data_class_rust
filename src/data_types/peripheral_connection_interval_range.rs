@@ -4,7 +4,7 @@ use crate::data_types::data_type::DataType;
 
 /// Peripheral Connection Interval Range.
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct PeripheralConnectionIntervalRange {
     /// data length
     pub length: u8,

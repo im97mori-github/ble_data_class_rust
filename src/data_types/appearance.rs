@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Appearance.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Appearance {
     /// data length
     pub length: u8,

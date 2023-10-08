@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// LE Role.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct LeRole {
     /// data length
     pub length: u8,

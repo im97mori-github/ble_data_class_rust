@@ -12,6 +12,8 @@ pub mod data_types {
     pub mod complete_list_of_16bit_service_uuids;
     pub mod complete_list_of_32bit_service_uuids;
     pub mod complete_local_name;
+    pub mod data_type;
+    pub mod data_type_parser;
     pub mod encrypted_data;
     pub mod flags;
     pub mod incomplete_list_of_128bit_service_uuids;
@@ -42,8 +44,13 @@ pub mod data_types {
     pub mod shortened_local_name;
     pub mod tx_power_level;
     pub mod uniform_resource_identifier;
-    pub mod data_type;
-    pub mod parser;
+}
+
+/// for Windows
+pub mod windows {
+    pub mod data_types {
+        pub mod windows_data_type_parser;
+    }
 }
 
 use uuid::{uuid, Uuid};

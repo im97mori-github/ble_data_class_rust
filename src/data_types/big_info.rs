@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// BIGInfo.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct BigInfo {
     /// data length
     pub length: u8,

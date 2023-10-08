@@ -4,7 +4,7 @@ use crate::data_types::data_type::DataType;
 
 /// Manufacturer Specific Data.
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct ManufacturerSpecificData {
     /// data length
     pub length: u8,

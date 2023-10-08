@@ -4,7 +4,7 @@ use crate::data_types::data_type::DataType;
 
 /// LE Secure Connections Random Value.
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct LeSecureConnectionsRandomValue {
     /// data length
     pub length: u8,

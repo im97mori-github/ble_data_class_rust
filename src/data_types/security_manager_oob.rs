@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Security Manager Out of Band.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct SecurityManagerOutOfBand {
     /// data length
     pub length: u8,

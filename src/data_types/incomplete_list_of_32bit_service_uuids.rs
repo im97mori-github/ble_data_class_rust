@@ -6,7 +6,7 @@ use crate::{data_types::data_type::DataType, BASE_UUID};
 
 /// Incomplete List of 32-bit Service Class UUIDs.
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct IncompleteListOf32BitServiceUuids {
     /// data length
     pub length: u8,

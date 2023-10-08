@@ -4,7 +4,7 @@ use crate::data_types::data_type::DataType;
 
 /// Public Target Address.
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct PublicTargetAddress {
     /// data length
     pub length: u8,

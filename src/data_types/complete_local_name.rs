@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Complete Local Name.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct CompleteLocalName {
     /// data length
     pub length: u8,

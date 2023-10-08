@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// LE Supported Features.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct LeSupportedFeatures {
     /// data length
     pub length: u8,

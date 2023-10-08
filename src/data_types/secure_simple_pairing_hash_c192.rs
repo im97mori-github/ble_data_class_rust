@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Secure Simple Pairing Hash C-192.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct SecureSimplePairingHashC192 {
     /// data length
     pub length: u8,

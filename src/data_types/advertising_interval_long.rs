@@ -3,7 +3,7 @@
 use crate::data_types::data_type::DataType;
 
 /// Advertising Interval - long.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct AdvertisingIntervalLong {
     /// data length
     pub length: u8,

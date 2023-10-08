@@ -5,7 +5,7 @@ use uuid::Uuid;
 use crate::{data_types::data_type::DataType, BASE_UUID};
 
 /// Service Data - 16-bit UUID.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct ServiceData16BitUUID {
     /// data length
     pub length: u8,
