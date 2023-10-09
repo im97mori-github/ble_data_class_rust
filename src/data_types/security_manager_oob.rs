@@ -126,7 +126,7 @@ pub const SECURITY_MANAGER_ADDRESS_TYPE: u8 = 0b00001000u8;
 
 impl TryFrom<&Vec<u8>> for SecurityManagerOutOfBand {
     type Error = String;
-    /// Create [`SecurityManagerOutOfBand`] from `Vec<u8>`.
+    /// Create [`SecurityManagerOutOfBand`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -204,7 +204,7 @@ impl TryFrom<&Vec<u8>> for SecurityManagerOutOfBand {
 }
 
 impl Into<Vec<u8>> for SecurityManagerOutOfBand {
-    /// Create `Vec<u8>` from [`SecurityManagerOutOfBand`].
+    /// Create [`Vec<u8>`] from [`SecurityManagerOutOfBand`].
     ///
     /// # Examples
     ///

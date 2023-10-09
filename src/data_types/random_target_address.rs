@@ -42,7 +42,7 @@ impl RandomTargetAddress {
 
 impl TryFrom<&Vec<u8>> for RandomTargetAddress {
     type Error = String;
-    /// Create [`RandomTargetAddress`] from `Vec<u8>`.
+    /// Create [`RandomTargetAddress`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -115,7 +115,7 @@ impl TryFrom<&Vec<u8>> for RandomTargetAddress {
 }
 
 impl Into<Vec<u8>> for RandomTargetAddress {
-    /// Create `Vec<u8>` from [`RandomTargetAddress`].
+    /// Create [`Vec<u8>`] from [`RandomTargetAddress`].
     ///
     /// # Examples
     ///

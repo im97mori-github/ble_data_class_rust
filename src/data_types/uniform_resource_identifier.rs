@@ -50,7 +50,7 @@ impl UniformResourceIdentifier {
 
 impl TryFrom<&Vec<u8>> for UniformResourceIdentifier {
     type Error = String;
-    /// Create [`UniformResourceIdentifier`] from `Vec<u8>`.
+    /// Create [`UniformResourceIdentifier`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -114,7 +114,7 @@ impl TryFrom<&Vec<u8>> for UniformResourceIdentifier {
 }
 
 impl Into<Vec<u8>> for UniformResourceIdentifier {
-    /// Create `Vec<u8>` from [`UniformResourceIdentifier`].
+    /// Create [`Vec<u8>`] from [`UniformResourceIdentifier`].
     ///
     /// # Examples
     ///

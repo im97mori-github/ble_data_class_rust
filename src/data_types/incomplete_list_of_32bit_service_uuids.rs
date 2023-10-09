@@ -43,7 +43,7 @@ impl IncompleteListOf32BitServiceUuids {
 
 impl TryFrom<&Vec<u8>> for IncompleteListOf32BitServiceUuids {
     type Error = String;
-    /// Create [`IncompleteListOf32BitServiceUuids`] from `Vec<u8>`.
+    /// Create [`IncompleteListOf32BitServiceUuids`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -109,7 +109,7 @@ impl TryFrom<&Vec<u8>> for IncompleteListOf32BitServiceUuids {
 }
 
 impl Into<Vec<u8>> for IncompleteListOf32BitServiceUuids {
-    /// Create `Vec<u8>` from [`IncompleteListOf32BitServiceUuids`].
+    /// Create [`Vec<u8>`] from [`IncompleteListOf32BitServiceUuids`].
     ///
     /// # Examples
     ///

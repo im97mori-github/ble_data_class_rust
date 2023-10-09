@@ -49,7 +49,7 @@ impl BroadcastCode {
 
 impl TryFrom<&Vec<u8>> for BroadcastCode {
     type Error = String;
-    /// Create [`BroadcastCode`] from `Vec<u8>`.
+    /// Create [`BroadcastCode`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -121,7 +121,7 @@ impl TryFrom<&Vec<u8>> for BroadcastCode {
 }
 
 impl Into<Vec<u8>> for BroadcastCode {
-    /// Create `Vec<u8>` from [`BroadcastCode`].
+    /// Create [`Vec<u8>`] from [`BroadcastCode`].
     ///
     /// # Examples
     ///

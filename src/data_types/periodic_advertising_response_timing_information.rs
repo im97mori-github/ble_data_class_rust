@@ -71,7 +71,7 @@ impl PeriodicAdvertisingResponseTimingInformation {
 
 impl TryFrom<&Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
     type Error = String;
-    /// Create [`PeriodicAdvertisingResponseTimingInformation`] from `Vec<u8>`.
+    /// Create [`PeriodicAdvertisingResponseTimingInformation`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -129,7 +129,7 @@ impl TryFrom<&Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
 }
 
 impl Into<Vec<u8>> for PeriodicAdvertisingResponseTimingInformation {
-    /// Create `Vec<u8>` from [`PeriodicAdvertisingResponseTimingInformation`].
+    /// Create [`Vec<u8>`] from [`PeriodicAdvertisingResponseTimingInformation`].
     ///
     /// # Examples
     ///

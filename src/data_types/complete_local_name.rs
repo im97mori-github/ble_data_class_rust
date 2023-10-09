@@ -35,7 +35,7 @@ impl CompleteLocalName {
 
 impl TryFrom<&Vec<u8>> for CompleteLocalName {
     type Error = String;
-    /// Create [`CompleteLocalName`] from `Vec<u8>`.
+    /// Create [`CompleteLocalName`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -78,7 +78,7 @@ impl TryFrom<&Vec<u8>> for CompleteLocalName {
 }
 
 impl Into<Vec<u8>> for CompleteLocalName {
-    /// Create `Vec<u8>` from [`CompleteLocalName`].
+    /// Create[`Vec<u8>`] from [`CompleteLocalName`].
     ///
     /// # Examples
     ///

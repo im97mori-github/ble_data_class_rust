@@ -36,7 +36,7 @@ impl LeSecureConnectionsRandomValue {
 
 impl TryFrom<&Vec<u8>> for LeSecureConnectionsRandomValue {
     type Error = String;
-    /// Create [`LeSecureConnectionsRandomValue`] from `Vec<u8>`.
+    /// Create [`LeSecureConnectionsRandomValue`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -83,7 +83,7 @@ impl TryFrom<&Vec<u8>> for LeSecureConnectionsRandomValue {
 }
 
 impl Into<Vec<u8>> for LeSecureConnectionsRandomValue {
-    /// Create `Vec<u8>` from [`LeSecureConnectionsRandomValue`].
+    /// Create [`Vec<u8>`] from [`LeSecureConnectionsRandomValue`].
     ///
     /// # Examples
     ///

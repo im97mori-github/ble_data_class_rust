@@ -76,7 +76,7 @@ impl LeBluetoothDeviceAddress {
 
 impl TryFrom<&Vec<u8>> for LeBluetoothDeviceAddress {
     type Error = String;
-    /// Create [`LeBluetoothDeviceAddress`] from `Vec<u8>`.
+    /// Create [`LeBluetoothDeviceAddress`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -156,7 +156,7 @@ impl TryFrom<&Vec<u8>> for LeBluetoothDeviceAddress {
 pub const ADDRESS_TYPE: u8 = 0b00000001;
 
 impl Into<Vec<u8>> for LeBluetoothDeviceAddress {
-    /// Create `Vec<u8>` from [`LeBluetoothDeviceAddress`].
+    /// Create [`Vec<u8>`] from [`LeBluetoothDeviceAddress`].
     ///
     /// # Examples
     ///

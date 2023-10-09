@@ -44,7 +44,7 @@ impl ServiceData128BitUUID {
 
 impl TryFrom<&Vec<u8>> for ServiceData128BitUUID {
     type Error = String;
-    /// Create [`ServiceData128BitUUID`] from `Vec<u8>`.
+    /// Create [`ServiceData128BitUUID`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -52,12 +52,8 @@ impl TryFrom<&Vec<u8>> for ServiceData128BitUUID {
     /// use ble_data_struct::{BASE_UUID, data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
-    /// let uuid_bytes: Vec<u8> = [
-    ///     0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
-    ///     0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8,
-    /// ]
-    /// .to_vec();
-    /// let uuid = Uuid::from_bytes_le(uuid_bytes.clone().try_into().unwrap());
+    /// let uuid = uuid!("00000001-0000-1000-8000-00805F9B34FB");
+    /// let uuid_bytes: Vec<u8> = uuid.as_u128().to_le_bytes().to_vec().to_vec();
     /// let additional_service_data = [0x11u8].to_vec();
     /// let length = additional_service_data.len() as u8 + 17;
     /// let mut data: Vec<u8> = Vec::new();
@@ -73,7 +69,8 @@ impl TryFrom<&Vec<u8>> for ServiceData128BitUUID {
     /// assert_eq!(uuid, data_type.uuid);
     /// assert_eq!(additional_service_data, data_type.additional_service_data);
     ///
-    /// let data: Vec<u8> = Vec::new();
+    /// let mut data: Vec<u8> = vec![0u8; 17];
+    /// data[0] = data.len() as u8 - 1;
     /// let result = ServiceData128BitUUID::try_from(&data);
     /// assert!(result.is_err());
     /// assert_eq!(
@@ -89,14 +86,14 @@ impl TryFrom<&Vec<u8>> for ServiceData128BitUUID {
         let length = value[0];
         Ok(Self {
             length,
-            uuid: Uuid::from_bytes_le(value[2..18].try_into().unwrap()),
+            uuid: Uuid::from_u128(u128::from_le_bytes(value[2..18].try_into().unwrap())),
             additional_service_data: value[18..1 + length as usize].to_vec(),
         })
     }
 }
 
 impl Into<Vec<u8>> for ServiceData128BitUUID {
-    /// Create `Vec<u8>` from [`ServiceData128BitUUID`].
+    /// Create [`Vec<u8>`] from [`ServiceData128BitUUID`].
     ///
     /// # Examples
     ///
@@ -104,12 +101,8 @@ impl Into<Vec<u8>> for ServiceData128BitUUID {
     /// use ble_data_struct::{BASE_UUID, data_types::{service_data_128bit_uuid::ServiceData128BitUUID, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
-    /// let uuid_bytes: Vec<u8> = [
-    ///     0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
-    ///     0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8,
-    /// ]
-    /// .to_vec();
-    /// let uuid = Uuid::from_bytes_le(uuid_bytes.clone().try_into().unwrap());
+    /// let uuid = uuid!("00000001-0000-1000-8000-00805F9B34FB");
+    /// let uuid_bytes: Vec<u8> = uuid.as_u128().to_le_bytes().to_vec();
     /// let additional_service_data = [0x11u8].to_vec();
     /// let result1 = ServiceData128BitUUID::new(&uuid, &additional_service_data);
     ///
@@ -133,7 +126,7 @@ impl Into<Vec<u8>> for ServiceData128BitUUID {
         let mut data: Vec<u8> = Vec::new();
         data.push(self.length);
         data.push(Self::data_type());
-        data.append(&mut self.uuid.to_bytes_le().to_vec());
+        data.append(&mut self.uuid.as_u128().to_le_bytes().to_vec());
         data.append(&mut self.additional_service_data.clone());
         return data;
     }
@@ -171,7 +164,7 @@ pub fn is_service_data_128bit_uuid(data_type: u8) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use uuid::{uuid, Uuid};
+    use uuid::uuid;
 
     use crate::data_types::{data_type::DataType, service_data_128bit_uuid::*};
 
@@ -187,12 +180,8 @@ mod tests {
 
     #[test]
     fn test_try_from() {
-        let uuid_bytes: Vec<u8> = [
-            0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
-            0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8,
-        ]
-        .to_vec();
-        let uuid = Uuid::from_bytes_le(uuid_bytes.clone().try_into().unwrap());
+        let uuid = uuid!("00000001-0000-1000-8000-00805F9B34FB");
+        let uuid_bytes: Vec<u8> = uuid.as_u128().to_le_bytes().to_vec().to_vec();
         let additional_service_data = [0x11u8].to_vec();
         let length = additional_service_data.len() as u8 + 17;
         let mut data: Vec<u8> = Vec::new();
@@ -220,12 +209,8 @@ mod tests {
 
     #[test]
     fn test_into() {
-        let uuid_bytes: Vec<u8> = [
-            0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
-            0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8,
-        ]
-        .to_vec();
-        let uuid = Uuid::from_bytes_le(uuid_bytes.clone().try_into().unwrap());
+        let uuid = uuid!("00000001-0000-1000-8000-00805F9B34FB");
+        let uuid_bytes: Vec<u8> = uuid.as_u128().to_le_bytes().to_vec();
         let additional_service_data = [0x11u8].to_vec();
         let result1 = ServiceData128BitUUID::new(&uuid, &additional_service_data);
 

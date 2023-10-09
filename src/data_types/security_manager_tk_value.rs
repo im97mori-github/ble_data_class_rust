@@ -35,7 +35,7 @@ impl SecurityManagerTkValue {
 
 impl TryFrom<&Vec<u8>> for SecurityManagerTkValue {
     type Error = String;
-    /// Create [`SecurityManagerTkValue`] from `Vec<u8>`.
+    /// Create [`SecurityManagerTkValue`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -80,7 +80,7 @@ impl TryFrom<&Vec<u8>> for SecurityManagerTkValue {
 }
 
 impl Into<Vec<u8>> for SecurityManagerTkValue {
-    /// Create `Vec<u8>` from [`SecurityManagerTkValue`].
+    /// Create [`Vec<u8>`] from [`SecurityManagerTkValue`].
     ///
     /// # Examples
     ///

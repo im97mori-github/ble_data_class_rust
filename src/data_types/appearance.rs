@@ -77,7 +77,7 @@ impl Appearance {
 
 impl TryFrom<&Vec<u8>> for Appearance {
     type Error = String;
-    /// Create [`Appearance`] from `Vec<u8>`.
+    /// Create [`Appearance`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -118,7 +118,7 @@ impl TryFrom<&Vec<u8>> for Appearance {
 }
 
 impl Into<Vec<u8>> for Appearance {
-    /// Create `Vec<u8>` from [`Appearance`].
+    /// Create [`Vec<u8>`] from [`Appearance`].
     ///
     /// # Examples
     ///

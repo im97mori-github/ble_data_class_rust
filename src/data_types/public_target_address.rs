@@ -43,7 +43,7 @@ impl PublicTargetAddress {
 
 impl TryFrom<&Vec<u8>> for PublicTargetAddress {
     type Error = String;
-    /// Create [`PublicTargetAddress`] from `Vec<u8>`.
+    /// Create [`PublicTargetAddress`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -116,7 +116,7 @@ impl TryFrom<&Vec<u8>> for PublicTargetAddress {
 }
 
 impl Into<Vec<u8>> for PublicTargetAddress {
-    /// Create `Vec<u8>` from [`PublicTargetAddress`].
+    /// Create [`Vec<u8>`] from [`PublicTargetAddress`].
     ///
     /// # Examples
     ///

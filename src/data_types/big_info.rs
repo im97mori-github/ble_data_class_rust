@@ -257,7 +257,7 @@ impl BigInfo {
 
 impl TryFrom<&Vec<u8>> for BigInfo {
     type Error = String;
-    /// Create [`BigInfo`] from `Vec<u8>`.
+    /// Create [`BigInfo`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -548,7 +548,7 @@ impl TryFrom<&Vec<u8>> for BigInfo {
 }
 
 impl Into<Vec<u8>> for BigInfo {
-    /// Create `Vec<u8>` from [`BigInfo`].
+    /// Create [`Vec<u8>`] from [`BigInfo`].
     ///
     /// # Examples
     ///

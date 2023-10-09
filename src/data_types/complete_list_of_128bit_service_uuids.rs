@@ -42,7 +42,7 @@ impl CompleteListOf128BitServiceUuids {
 
 impl TryFrom<&Vec<u8>> for CompleteListOf128BitServiceUuids {
     type Error = String;
-    /// Create [`CompleteListOf128BitServiceUuids`] from `Vec<u8>`.
+    /// Create [`CompleteListOf128BitServiceUuids`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -50,17 +50,15 @@ impl TryFrom<&Vec<u8>> for CompleteListOf128BitServiceUuids {
     /// use ble_data_struct::{BASE_UUID, data_types::{complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
-    /// let uuid_bytes: Vec<u8> = [
-    ///     0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
-    ///     0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8, 0x11u8, 0x12u8, 0x13u8, 0x14u8, 0x15u8, 0x16u8,
-    ///     0x17u8, 0x18u8, 0x19u8, 0x1au8, 0x1bu8, 0x1cu8, 0x1du8, 0x1eu8, 0x1fu8, 0x20u8,
+    /// let uuids = [
+    ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+    ///     uuid!("00000002-0000-1000-8000-00805F9B34FB"),
     /// ]
     /// .to_vec();
-    /// let uuids: Vec<Uuid> = uuid_bytes
-    ///     .windows(16)
-    ///     .step_by(16)
-    ///     .map(|f| Uuid::from_bytes_le(f.try_into().unwrap()))
-    ///     .collect();
+    /// let mut uuid_bytes: Vec<u8> = Vec::new();
+    /// uuid_bytes.append(&mut uuids[0].as_u128().to_le_bytes().to_vec());
+    /// uuid_bytes.append(&mut uuids[1].as_u128().to_le_bytes().to_vec());
+    ///
     /// let length = uuid_bytes.len() as u8 + 1;
     /// let mut data: Vec<u8> = Vec::new();
     /// data.push(length);
@@ -73,7 +71,8 @@ impl TryFrom<&Vec<u8>> for CompleteListOf128BitServiceUuids {
     /// assert_eq!(length, data_type.length);
     /// assert_eq!(uuids, data_type.uuids);
     ///
-    /// let data: Vec<u8> = Vec::new();
+    /// let mut data: Vec<u8> = vec![0u8; 16];
+    /// data[0] = data.len() as u8 - 1;
     /// let result = CompleteListOf128BitServiceUuids::try_from(&data);
     /// assert!(result.is_err());
     /// assert_eq!(
@@ -92,14 +91,14 @@ impl TryFrom<&Vec<u8>> for CompleteListOf128BitServiceUuids {
             uuids: value[2..2 + length as usize - 1]
                 .windows(16)
                 .step_by(16)
-                .map(|w| Uuid::from_bytes_le(w.try_into().unwrap()))
+                .map(|w| Uuid::from_u128(u128::from_le_bytes(w.try_into().unwrap())))
                 .collect(),
         })
     }
 }
 
 impl Into<Vec<u8>> for CompleteListOf128BitServiceUuids {
-    /// Create `Vec<u8>` from [`CompleteListOf128BitServiceUuids`].
+    /// Create [`Vec<u8>`] from [`CompleteListOf128BitServiceUuids`].
     ///
     /// # Examples
     ///
@@ -107,17 +106,14 @@ impl Into<Vec<u8>> for CompleteListOf128BitServiceUuids {
     /// use ble_data_struct::{BASE_UUID, data_types::{complete_list_of_128bit_service_uuids::CompleteListOf128BitServiceUuids, data_type::DataType}};
     /// use uuid::{uuid, Uuid};
     ///
-    /// let uuid_bytes: Vec<u8> = [
-    ///     0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
-    ///     0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8, 0x11u8, 0x12u8, 0x13u8, 0x14u8, 0x15u8, 0x16u8,
-    ///     0x17u8, 0x18u8, 0x19u8, 0x1au8, 0x1bu8, 0x1cu8, 0x1du8, 0x1eu8, 0x1fu8, 0x20u8,
+    /// let uuids = [
+    ///     uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+    ///     uuid!("00000002-0000-1000-8000-00805F9B34FB"),
     /// ]
     /// .to_vec();
-    /// let uuids: Vec<Uuid> = uuid_bytes
-    ///     .windows(16)
-    ///     .step_by(16)
-    ///     .map(|f| Uuid::from_bytes_le(f.try_into().unwrap()))
-    ///     .collect();
+    /// let mut uuid_bytes: Vec<u8> = Vec::new();
+    /// uuid_bytes.append(&mut uuids[0].as_u128().to_le_bytes().to_vec());
+    /// uuid_bytes.append(&mut uuids[1].as_u128().to_le_bytes().to_vec());
     /// let result1 = CompleteListOf128BitServiceUuids::new(&uuids);
     ///
     /// let length = uuid_bytes.len() as u8 + 1;
@@ -144,7 +140,7 @@ impl Into<Vec<u8>> for CompleteListOf128BitServiceUuids {
                 .uuids
                 .clone()
                 .iter()
-                .flat_map(|f| f.to_bytes_le().to_vec())
+                .flat_map(|f| f.as_u128().to_le_bytes().to_vec())
                 .collect(),
         );
         return data;
@@ -201,17 +197,15 @@ mod tests {
 
     #[test]
     fn test_try_from() {
-        let uuid_bytes: Vec<u8> = [
-            0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
-            0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8, 0x11u8, 0x12u8, 0x13u8, 0x14u8, 0x15u8, 0x16u8,
-            0x17u8, 0x18u8, 0x19u8, 0x1au8, 0x1bu8, 0x1cu8, 0x1du8, 0x1eu8, 0x1fu8, 0x20u8,
+        let uuids = [
+            uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+            uuid!("00000002-0000-1000-8000-00805F9B34FB"),
         ]
         .to_vec();
-        let uuids: Vec<Uuid> = uuid_bytes
-            .windows(16)
-            .step_by(16)
-            .map(|f| Uuid::from_bytes_le(f.try_into().unwrap()))
-            .collect();
+        let mut uuid_bytes: Vec<u8> = Vec::new();
+        uuid_bytes.append(&mut uuids[0].as_u128().to_le_bytes().to_vec());
+        uuid_bytes.append(&mut uuids[1].as_u128().to_le_bytes().to_vec());
+
         let length = uuid_bytes.len() as u8 + 1;
         let mut data: Vec<u8> = Vec::new();
         data.push(length);
@@ -236,17 +230,14 @@ mod tests {
 
     #[test]
     fn test_into() {
-        let uuid_bytes: Vec<u8> = [
-            0x01u8, 0x02u8, 0x03u8, 0x04u8, 0x05u8, 0x06u8, 0x07u8, 0x08u8, 0x09u8, 0x0au8, 0x0bu8,
-            0x0cu8, 0x0du8, 0x0eu8, 0x0fu8, 0x10u8, 0x11u8, 0x12u8, 0x13u8, 0x14u8, 0x15u8, 0x16u8,
-            0x17u8, 0x18u8, 0x19u8, 0x1au8, 0x1bu8, 0x1cu8, 0x1du8, 0x1eu8, 0x1fu8, 0x20u8,
+        let uuids = [
+            uuid!("00000001-0000-1000-8000-00805F9B34FB"),
+            uuid!("00000002-0000-1000-8000-00805F9B34FB"),
         ]
         .to_vec();
-        let uuids: Vec<Uuid> = uuid_bytes
-            .windows(16)
-            .step_by(16)
-            .map(|f| Uuid::from_bytes_le(f.try_into().unwrap()))
-            .collect();
+        let mut uuid_bytes: Vec<u8> = Vec::new();
+        uuid_bytes.append(&mut uuids[0].as_u128().to_le_bytes().to_vec());
+        uuid_bytes.append(&mut uuids[1].as_u128().to_le_bytes().to_vec());
         let result1 = CompleteListOf128BitServiceUuids::new(&uuids);
 
         let length = uuid_bytes.len() as u8 + 1;

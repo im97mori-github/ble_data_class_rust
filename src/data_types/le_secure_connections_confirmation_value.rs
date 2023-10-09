@@ -36,7 +36,7 @@ impl LeSecureConnectionsConfirmationValue {
 
 impl TryFrom<&Vec<u8>> for LeSecureConnectionsConfirmationValue {
     type Error = String;
-    /// Create [`LeSecureConnectionsConfirmationValue`] from `Vec<u8>`.
+    /// Create [`LeSecureConnectionsConfirmationValue`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -87,7 +87,7 @@ impl TryFrom<&Vec<u8>> for LeSecureConnectionsConfirmationValue {
 }
 
 impl Into<Vec<u8>> for LeSecureConnectionsConfirmationValue {
-    /// Create `Vec<u8>` from [`LeSecureConnectionsConfirmationValue`].
+    /// Create [`Vec<u8>`] from [`LeSecureConnectionsConfirmationValue`].
     ///
     /// # Examples
     ///

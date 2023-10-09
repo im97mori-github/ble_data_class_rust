@@ -60,7 +60,7 @@ pub const ADVINTERVAL_VALUE: f32 = 0.625;
 
 impl TryFrom<&Vec<u8>> for AdvertisingInterval {
     type Error = String;
-    /// Create [`AdvertisingInterval`] from `Vec<u8>`.
+    /// Create [`AdvertisingInterval`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -102,7 +102,7 @@ impl TryFrom<&Vec<u8>> for AdvertisingInterval {
 }
 
 impl Into<Vec<u8>> for AdvertisingInterval {
-    /// Create `Vec<u8>` from [`AdvertisingInterval`].
+    /// Create [`Vec<u8>`] from [`AdvertisingInterval`].
     ///
     /// # Examples
     ///

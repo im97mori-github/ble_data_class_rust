@@ -733,7 +733,7 @@ impl LeSupportedFeatures {
 
 impl TryFrom<&Vec<u8>> for LeSupportedFeatures {
     type Error = String;
-    /// Create [`LeSupportedFeatures`] from `Vec<u8>`.
+    /// Create [`LeSupportedFeatures`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -814,7 +814,7 @@ impl TryFrom<&Vec<u8>> for LeSupportedFeatures {
 }
 
 impl Into<Vec<u8>> for LeSupportedFeatures {
-    /// Create `Vec<u8>` from [`LeSupportedFeatures`].
+    /// Create [`Vec<u8>`] from [`LeSupportedFeatures`].
     ///
     /// # Examples
     ///

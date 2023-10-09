@@ -35,7 +35,7 @@ impl SecureSimplePairingRandomizerR192 {
 
 impl TryFrom<&Vec<u8>> for SecureSimplePairingRandomizerR192 {
     type Error = String;
-    /// Create [`SecureSimplePairingRandomizerR192`] from `Vec<u8>`.
+    /// Create [`SecureSimplePairingRandomizerR192`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -82,7 +82,7 @@ impl TryFrom<&Vec<u8>> for SecureSimplePairingRandomizerR192 {
 }
 
 impl Into<Vec<u8>> for SecureSimplePairingRandomizerR192 {
-    /// Create `Vec<u8>` from [SecureSimplePairingRandomizerR192].
+    /// Create [`Vec<u8>`] from [SecureSimplePairingRandomizerR192].
     ///
     /// # Examples
     ///

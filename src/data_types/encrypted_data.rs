@@ -47,7 +47,7 @@ impl EncryptedData {
 
 impl TryFrom<&Vec<u8>> for EncryptedData {
     type Error = String;
-    /// Create [`EncryptedData`] from `Vec<u8>`.
+    /// Create [`EncryptedData`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -107,7 +107,7 @@ impl TryFrom<&Vec<u8>> for EncryptedData {
 }
 
 impl Into<Vec<u8>> for EncryptedData {
-    /// Create `Vec<u8>` from [`EncryptedData`].
+    /// Create [`Vec<u8>`] from [`EncryptedData`].
     ///
     /// # Examples
     ///

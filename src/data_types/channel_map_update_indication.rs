@@ -44,7 +44,7 @@ impl ChannelMapUpdateIndication {
 
 impl TryFrom<&Vec<u8>> for ChannelMapUpdateIndication {
     type Error = String;
-    /// Create [`ChannelMapUpdateIndication`] from `Vec<u8>`.
+    /// Create [`ChannelMapUpdateIndication`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -129,7 +129,7 @@ impl TryFrom<&Vec<u8>> for ChannelMapUpdateIndication {
 }
 
 impl Into<Vec<u8>> for ChannelMapUpdateIndication {
-    /// Create `Vec<u8>` from [`ChannelMapUpdateIndication`].
+    /// Create [`Vec<u8>`] from [`ChannelMapUpdateIndication`].
     ///
     /// # Examples
     ///

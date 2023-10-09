@@ -36,7 +36,7 @@ impl ShortenedLocalName {
 
 impl TryFrom<&Vec<u8>> for ShortenedLocalName {
     type Error = String;
-    /// Create [`ShortenedLocalName`] from `Vec<u8>`.
+    /// Create [`ShortenedLocalName`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -79,7 +79,7 @@ impl TryFrom<&Vec<u8>> for ShortenedLocalName {
 }
 
 impl Into<Vec<u8>> for ShortenedLocalName {
-    /// Create `Vec<u8>` from [`ShortenedLocalName`].
+    /// Create [`Vec<u8>`] from [`ShortenedLocalName`].
     ///
     /// # Examples
     ///

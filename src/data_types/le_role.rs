@@ -167,7 +167,7 @@ pub const CENTRAL_ROLE_PREFERRED_FOR_CONNECTION_STABLISHMENT: u8 = 0x03;
 
 impl TryFrom<&Vec<u8>> for LeRole {
     type Error = String;
-    /// Create [LE Role] from `Vec<u8>`.
+    /// Create [LE Role] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -248,7 +248,7 @@ impl TryFrom<&Vec<u8>> for LeRole {
 }
 
 impl Into<Vec<u8>> for LeRole {
-    /// Create `Vec<u8>` from [LeRole].
+    /// Create [`Vec<u8>`] from [LeRole].
     ///
     /// # Examples
     ///

@@ -35,7 +35,7 @@ impl SecureSimplePairingHashC192 {
 
 impl TryFrom<&Vec<u8>> for SecureSimplePairingHashC192 {
     type Error = String;
-    /// Create [`SecureSimplePairingHashC192`] from `Vec<u8>`.
+    /// Create [`SecureSimplePairingHashC192`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -80,7 +80,7 @@ impl TryFrom<&Vec<u8>> for SecureSimplePairingHashC192 {
 }
 
 impl Into<Vec<u8>> for SecureSimplePairingHashC192 {
-    /// Create `Vec<u8>` from [`SecureSimplePairingHashC192`].
+    /// Create [`Vec<u8>`] from [`SecureSimplePairingHashC192`].
     ///
     /// # Examples
     ///

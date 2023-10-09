@@ -142,7 +142,7 @@ pub const CONNECTION_INTERVAL_NO_SPECIFIC_VALUE: u16 = 0xffff;
 
 impl TryFrom<&Vec<u8>> for PeripheralConnectionIntervalRange {
     type Error = String;
-    /// Create [`PeripheralConnectionIntervalRange`] from `Vec<u8>`.
+    /// Create [`PeripheralConnectionIntervalRange`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -188,7 +188,7 @@ impl TryFrom<&Vec<u8>> for PeripheralConnectionIntervalRange {
 }
 
 impl Into<Vec<u8>> for PeripheralConnectionIntervalRange {
-    /// Create `Vec<u8>` from [`PeripheralConnectionIntervalRange`].
+    /// Create [`Vec<u8>`] from [`PeripheralConnectionIntervalRange`].
     ///
     /// # Examples
     ///

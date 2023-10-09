@@ -42,7 +42,7 @@ impl ListOf16BitServiceSolicitationUUIDs {
 
 impl TryFrom<&Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
     type Error = String;
-    /// Create [ListOf16BitServiceSolicitationUUIDs] from `Vec<u8>`.
+    /// Create [ListOf16BitServiceSolicitationUUIDs] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -102,7 +102,7 @@ impl TryFrom<&Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
 }
 
 impl Into<Vec<u8>> for ListOf16BitServiceSolicitationUUIDs {
-    /// Create `Vec<u8>` from [ListOf16BitServiceSolicitationUUIDs].
+    /// Create [`Vec<u8>`] from [ListOf16BitServiceSolicitationUUIDs].
     ///
     /// # Examples
     ///

@@ -146,7 +146,7 @@ impl Flags {
 
 impl TryFrom<&Vec<u8>> for Flags {
     type Error = String;
-    /// Create [`Flags`] from `Vec<u8>`.
+    /// Create [`Flags`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -284,7 +284,7 @@ impl TryFrom<&Vec<u8>> for Flags {
 }
 
 impl Into<Vec<u8>> for Flags {
-    /// Create `Vec<u8>` from [`Flags`].
+    /// Create [`Vec<u8>`] from [`Flags`].
     ///
     /// # Examples
     ///

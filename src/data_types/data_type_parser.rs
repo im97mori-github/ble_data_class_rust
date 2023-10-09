@@ -1160,7 +1160,7 @@ impl DataTypeParseResult {
 }
 
 impl From<&Vec<u8>> for DataTypeParseResult {
-    /// Create [`DataTypeParseResult`] from `Vec<u8>`.
+    /// Create [`DataTypeParseResult`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -1445,7 +1445,7 @@ impl From<&Vec<Vec<u8>>> for DataTypeParseResults {
 }
 
 impl From<&Vec<u8>> for DataTypeParseResults {
-    /// Create [`DataTypeParseResults`] from `Vec<u8>`.
+    /// Create [`DataTypeParseResults`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///

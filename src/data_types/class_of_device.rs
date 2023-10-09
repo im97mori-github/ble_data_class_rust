@@ -108,7 +108,7 @@ pub const CLASS_OF_DEVICE_MINOR_DEVICE_CLASS_MASK: u32 = 0b00000000_00000000_111
 
 impl TryFrom<&Vec<u8>> for ClassOfDevice {
     type Error = String;
-    /// Create [`ClassOfDevice`] from `Vec<u8>`.
+    /// Create [`ClassOfDevice`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -157,7 +157,7 @@ impl TryFrom<&Vec<u8>> for ClassOfDevice {
 }
 
 impl Into<Vec<u8>> for ClassOfDevice {
-    /// Create `Vec<u8>` from [`ClassOfDevice`].
+    /// Create [`Vec<u8>`] from [`ClassOfDevice`].
     ///
     /// # Examples
     ///

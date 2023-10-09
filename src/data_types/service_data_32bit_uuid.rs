@@ -44,7 +44,7 @@ impl ServiceData32BitUUID {
 
 impl TryFrom<&Vec<u8>> for ServiceData32BitUUID {
     type Error = String;
-    /// Create [`ServiceData32BitUUID`] from `Vec<u8>`.
+    /// Create [`ServiceData32BitUUID`] from [`Vec<u8>`].
     ///
     /// # Examples
     ///
@@ -99,7 +99,7 @@ impl TryFrom<&Vec<u8>> for ServiceData32BitUUID {
 }
 
 impl Into<Vec<u8>> for ServiceData32BitUUID {
-    /// Create `Vec<u8>` from [`ServiceData32BitUUID`].
+    /// Create [`Vec<u8>`] from [`ServiceData32BitUUID`].
     ///
     /// # Examples
     ///
