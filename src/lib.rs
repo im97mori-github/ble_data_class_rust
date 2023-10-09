@@ -47,10 +47,12 @@ pub mod data_types {
 }
 
 /// for Windows
+#[cfg(target_os = "windows")]
 pub mod windows {
     pub mod data_types {
         pub mod windows_data_type_parser;
     }
+    pub mod buffer;
 }
 
 use uuid::{uuid, Uuid};

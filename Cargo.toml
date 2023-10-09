@@ -7,3 +7,16 @@ edition = "2021"
 
 [dependencies]
 uuid = "1.4.1"
+
+[dependencies.windows]
+version = "0.48"
+features = [
+    "Win32_Foundation",
+    "Win32_System_Threading",
+
+    "Storage_Streams",
+    "Foundation",
+    "Devices_Bluetooth",
+    "Devices_Bluetooth_Advertisement",
+    "Foundation_Collections",
+]
