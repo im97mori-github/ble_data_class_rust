@@ -379,7 +379,7 @@ mod windows_tests {
                                 _ => {}
                             }
                         }
-                        DataTypeParseResult::DataTypeParseErr(_) => {}
+                        DataTypeParseResult::DataTypeParseError(_) => {}
                     };
                 }
 

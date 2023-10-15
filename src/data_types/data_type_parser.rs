@@ -212,7 +212,7 @@ pub enum DataTypeParseResult {
     UniformResourceIdentifierResult(Result<UniformResourceIdentifier, String>),
 
     /// Occurs for unsupported data types.
-    DataTypeParseErr(String),
+    DataTypeParseError(String),
 }
 
 impl DataTypeParseResult {
@@ -1176,7 +1176,7 @@ impl From<&Vec<u8>> for DataTypeParseResult {
     /// let data: Vec<u8> = Vec::new();
     /// assert!(matches!(
     ///     DataTypeParseResult::from(&data),
-    ///     DataTypeParseResult::DataTypeParseErr(_)
+    ///     DataTypeParseResult::DataTypeParseError(_)
     /// ));
     fn from(value: &Vec<u8>) -> Self {
         if let Some(data_type) = value.get(1) {
@@ -1317,12 +1317,12 @@ impl From<&Vec<u8>> for DataTypeParseResult {
                     UniformResourceIdentifier::try_from(value),
                 )
             } else {
-                DataTypeParseResult::DataTypeParseErr(
+                DataTypeParseResult::DataTypeParseError(
                     format!("Unknown data type :{}", data_type).to_string(),
                 )
             }
         } else {
-            DataTypeParseResult::DataTypeParseErr("Invalid data size".to_string())
+            DataTypeParseResult::DataTypeParseError("Invalid data size".to_string())
         }
     }
 }
@@ -1430,7 +1430,7 @@ impl From<&Vec<Vec<u8>>> for DataTypeParseResults {
     /// ));
     /// assert!(matches!(
     ///     results.results.get(1),
-    ///     Some(DataTypeParseResult::DataTypeParseErr(_))
+    ///     Some(DataTypeParseResult::DataTypeParseError(_))
     /// ));
     /// assert!(matches!(results.results.get(2), None));
     /// ```
@@ -1464,7 +1464,7 @@ impl From<&Vec<u8>> for DataTypeParseResults {
     /// ));
     /// assert!(matches!(
     ///     results.results.get(1),
-    ///     Some(DataTypeParseResult::DataTypeParseErr(_))
+    ///     Some(DataTypeParseResult::DataTypeParseError(_))
     /// ));
     /// assert!(matches!(results.results.get(2), None));
     /// ```
@@ -1538,7 +1538,7 @@ mod tests {
 
     #[test]
     fn test_new() {
-        let vec = vec![DataTypeParseResult::DataTypeParseErr("".to_string())];
+        let vec = vec![DataTypeParseResult::DataTypeParseError("".to_string())];
         let results = DataTypeParseResults::new(vec.to_vec());
         assert_eq!(vec, results.results);
     }
@@ -2104,7 +2104,7 @@ mod tests {
         let data: Vec<u8> = Vec::new();
         assert!(matches!(
             DataTypeParseResult::from(&data),
-            DataTypeParseResult::DataTypeParseErr(_)
+            DataTypeParseResult::DataTypeParseError(_)
         ));
     }
 
@@ -2123,7 +2123,7 @@ mod tests {
         ));
         assert!(matches!(
             results.results.get(1),
-            Some(DataTypeParseResult::DataTypeParseErr(_))
+            Some(DataTypeParseResult::DataTypeParseError(_))
         ));
         assert!(matches!(results.results.get(2), None));
     }
@@ -2142,7 +2142,7 @@ mod tests {
         ));
         assert!(matches!(
             results.results.get(1),
-            Some(DataTypeParseResult::DataTypeParseErr(_))
+            Some(DataTypeParseResult::DataTypeParseError(_))
         ));
         assert!(matches!(results.results.get(2), None));
     }

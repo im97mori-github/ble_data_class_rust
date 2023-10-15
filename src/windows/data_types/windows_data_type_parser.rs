@@ -76,7 +76,7 @@ impl From<BluetoothLEAdvertisementDataSection> for DataTypeParseResult {
 
 #[cfg(target_os = "windows")]
 fn create_error_result(error: Error) -> DataTypeParseResult {
-    DataTypeParseResult::DataTypeParseErr(match error.message().to_os_string().to_str() {
+    DataTypeParseResult::DataTypeParseError(match error.message().to_os_string().to_str() {
         Some(message) => message.to_string(),
         None => "Unknown Error".to_string(),
     })
@@ -93,7 +93,7 @@ impl TryFrom<BluetoothLEAdvertisement> for DataTypeParseResults {
     /// ```
     /// use ble_data_struct::data_types::data_type_parser::DataTypeParseResults;
     /// use windows::Devices::Bluetooth::Advertisement::BluetoothLEAdvertisement;
-    /// 
+    ///
     /// let bluetooth_le_advertisiement = BluetoothLEAdvertisement::new().unwrap();
     /// let data_type_parse_results = DataTypeParseResults::try_from(bluetooth_le_advertisiement);
     ///
