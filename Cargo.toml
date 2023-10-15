@@ -2,6 +2,13 @@
 name = "ble-data-struct"
 version = "0.1.0"
 edition = "2021"
+description = "BLE data struct for Rust"
+authors = ["im97mori-github <github@im97mori.org>"]
+homepage = "https://github.com/im97mori-github/ble-data-struct-rust"
+repository = "https://github.com/im97mori-github/ble-data-struct-rust.git"
+keywords = ["bluetooth", "ble"]
+categories = ["data-structures", "parsing", "os::windows-apis"]
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -13,7 +20,6 @@ version = "0.48"
 features = [
     "Win32_Foundation",
     "Win32_System_Threading",
-
     "Storage_Streams",
     "Foundation",
     "Devices_Bluetooth",
