@@ -46,6 +46,11 @@ pub mod data_types {
     pub mod uniform_resource_identifier;
 }
 
+pub mod descriptors {
+    //! descriptor module.
+    pub mod client_characteristic_configuration;
+}
+
 /// for Windows
 #[cfg(target_os = "windows")]
 pub mod windows {
@@ -61,3 +66,67 @@ use uuid::{uuid, Uuid};
 ///
 /// 00000000-0000-1000-8000-00805F9B34FB
 pub const BASE_UUID: Uuid = uuid!("00000000-0000-1000-8000-00805F9B34FB");
+
+/// Create [`Uuid`] from [`u16`].
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_struct::uuid_from_u16;
+/// use uuid::uuid;
+///
+/// assert_eq!(
+///     uuid!("00001234-0000-1000-8000-00805F9B34FB"),
+///     uuid_from_u16(0x1234)
+/// );
+/// ```
+pub fn uuid_from_u16(value: u16) -> Uuid {
+    let (d1, d2, d3, d4) = BASE_UUID.as_fields();
+    Uuid::from_fields(d1 | value as u32, d2, d3, d4)
+}
+
+/// Create [`Uuid`] from [`u32`].
+///
+/// # Examples
+///
+/// ```
+/// use ble_data_struct::uuid_from_u32;
+/// use uuid::uuid;
+///
+/// assert_eq!(
+///     uuid!("12345678-0000-1000-8000-00805F9B34FB"),
+///     uuid_from_u32(0x12345678)
+/// );
+/// ```
+pub fn uuid_from_u32(value: u32) -> Uuid {
+    let (d1, d2, d3, d4) = BASE_UUID.as_fields();
+    Uuid::from_fields(d1 | value, d2, d3, d4)
+}
+
+/// Trait for Assigned 16bit-UUID.
+pub trait Uuid16bit {
+    /// Assigned 16bit-UUID
+    fn uuid_16bit() -> u16;
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{uuid_from_u16, uuid_from_u32};
+    use uuid::uuid;
+
+    #[test]
+    fn test_uuid_from_u16() {
+        assert_eq!(
+            uuid!("00001234-0000-1000-8000-00805F9B34FB"),
+            uuid_from_u16(0x1234)
+        );
+    }
+
+    #[test]
+    fn test_uuid_from_u32() {
+        assert_eq!(
+            uuid!("12345678-0000-1000-8000-00805F9B34FB"),
+            uuid_from_u32(0x12345678)
+        );
+    }
+}

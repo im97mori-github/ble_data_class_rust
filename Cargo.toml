@@ -1,6 +1,6 @@
 [package]
 name = "ble-data-struct"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "BLE data struct for Rust"
 authors = ["im97mori-github <github@im97mori.org>"]
