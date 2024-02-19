@@ -56,7 +56,7 @@ Some as [https://github.com/im97mori-github/JavaBLEUtil/wiki](https://github.com
     - [ ] 3D Information Data(0x3D)
     - [x] Manufacturer Specific Data(0xFF)
 - [ ] Descriptor
-    - [ ] Characteristic Extended Properties(0x2900)
+    - [x] Characteristic Extended Properties(0x2900)
     - [ ] Characteristic User Description(0x2901)
     - [x] Client Characteristic Configuration(0x2902)
     - [ ] Server Characteristic Configuration(0x2903)
