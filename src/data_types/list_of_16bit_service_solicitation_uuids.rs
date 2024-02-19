@@ -1,4 +1,4 @@
-//! List of 16-bit Service Solicitation UUIDs (Data Type Value: 0x03) module.
+//! List of 16-bit Service Solicitation UUIDs (Data Type Value: 0x14) module.
 
 use uuid::Uuid;
 

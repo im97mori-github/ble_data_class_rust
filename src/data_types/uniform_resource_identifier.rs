@@ -1,4 +1,4 @@
-//! Uniform Resource Identifier (Data Type Value: 0x08) module.
+//! Uniform Resource Identifier (Data Type Value: 0x24) module.
 
 use crate::data_types::data_type::DataType;
 

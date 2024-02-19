@@ -1,4 +1,4 @@
-//! Peripheral Connection Interval Range (Data Type Value: 0x1a) module.
+//! Peripheral Connection Interval Range (Data Type Value: 0x12) module.
 
 use crate::data_types::data_type::DataType;
 

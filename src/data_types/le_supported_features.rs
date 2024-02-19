@@ -1,4 +1,4 @@
-//! LE Supported Features (Data Type Value: 0xff) module.
+//! LE Supported Features (Data Type Value: 0x27) module.
 
 use crate::data_types::data_type::DataType;
 
