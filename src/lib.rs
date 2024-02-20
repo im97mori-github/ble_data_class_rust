@@ -52,6 +52,7 @@ pub mod descriptors {
     pub mod characteristic_user_description;
     pub mod client_characteristic_configuration;
     pub mod server_characteristic_configuration;
+    pub mod characteristic_presentation_format;
     pub mod characteristic_aggregate_format;
 }
 

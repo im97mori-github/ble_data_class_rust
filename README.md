@@ -60,7 +60,7 @@ Some as [https://github.com/im97mori-github/JavaBLEUtil/wiki](https://github.com
     - [x] Characteristic User Description(0x2901)
     - [x] Client Characteristic Configuration(0x2902)
     - [x] Server Characteristic Configuration(0x2903)
-    - [ ] Characteristic Presentation Format(0x2904)
+    - [x] Characteristic Presentation Format(0x2904)
     - [x] Characteristic Aggregate Format(0x2905)
     - [ ] Valid Range(0x2906)
     - [ ] External Report Reference(0x2907)

@@ -412,7 +412,7 @@ mod windows_tests {
 
         watcher.Start().unwrap();
 
-        let duration = time::Duration::from_secs(37);
+        let duration = time::Duration::from_secs(5);
         std::thread::sleep(duration);
 
         watcher.Stop().unwrap();

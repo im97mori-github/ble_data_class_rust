@@ -15,12 +15,12 @@ impl ServerCharacteristicConfiguration {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ServerCharacteristicConfiguration, INDICATION, NOTIFICATION,
+    /// use ble_data_struct::descriptors::server_characteristic_configuration::{
+    ///     ServerCharacteristicConfiguration, BROADCAST,
     /// };
     ///
-    /// let result = ServerCharacteristicConfiguration::new(NOTIFICATION);
-    /// assert_eq!(NOTIFICATION, result.configuration);
+    /// let result = ServerCharacteristicConfiguration::new(BROADCAST);
+    /// assert_eq!(BROADCAST, result.configuration);
     /// ```
     pub fn new(configuration: u16) -> Self {
         Self { configuration }
@@ -31,13 +31,12 @@ impl ServerCharacteristicConfiguration {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ServerCharacteristicConfiguration, INDICATION, NOTIFICATION,
+    /// use ble_data_struct::descriptors::server_characteristic_configuration::{
+    ///     ServerCharacteristicConfiguration, BROADCAST,
     /// };
     ///
-    /// let result = ServerCharacteristicConfiguration::new(NOTIFICATION);
-    /// assert!(result.is_notification());
-    /// assert!(!result.is_indication());
+    /// let result = ServerCharacteristicConfiguration::new(BROADCAST);
+    /// assert!(result.is_broadcast());
     /// ```
     pub fn is_broadcast(&self) -> bool {
         self.configuration == BROADCAST
@@ -54,20 +53,15 @@ impl TryFrom<&Vec<u8>> for ServerCharacteristicConfiguration {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ServerCharacteristicConfiguration, INDICATION, NOTIFICATION,
+    /// use ble_data_struct::descriptors::server_characteristic_configuration::{
+    ///     ServerCharacteristicConfiguration, BROADCAST,
     /// };
     ///
-    /// let configuration = NOTIFICATION.to_le_bytes().to_vec();
+    /// let configuration = BROADCAST.to_le_bytes().to_vec();
     /// let result = ServerCharacteristicConfiguration::try_from(&configuration);
     /// assert!(result.is_ok());
-    /// assert_eq!(NOTIFICATION, result.unwrap().configuration);
-    ///
-    /// let configuration = INDICATION.to_le_bytes().to_vec();
-    /// let result = ServerCharacteristicConfiguration::try_from(&configuration);
-    /// assert!(result.is_ok());
-    /// assert_eq!(INDICATION, result.unwrap().configuration);
-    ///
+    /// assert_eq!(BROADCAST, result.unwrap().configuration);
+    /// 
     /// let configuration = Vec::new();
     /// let result = ServerCharacteristicConfiguration::try_from(&configuration);
     /// assert!(!result.is_ok());
@@ -89,17 +83,12 @@ impl Into<Vec<u8>> for ServerCharacteristicConfiguration {
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ServerCharacteristicConfiguration, INDICATION, NOTIFICATION,
+    /// use ble_data_struct::descriptors::server_characteristic_configuration::{
+    ///     ServerCharacteristicConfiguration, BROADCAST,
     /// };
     ///
-    /// let configuration = NOTIFICATION.to_le_bytes().to_vec();
-    /// let result = ServerCharacteristicConfiguration::new(NOTIFICATION);
-    /// let into_data: Vec<u8> = result.into();
-    /// assert_eq!(configuration, into_data);
-    ///
-    /// let configuration = INDICATION.to_le_bytes().to_vec();
-    /// let result = ServerCharacteristicConfiguration::new(INDICATION);
+    /// let configuration = BROADCAST.to_le_bytes().to_vec();
+    /// let result = ServerCharacteristicConfiguration::new(BROADCAST);
     /// let into_data: Vec<u8> = result.into();
     /// assert_eq!(configuration, into_data);
     /// ```
@@ -115,7 +104,7 @@ impl Uuid16bit for ServerCharacteristicConfiguration {
     ///
     /// ```
     /// use ble_data_struct::Uuid16bit;
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::ServerCharacteristicConfiguration;
+    /// use ble_data_struct::descriptors::server_characteristic_configuration::ServerCharacteristicConfiguration;
     ///
     /// assert_eq!(0x2903, ServerCharacteristicConfiguration::uuid_16bit());
     /// ```

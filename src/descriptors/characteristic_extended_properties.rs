@@ -135,9 +135,9 @@ impl Uuid16bit for CharacteristicExtendedProperties {
     ///
     /// ```
     /// use ble_data_struct::Uuid16bit;
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::ClientCharacteristicConfiguration;
+    /// use ble_data_struct::descriptors::characteristic_extended_properties::CharacteristicExtendedProperties;
     ///
-    /// assert_eq!(0x2900, ClientCharacteristicConfiguration::uuid_16bit());
+    /// assert_eq!(0x2900, CharacteristicExtendedProperties::uuid_16bit());
     /// ```
     fn uuid_16bit() -> u16 {
         0x2900

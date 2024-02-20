@@ -40,7 +40,7 @@ impl TryFrom<&Vec<u8>> for CharacteristicUserDescription {
     /// };
     ///
     /// let description = "description".to_string();
-    /// let result = CharacteristicUserDescription::try_from(description.to_string().into_bytes());
+    /// let result = CharacteristicUserDescription::try_from(&description.to_string().into_bytes());
     /// assert!(result.is_ok());
     /// assert_eq!(description, result.unwrap().description);
     /// ```
