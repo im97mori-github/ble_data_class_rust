@@ -57,7 +57,7 @@ Some as [https://github.com/im97mori-github/JavaBLEUtil/wiki](https://github.com
     - [x] Manufacturer Specific Data(0xFF)
 - [ ] Descriptor
     - [x] Characteristic Extended Properties(0x2900)
-    - [ ] Characteristic User Description(0x2901)
+    - [x] Characteristic User Description(0x2901)
     - [x] Client Characteristic Configuration(0x2902)
     - [ ] Server Characteristic Configuration(0x2903)
     - [ ] Characteristic Presentation Format(0x2904)

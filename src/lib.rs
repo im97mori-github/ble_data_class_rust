@@ -49,6 +49,7 @@ pub mod data_types {
 pub mod descriptors {
     //! descriptor module.
     pub mod characteristic_extended_properties;
+    pub mod characteristic_user_description;
     pub mod client_characteristic_configuration;
 }
 
