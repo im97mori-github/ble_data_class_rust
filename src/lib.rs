@@ -51,6 +51,7 @@ pub mod descriptors {
     pub mod characteristic_extended_properties;
     pub mod characteristic_user_description;
     pub mod client_characteristic_configuration;
+    pub mod server_characteristic_configuration;
 }
 
 /// for Windows
