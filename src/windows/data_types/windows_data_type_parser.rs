@@ -76,10 +76,7 @@ impl From<BluetoothLEAdvertisementDataSection> for DataTypeParseResult {
 
 #[cfg(target_os = "windows")]
 fn create_error_result(error: Error) -> DataTypeParseResult {
-    DataTypeParseResult::DataTypeParseError(match error.message().to_os_string().to_str() {
-        Some(message) => message.to_string(),
-        None => "Unknown Error".to_string(),
-    })
+    DataTypeParseResult::DataTypeParseError(error.message())
 }
 
 #[cfg(target_os = "windows")]

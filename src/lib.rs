@@ -62,6 +62,9 @@ pub mod windows {
     pub mod data_types {
         pub mod windows_data_type_parser;
     }
+    pub mod descriptors {
+        pub mod windows_client_characteristic_configuration;
+    }
     pub mod buffer;
 }
 
