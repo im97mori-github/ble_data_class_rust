@@ -63,7 +63,7 @@ pub mod windows {
         pub mod windows_data_type_parser;
     }
     pub mod descriptors {
-        // pub mod windows_characteristic_aggregate_format;
+        pub mod windows_characteristic_aggregate_format;
         // pub mod windows_characteristic_extended_properties;
         // pub mod windows_characteristic_presentation_format;
         pub mod windows_characteristic_user_description;

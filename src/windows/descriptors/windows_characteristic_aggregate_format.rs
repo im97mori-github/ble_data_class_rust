@@ -1,186 +1,101 @@
 //! Characteristic Aggregate Format (Attribute Type: 0x2905) module for windows.
 
-use crate::Uuid16bit;
+#[cfg(target_os = "windows")]
+use crate::descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat;
+#[cfg(target_os = "windows")]
+use crate::windows::buffer::{i_buffer_to_vec, vec_to_i_buffer};
 
-/// Characteristic Aggregate Format.
-#[derive(Debug, PartialEq, Clone)]
-pub struct CharacteristicAggregateFormat {
-    /// List of Attribute Handles
-    pub list_of_attribute_handles: Vec<u16>,
-}
+#[cfg(target_os = "windows")]
+use windows::Storage::Streams::IBuffer;
 
-impl CharacteristicAggregateFormat {
-    /// Create [`CharacteristicAggregateFormat`] from [`String`].
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::{
-    ///     descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat, Uuid16bit,
-    /// };
-    ///
-    /// let list_of_attribute_handles: Vec<u16> = [0x0201, 0x0403].to_vec();
-    /// let result = CharacteristicAggregateFormat::new(&list_of_attribute_handles.clone());
-    /// assert_eq!(list_of_attribute_handles, result.list_of_attribute_handles);
-    /// ```
-    pub fn new(list_of_attribute_handles: &Vec<u16>) -> Self {
-        Self {
-            list_of_attribute_handles: list_of_attribute_handles.clone(),
-        }
-    }
-}
-
-impl TryFrom<&Vec<u8>> for CharacteristicAggregateFormat {
+#[cfg(target_os = "windows")]
+impl TryFrom<IBuffer> for CharacteristicAggregateFormat {
     type Error = String;
-    /// Create [`CharacteristicAggregateFormat`] from [`Vec<u8>`].
+    /// Create [`CharacteristicAggregateFormat`] from [`IBuffer`].
     ///
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::{
-    ///     descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat, Uuid16bit,
-    /// };
+    /// use windows::Storage::Streams::{DataWriter, IBuffer};
+    ///
+    /// use ble_data_struct::descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat;
     ///
     /// let list_of_attribute_handles: Vec<u16> = [0x0201, 0x0403].to_vec();
-    /// let data: Vec<u8> = list_of_attribute_handles
-    ///     .clone()
-    ///     .iter()
-    ///     .flat_map(|f| f.to_le_bytes())
-    ///     .collect();
-    /// 
-    /// let result = CharacteristicAggregateFormat::try_from(&data);
+    /// let chracteristic_aggregate_format =
+    ///     CharacteristicAggregateFormat::new(&list_of_attribute_handles.clone());
+    ///
+    /// let data_writer = DataWriter::new().unwrap();
+    /// let ble_packet: Vec<u8> = chracteristic_aggregate_format.into();
+    /// data_writer.WriteBytes(&ble_packet).unwrap();
+    /// let buffer = data_writer.DetachBuffer().unwrap();
+    ///
+    /// let result = CharacteristicAggregateFormat::try_from(buffer);
     /// assert!(result.is_ok());
-    /// let descriptor = result.unwrap();
-    /// assert_eq!(
-    ///     list_of_attribute_handles,
-    ///     descriptor.list_of_attribute_handles
-    /// );
-    /// 
-    /// let result = CharacteristicAggregateFormat::try_from(&Vec::new());
-    /// assert!(!result.is_ok());
-    /// 
-    /// let result = CharacteristicAggregateFormat::try_from(&vec![0, 1, 2]);
-    /// assert!(!result.is_ok());
+    /// let value: Vec<u8> = result.unwrap().into();
+    /// assert_eq!(ble_packet, value);
     /// ```
-    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
-        let len = value.len();
-        if len < 2 {
-            return Err(format!("Invalid data size :{}", len).to_string());
-        }
-        if len % 2 == 1 {
-            return Err(format!("Invalid data size :{}", len).to_string());
-        }
-        Ok(Self {
-            list_of_attribute_handles: value
-                .windows(2)
-                .step_by(2)
-                .map(|w| u16::from_le_bytes(w[0..2].try_into().unwrap()))
-                .collect(),
-        })
+    fn try_from(value: IBuffer) -> Result<Self, String> {
+        let vec = i_buffer_to_vec(value).unwrap();
+        Self::try_from(&vec)
     }
 }
 
-impl Into<Vec<u8>> for CharacteristicAggregateFormat {
-    /// Create [`Vec<u8>`] from [`CharacteristicAggregateFormat`].
+#[cfg(target_os = "windows")]
+impl Into<IBuffer> for CharacteristicAggregateFormat {
+    /// Create [`IBuffer`] from [`CharacteristicAggregateFormat`].
     ///
     /// # Examples
     ///
     /// ```
+    /// use windows::Storage::Streams::{DataWriter, IBuffer};
+    ///
     /// use ble_data_struct::{
-    ///     descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat, Uuid16bit,
+    ///     descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat,
+    ///     windows::buffer::i_buffer_to_vec,
     /// };
     ///
     /// let list_of_attribute_handles: Vec<u16> = [0x0201, 0x0403].to_vec();
-    /// let result = CharacteristicAggregateFormat::new(&list_of_attribute_handles.clone());
-    /// 
-    /// let data: Vec<u8> = list_of_attribute_handles
-    ///     .clone()
-    ///     .iter()
-    ///     .flat_map(|f| f.to_le_bytes())
-    ///     .collect();
-    /// let into_data: Vec<u8> = result.into();
-    /// assert_eq!(data, into_data);
+    /// let value = CharacteristicAggregateFormat::new(&list_of_attribute_handles.clone());
+    /// let buffer: IBuffer = value.clone().into();
+    /// let vec: Vec<u8> = value.into();
+    /// assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
     /// ```
-    fn into(self) -> Vec<u8> {
-        return self
-            .list_of_attribute_handles
-            .clone()
-            .iter()
-            .flat_map(|f| f.to_le_bytes())
-            .collect();
-    }
-}
-
-impl Uuid16bit for CharacteristicAggregateFormat {
-    /// return `0x2905`.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::{
-    ///     descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat, Uuid16bit,
-    /// };
-    ///
-    /// assert_eq!(0x2905, CharacteristicAggregateFormat::uuid_16bit());
-    /// ```
-    fn uuid_16bit() -> u16 {
-        0x2905
+    fn into(self) -> IBuffer {
+        let vec: Vec<u8> = self.into();
+        vec_to_i_buffer(&vec).unwrap()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat, Uuid16bit,
-    };
+    use crate::descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat;
+    use windows::Storage::Streams::{DataWriter, IBuffer};
+
+    use crate::windows::buffer::i_buffer_to_vec;
 
     #[test]
-    fn test_new() {
+    fn test_try_from_i_buffer() {
         let list_of_attribute_handles: Vec<u16> = [0x0201, 0x0403].to_vec();
-        let result = CharacteristicAggregateFormat::new(&list_of_attribute_handles.clone());
-        assert_eq!(list_of_attribute_handles, result.list_of_attribute_handles);
-    }
+        let chracteristic_aggregate_format =
+            CharacteristicAggregateFormat::new(&list_of_attribute_handles.clone());
 
-    #[test]
-    fn test_try_from() {
-        let list_of_attribute_handles: Vec<u16> = [0x0201, 0x0403].to_vec();
-        let data: Vec<u8> = list_of_attribute_handles
-            .clone()
-            .iter()
-            .flat_map(|f| f.to_le_bytes())
-            .collect();
+        let data_writer = DataWriter::new().unwrap();
+        let ble_packet: Vec<u8> = chracteristic_aggregate_format.into();
+        data_writer.WriteBytes(&ble_packet).unwrap();
+        let buffer = data_writer.DetachBuffer().unwrap();
 
-        let result = CharacteristicAggregateFormat::try_from(&data);
+        let result = CharacteristicAggregateFormat::try_from(buffer);
         assert!(result.is_ok());
-        let descriptor = result.unwrap();
-        assert_eq!(
-            list_of_attribute_handles,
-            descriptor.list_of_attribute_handles
-        );
-
-        let result = CharacteristicAggregateFormat::try_from(&Vec::new());
-        assert!(!result.is_ok());
-
-        let result = CharacteristicAggregateFormat::try_from(&vec![0, 1, 2]);
-        assert!(!result.is_ok());
+        let value: Vec<u8> = result.unwrap().into();
+        assert_eq!(ble_packet, value);
     }
 
     #[test]
-    fn test_into() {
+    fn test_into_i_buffer() {
         let list_of_attribute_handles: Vec<u16> = [0x0201, 0x0403].to_vec();
-        let result = CharacteristicAggregateFormat::new(&list_of_attribute_handles.clone());
-
-        let data: Vec<u8> = list_of_attribute_handles
-            .clone()
-            .iter()
-            .flat_map(|f| f.to_le_bytes())
-            .collect();
-        let into_data: Vec<u8> = result.into();
-        assert_eq!(data, into_data);
-    }
-
-    #[test]
-    fn test_uuid_16bit() {
-        assert_eq!(0x2905, CharacteristicAggregateFormat::uuid_16bit());
+        let value = CharacteristicAggregateFormat::new(&list_of_attribute_handles.clone());
+        let buffer: IBuffer = value.clone().into();
+        let vec: Vec<u8> = value.into();
+        assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
     }
 }
