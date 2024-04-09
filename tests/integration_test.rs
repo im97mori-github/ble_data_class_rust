@@ -15,18 +15,30 @@ fn test_uuid() {
 #[cfg(target_os = "windows")]
 mod windows_tests {
     use ble_data_struct::{
-        data_types::data_type_parser::DataTypeParseResult, windows::buffer::i_buffer_to_vec,
+        data_types::data_type_parser::DataTypeParseResult,
+        descriptors::client_characteristic_configuration::ClientCharacteristicConfiguration,
+        windows::buffer::{i_buffer_to_vec, vec_to_i_buffer},
     };
-    use std::time;
-    use uuid::Uuid;
+    use std::{
+        sync::mpsc::{self},
+        time::{self, Duration},
+    };
+    use uuid::{uuid, Uuid};
 
     use windows::{
         core::GUID,
-        Devices::Bluetooth::Advertisement::{
-            BluetoothLEAdvertisementFlags, BluetoothLEAdvertisementReceivedEventArgs,
-            BluetoothLEAdvertisementWatcher, BluetoothLEManufacturerData, BluetoothLEScanningMode,
+        Devices::Bluetooth::{
+            Advertisement::{
+                BluetoothLEAdvertisementFlags, BluetoothLEAdvertisementReceivedEventArgs,
+                BluetoothLEAdvertisementWatcher, BluetoothLEManufacturerData,
+                BluetoothLEScanningMode,
+            },
+            BluetoothLEDevice,
+            GenericAttributeProfile::GattClientCharacteristicConfigurationDescriptorValue,
         },
-        Foundation::{EventRegistrationToken, TypedEventHandler},
+        Foundation::{
+            AsyncOperationCompletedHandler, AsyncStatus, IAsyncOperation, TypedEventHandler,
+        },
     };
 
     #[test]
@@ -396,14 +408,14 @@ mod windows_tests {
                         .for_each(|x| println!("\t{}", x.CompanyId().unwrap()));
                 }
 
-                ::windows::core::Result::Ok(())
+                windows::core::Result::Ok(())
             };
         let handler: TypedEventHandler<
             BluetoothLEAdvertisementWatcher,
             BluetoothLEAdvertisementReceivedEventArgs,
         > = TypedEventHandler::new(function);
 
-        let token: EventRegistrationToken = watcher.Received(&handler).unwrap();
+        let token = watcher.Received(&handler).unwrap();
         println!("{}", token.Value);
 
         watcher
@@ -416,5 +428,181 @@ mod windows_tests {
         std::thread::sleep(duration);
 
         watcher.Stop().unwrap();
+    }
+
+    fn wait_operation<TResult: windows::core::RuntimeType + core::marker::Send>(
+        operation: IAsyncOperation<TResult>,
+        duration: Duration,
+    ) -> TResult {
+        let (tx, rx) = mpsc::channel();
+
+        let function = move |option: core::option::Option<&IAsyncOperation<TResult>>,
+                             async_status: AsyncStatus| {
+            if async_status == AsyncStatus::Completed {
+                tx.send(option.unwrap().GetResults().unwrap()).unwrap();
+            }
+
+            windows::core::Result::Ok(())
+        };
+        let handler = AsyncOperationCompletedHandler::new(function);
+        operation.SetCompleted(&handler).unwrap();
+
+        let result = rx.recv_timeout(duration).unwrap();
+        operation.Close().unwrap();
+        result
+    }
+
+    #[test]
+    #[ignore]
+    fn test_descriptors() {
+        let duration = time::Duration::from_secs(5);
+        let (tx, rx) = mpsc::channel();
+
+        let watcher = BluetoothLEAdvertisementWatcher::new().unwrap();
+        let function =
+            move |_: &Option<BluetoothLEAdvertisementWatcher>,
+                  option_arg: &Option<BluetoothLEAdvertisementReceivedEventArgs>| {
+                let args = match option_arg {
+                    Some(val) => val,
+                    None => panic!("called `Option::unwrap()` on a `None` value"),
+                };
+
+                let advertisement = args.Advertisement().unwrap();
+
+                if advertisement
+                    .ServiceUuids()
+                    .unwrap()
+                    .into_iter()
+                    .map(|f| Uuid::from_u128(f.to_u128()))
+                    .any(|f| f == uuid!("00001810-0000-1000-8000-00805f9b34fb"))
+                {
+                    tx.send(args.BluetoothAddress().unwrap()).unwrap();
+                }
+
+                windows::core::Result::Ok(())
+            };
+        let handler: TypedEventHandler<
+            BluetoothLEAdvertisementWatcher,
+            BluetoothLEAdvertisementReceivedEventArgs,
+        > = TypedEventHandler::new(function);
+
+        let token = watcher.Received(&handler).unwrap();
+        println!("{}", token.Value);
+
+        watcher
+            .SetScanningMode(BluetoothLEScanningMode::Active)
+            .unwrap();
+        watcher.Start().unwrap();
+
+        std::thread::sleep(duration);
+
+        watcher.Stop().unwrap();
+        println!("stopped");
+
+        let blp_address = rx.recv_timeout(duration).unwrap();
+        let operation = BluetoothLEDevice::FromBluetoothAddressAsync(blp_address).unwrap();
+        let device = wait_operation(operation, duration);
+
+        let operation = device
+            .GetGattServicesForUuidAsync(GUID::from("00001810-0000-1000-8000-00805f9b34fb"))
+            .unwrap();
+        let service_result = wait_operation(operation, duration);
+        let service = service_result.Services().unwrap().GetAt(0).unwrap();
+
+        let operation = service
+            .GetCharacteristicsForUuidAsync(GUID::from("00002a35-0000-1000-8000-00805f9b34fb"))
+            .unwrap();
+
+        let characteristic_result = wait_operation(operation, duration);
+        let characteristic = characteristic_result
+            .Characteristics()
+            .unwrap()
+            .GetAt(0)
+            .unwrap();
+
+        let operation = characteristic
+            .GetDescriptorsForUuidAsync(GUID::from("00002902-0000-1000-8000-00805f9b34fb"))
+            .unwrap();
+        let descriptor_result = wait_operation(operation, duration);
+        let descriptor = descriptor_result.Descriptors().unwrap().GetAt(0).unwrap();
+
+        let operation = descriptor.ReadValueAsync().unwrap();
+        let read_descriptor_result = wait_operation(operation, duration);
+        let cccd_vec = i_buffer_to_vec(read_descriptor_result.Value().unwrap()).unwrap();
+        let cccd = ClientCharacteristicConfiguration::try_from(&cccd_vec).unwrap();
+
+        assert!(!cccd.is_notification());
+        assert!(!cccd.is_indication());
+
+        let operation = characteristic
+            .ReadClientCharacteristicConfigurationDescriptorAsync()
+            .unwrap();
+        let read_client_characteristic_configuration_descriptor_result =
+            wait_operation(operation, duration);
+        let gatt_client_characteristic_configuration_descriptor =
+            read_client_characteristic_configuration_descriptor_result
+                .ClientCharacteristicConfigurationDescriptor()
+                .unwrap();
+        assert_eq!(
+            GattClientCharacteristicConfigurationDescriptorValue::None,
+            gatt_client_characteristic_configuration_descriptor
+        );
+
+        let operation = characteristic
+            .WriteClientCharacteristicConfigurationDescriptorWithResultAsync(
+                GattClientCharacteristicConfigurationDescriptorValue::Indicate,
+            )
+            .unwrap();
+        wait_operation(operation, duration);
+
+        let operation = descriptor.ReadValueAsync().unwrap();
+        let read_descriptor_result = wait_operation(operation, duration);
+        let cccd_vec = i_buffer_to_vec(read_descriptor_result.Value().unwrap()).unwrap();
+        let cccd = ClientCharacteristicConfiguration::try_from(&cccd_vec).unwrap();
+
+        assert!(!cccd.is_notification());
+        assert!(cccd.is_indication());
+
+        let operation = characteristic
+            .ReadClientCharacteristicConfigurationDescriptorAsync()
+            .unwrap();
+        let read_client_characteristic_configuration_descriptor_result =
+            wait_operation(operation, duration);
+        let gatt_client_characteristic_configuration_descriptor =
+            read_client_characteristic_configuration_descriptor_result
+                .ClientCharacteristicConfigurationDescriptor()
+                .unwrap();
+        assert_eq!(
+            GattClientCharacteristicConfigurationDescriptorValue::Indicate,
+            gatt_client_characteristic_configuration_descriptor
+        );
+
+        let vec: Vec<u8> = ClientCharacteristicConfiguration::new(0).into();
+        let operation = descriptor
+            .WriteValueAsync(&vec_to_i_buffer(&vec).unwrap())
+            .unwrap();
+        wait_operation(operation, duration);
+
+        let operation = descriptor.ReadValueAsync().unwrap();
+        let read_descriptor_result = wait_operation(operation, duration);
+        let cccd_vec = i_buffer_to_vec(read_descriptor_result.Value().unwrap()).unwrap();
+        let cccd = ClientCharacteristicConfiguration::try_from(&cccd_vec).unwrap();
+
+        assert!(!cccd.is_notification());
+        assert!(!cccd.is_indication());
+
+        let operation = characteristic
+            .ReadClientCharacteristicConfigurationDescriptorAsync()
+            .unwrap();
+        let read_client_characteristic_configuration_descriptor_result =
+            wait_operation(operation, duration);
+        let gatt_client_characteristic_configuration_descriptor =
+            read_client_characteristic_configuration_descriptor_result
+                .ClientCharacteristicConfigurationDescriptor()
+                .unwrap();
+        assert_eq!(
+            GattClientCharacteristicConfigurationDescriptorValue::None,
+            gatt_client_characteristic_configuration_descriptor
+        );
     }
 }

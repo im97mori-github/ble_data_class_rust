@@ -69,23 +69,23 @@ impl TryFrom<IBuffer> for ClientCharacteristicConfiguration {
     /// # Examples
     ///
     /// ```
+    /// use windows::Storage::Streams::{DataWriter, IBuffer};
+    ///
     /// use ble_data_struct::descriptors::client_characteristic_configuration::{
     ///     ClientCharacteristicConfiguration, INDICATION, NOTIFICATION,
     /// };
     ///
-    /// let configuration = NOTIFICATION.to_le_bytes().to_vec();
-    /// let result = ClientCharacteristicConfiguration::try_from(&configuration);
+    /// let client_characteristic_configuration =
+    ///     ClientCharacteristicConfiguration::new(NOTIFICATION);
+    /// let data_writer = DataWriter::new().unwrap();
+    /// let ble_packet: Vec<u8> = client_characteristic_configuration.into();
+    /// data_writer.WriteBytes(&ble_packet).unwrap();
+    /// let buffer = data_writer.DetachBuffer().unwrap();
+
+    /// let result = ClientCharacteristicConfiguration::try_from(buffer);
     /// assert!(result.is_ok());
-    /// assert_eq!(NOTIFICATION, result.unwrap().configuration);
-    ///
-    /// let configuration = INDICATION.to_le_bytes().to_vec();
-    /// let result = ClientCharacteristicConfiguration::try_from(&configuration);
-    /// assert!(result.is_ok());
-    /// assert_eq!(INDICATION, result.unwrap().configuration);
-    ///
-    /// let configuration = Vec::new();
-    /// let result = ClientCharacteristicConfiguration::try_from(&configuration);
-    /// assert!(!result.is_ok());
+    /// let value = result.unwrap();
+    /// assert!(value.is_notification());
     /// ```
     fn try_from(value: IBuffer) -> Result<Self, String> {
         let vec = i_buffer_to_vec(value).unwrap();
