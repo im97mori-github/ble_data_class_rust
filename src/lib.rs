@@ -68,7 +68,7 @@ pub mod windows {
         // pub mod windows_characteristic_presentation_format;
         pub mod windows_characteristic_user_description;
         pub mod windows_client_characteristic_configuration;
-        // pub mod windows_server_characteristic_configuration;
+        pub mod windows_server_characteristic_configuration;
     }
     pub mod buffer;
 }
