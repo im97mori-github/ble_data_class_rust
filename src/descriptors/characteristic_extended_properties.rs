@@ -157,14 +157,14 @@ mod tests {
     }
 
     #[test]
-    fn test_is_notification() {
+    fn test_is_reliable_write() {
         let result = CharacteristicExtendedProperties::new(RELIABLE_WRITE);
         assert!(result.is_reliable_write());
         assert!(!result.is_writable_auxiliaries());
     }
 
     #[test]
-    fn test_is_indication() {
+    fn test_is_writable_auxiliaries() {
         let result = CharacteristicExtendedProperties::new(WRITABLE_AUXILIARIES);
         assert!(!result.is_reliable_write());
         assert!(result.is_writable_auxiliaries());

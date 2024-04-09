@@ -1,207 +1,125 @@
 //! Characteristic Extended Properties (Attribute Type: 0x2900) module for windows.
 
-use crate::Uuid16bit;
+use windows::Storage::Streams::IBuffer;
 
-/// Characteristic Extended Properties.
-#[derive(Debug, PartialEq, Clone)]
-pub struct CharacteristicExtendedProperties {
-    /// Characteristic Extended Properties Bit Field
-    pub properties: u16,
-}
+use crate::{
+    descriptors::characteristic_extended_properties::CharacteristicExtendedProperties,
+    windows::buffer::{i_buffer_to_vec, vec_to_i_buffer},
+};
 
-impl CharacteristicExtendedProperties {
-    /// Create [`CharacteristicExtendedProperties`] from `Characteristic Extended Properties Bit Field`.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ClientCharacteristicConfiguration, INDICATION, NOTIFICATION,
-    /// };
-    ///
-    /// let result = ClientCharacteristicConfiguration::new(NOTIFICATION);
-    /// assert_eq!(NOTIFICATION, result.configuration);
-    /// ```
-    pub fn new(properties: u16) -> Self {
-        Self { properties }
-    }
-
-    /// check Reliable Write.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ClientCharacteristicConfiguration, INDICATION, NOTIFICATION,
-    /// };
-    ///
-    /// let result = ClientCharacteristicConfiguration::new(NOTIFICATION);
-    /// assert!(result.is_notification());
-    /// assert!(!result.is_indication());
-    /// ```
-    pub fn is_reliable_write(&self) -> bool {
-        self.properties == RELIABLE_WRITE
-    }
-
-    /// check Writable Auxiliaries.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ClientCharacteristicConfiguration, INDICATION, NOTIFICATION,
-    /// };
-    ///
-    /// let result = ClientCharacteristicConfiguration::new(INDICATION);
-    /// assert!(!result.is_notification());
-    /// assert!(result.is_indication());
-    /// ```
-    pub fn is_writable_auxiliaries(&self) -> bool {
-        self.properties == WRITABLE_AUXILIARIES
-    }
-}
-
-/// Reliable Write
-pub const RELIABLE_WRITE: u16 = 0b00000001;
-
-/// Writable Auxiliaries
-pub const WRITABLE_AUXILIARIES: u16 = 0b00000010;
-
-impl TryFrom<&Vec<u8>> for CharacteristicExtendedProperties {
+#[cfg(target_os = "windows")]
+impl TryFrom<IBuffer> for CharacteristicExtendedProperties {
     type Error = String;
-    /// Create [`CharacteristicExtendedProperties`] from [`Vec<u8>`].
+    /// Create [`CharacteristicExtendedProperties`] from [`IBuffer`].
     ///
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ClientCharacteristicConfiguration, INDICATION, NOTIFICATION,
+    /// use windows::Storage::Streams::{DataWriter, IBuffer};
+    ///
+    /// use ble_data_struct::descriptors::characteristic_extended_properties::{
+    ///     CharacteristicExtendedProperties, RELIABLE_WRITE, WRITABLE_AUXILIARIES,
     /// };
     ///
-    /// let configuration = NOTIFICATION.to_le_bytes().to_vec();
-    /// let result = ClientCharacteristicConfiguration::try_from(&configuration);
-    /// assert!(result.is_ok());
-    /// assert_eq!(NOTIFICATION, result.unwrap().configuration);
+    /// let client_characteristic_configuration =
+    ///     CharacteristicExtendedProperties::new(RELIABLE_WRITE);
+    /// let data_writer = DataWriter::new().unwrap();
+    /// let ble_packet: Vec<u8> = client_characteristic_configuration.into();
+    /// data_writer.WriteBytes(&ble_packet).unwrap();
+    /// let buffer = data_writer.DetachBuffer().unwrap();
     ///
-    /// let configuration = INDICATION.to_le_bytes().to_vec();
-    /// let result = ClientCharacteristicConfiguration::try_from(&configuration);
+    /// let result = CharacteristicExtendedProperties::try_from(buffer);
     /// assert!(result.is_ok());
-    /// assert_eq!(INDICATION, result.unwrap().configuration);
-    ///
-    /// let configuration = Vec::new();
-    /// let result = ClientCharacteristicConfiguration::try_from(&configuration);
-    /// assert!(!result.is_ok());
+    /// let value = result.unwrap();
+    /// assert!(value.is_reliable_write());
     /// ```
-    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
-        let len = value.len();
-        if len != 2 {
-            return Err(format!("Invalid data size :{}", len).to_string());
-        }
-        Ok(Self {
-            properties: u16::from_le_bytes(value[..2].try_into().unwrap()),
-        })
+    fn try_from(value: IBuffer) -> Result<Self, String> {
+        let vec = i_buffer_to_vec(value).unwrap();
+        let properties = u16::from_le_bytes(vec.try_into().unwrap());
+        Ok(Self { properties })
     }
 }
 
-impl Into<Vec<u8>> for CharacteristicExtendedProperties {
-    /// Create [`Vec<u8>`] from [`CharacteristicExtendedProperties`].
+#[cfg(target_os = "windows")]
+impl Into<IBuffer> for CharacteristicExtendedProperties {
+    /// Create [`IBuffer`] from [`CharacteristicExtendedProperties`].
     ///
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::descriptors::client_characteristic_configuration::{
-    ///     ClientCharacteristicConfiguration, INDICATION, NOTIFICATION,
+    /// use windows::{
+    ///     Storage::Streams::{DataWriter, IBuffer},
     /// };
     ///
-    /// let configuration = NOTIFICATION.to_le_bytes().to_vec();
-    /// let result = ClientCharacteristicConfiguration::new(NOTIFICATION);
-    /// let into_data: Vec<u8> = result.into();
-    /// assert_eq!(configuration, into_data);
+    /// use ble_data_struct::{
+    ///     descriptors::characteristic_extended_properties::{
+    ///         CharacteristicExtendedProperties, RELIABLE_WRITE, WRITABLE_AUXILIARIES,
+    ///     },
+    ///     windows::buffer::i_buffer_to_vec,
+    /// };
     ///
-    /// let configuration = INDICATION.to_le_bytes().to_vec();
-    /// let result = ClientCharacteristicConfiguration::new(INDICATION);
-    /// let into_data: Vec<u8> = result.into();
-    /// assert_eq!(configuration, into_data);
+    /// let value = CharacteristicExtendedProperties::new(0);
+    /// let buffer: IBuffer = value.clone().into();
+    /// let vec: Vec<u8> = value.into();
+    /// assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
+    /// 
+    /// let value = CharacteristicExtendedProperties::new(RELIABLE_WRITE);
+    /// let buffer: IBuffer = value.clone().into();
+    /// let vec: Vec<u8> = value.into();
+    /// assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
+    /// 
+    /// let value = CharacteristicExtendedProperties::new(WRITABLE_AUXILIARIES);
+    /// let buffer: IBuffer = value.clone().into();
+    /// let vec: Vec<u8> = value.into();
+    /// assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
     /// ```
-    fn into(self) -> Vec<u8> {
-        u16::to_le_bytes(self.properties).to_vec()
-    }
-}
-
-impl Uuid16bit for CharacteristicExtendedProperties {
-    /// return `0x2900`.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::Uuid16bit;
-    /// use ble_data_struct::descriptors::characteristic_extended_properties::CharacteristicExtendedProperties;
-    ///
-    /// assert_eq!(0x2900, CharacteristicExtendedProperties::uuid_16bit());
-    /// ```
-    fn uuid_16bit() -> u16 {
-        0x2900
+    fn into(self) -> IBuffer {
+        let vec: Vec<u8> = self.into();
+        vec_to_i_buffer(&vec).unwrap()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{descriptors::characteristic_extended_properties::{
-        CharacteristicExtendedProperties, RELIABLE_WRITE, WRITABLE_AUXILIARIES,
-    }, Uuid16bit};
+    use windows::Storage::Streams::{DataWriter, IBuffer};
+
+    use crate::{
+        descriptors::characteristic_extended_properties::{
+            CharacteristicExtendedProperties, RELIABLE_WRITE, WRITABLE_AUXILIARIES,
+        },
+        windows::buffer::i_buffer_to_vec,
+    };
 
     #[test]
-    fn test_new() {
-        let result = CharacteristicExtendedProperties::new(RELIABLE_WRITE);
-        assert_eq!(RELIABLE_WRITE, result.properties);
-    }
+    fn test_try_from_i_buffer() {
+        let client_characteristic_configuration =
+            CharacteristicExtendedProperties::new(RELIABLE_WRITE);
+        let data_writer = DataWriter::new().unwrap();
+        let ble_packet: Vec<u8> = client_characteristic_configuration.into();
+        data_writer.WriteBytes(&ble_packet).unwrap();
+        let buffer = data_writer.DetachBuffer().unwrap();
 
-    #[test]
-    fn test_is_notification() {
-        let result = CharacteristicExtendedProperties::new(RELIABLE_WRITE);
-        assert!(result.is_reliable_write());
-        assert!(!result.is_writable_auxiliaries());
-    }
-
-    #[test]
-    fn test_is_indication() {
-        let result = CharacteristicExtendedProperties::new(WRITABLE_AUXILIARIES);
-        assert!(!result.is_reliable_write());
-        assert!(result.is_writable_auxiliaries());
-    }
-
-    #[test]
-    fn test_try_from() {
-        let properties = RELIABLE_WRITE.to_le_bytes().to_vec();
-        let result = CharacteristicExtendedProperties::try_from(&properties);
+        let result = CharacteristicExtendedProperties::try_from(buffer);
         assert!(result.is_ok());
-        assert_eq!(RELIABLE_WRITE, result.unwrap().properties);
-
-        let properties = WRITABLE_AUXILIARIES.to_le_bytes().to_vec();
-        let result = CharacteristicExtendedProperties::try_from(&properties);
-        assert!(result.is_ok());
-        assert_eq!(WRITABLE_AUXILIARIES, result.unwrap().properties);
-
-        let properties = Vec::new();
-        let result = CharacteristicExtendedProperties::try_from(&properties);
-        assert!(!result.is_ok());
+        let value = result.unwrap();
+        assert!(value.is_reliable_write());
     }
 
     #[test]
-    fn test_into() {
-        let properties = RELIABLE_WRITE.to_le_bytes().to_vec();
-        let result = CharacteristicExtendedProperties::new(RELIABLE_WRITE);
-        let into_data: Vec<u8> = result.into();
-        assert_eq!(properties, into_data);
+    fn test_into_i_buffer() {
+        let value = CharacteristicExtendedProperties::new(0);
+        let buffer: IBuffer = value.clone().into();
+        let vec: Vec<u8> = value.into();
+        assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
 
-        let properties = WRITABLE_AUXILIARIES.to_le_bytes().to_vec();
-        let result = CharacteristicExtendedProperties::new(WRITABLE_AUXILIARIES);
-        let into_data: Vec<u8> = result.into();
-        assert_eq!(properties, into_data);
-    }
+        let value = CharacteristicExtendedProperties::new(RELIABLE_WRITE);
+        let buffer: IBuffer = value.clone().into();
+        let vec: Vec<u8> = value.into();
+        assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
 
-    #[test]
-    fn test_uuid_16bit() {
-        assert_eq!(0x2900, CharacteristicExtendedProperties::uuid_16bit());
+        let value = CharacteristicExtendedProperties::new(WRITABLE_AUXILIARIES);
+        let buffer: IBuffer = value.clone().into();
+        let vec: Vec<u8> = value.into();
+        assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
     }
 }
