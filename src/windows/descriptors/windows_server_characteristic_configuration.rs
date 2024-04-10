@@ -1,11 +1,13 @@
 //! Server Characteristic Configuration (Attribute Type: 0x2903) module for windows.
-#[cfg(target_os = "windows")]
-use crate::descriptors::server_characteristic_configuration::ServerCharacteristicConfiguration;
-#[cfg(target_os = "windows")]
-use crate::windows::buffer::{i_buffer_to_vec, vec_to_i_buffer};
 
 #[cfg(target_os = "windows")]
 use windows::Storage::Streams::IBuffer;
+
+#[cfg(target_os = "windows")]
+use crate::{
+    descriptors::server_characteristic_configuration::ServerCharacteristicConfiguration,
+    windows::buffer::{i_buffer_to_vec, vec_to_i_buffer},
+};
 
 #[cfg(target_os = "windows")]
 impl TryFrom<IBuffer> for ServerCharacteristicConfiguration {
@@ -61,7 +63,7 @@ impl Into<IBuffer> for ServerCharacteristicConfiguration {
     /// let buffer: IBuffer = value.clone().into();
     /// let vec: Vec<u8> = value.into();
     /// assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
-    /// 
+    ///
     /// let value = ServerCharacteristicConfiguration::new(BROADCAST);
     /// let buffer: IBuffer = value.clone().into();
     /// let vec: Vec<u8> = value.into();

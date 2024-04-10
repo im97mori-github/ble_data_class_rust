@@ -1,13 +1,16 @@
 //! Client Characteristic Configuration (Attribute Type: 0x2902) module for windows.
-#[cfg(target_os = "windows")]
-use crate::descriptors::client_characteristic_configuration::ClientCharacteristicConfiguration;
-#[cfg(target_os = "windows")]
-use crate::windows::buffer::{i_buffer_to_vec, vec_to_i_buffer};
 
 #[cfg(target_os = "windows")]
-use windows::Devices::Bluetooth::GenericAttributeProfile::GattClientCharacteristicConfigurationDescriptorValue;
+use windows::{
+    Devices::Bluetooth::GenericAttributeProfile::GattClientCharacteristicConfigurationDescriptorValue,
+    Storage::Streams::IBuffer,
+};
+
 #[cfg(target_os = "windows")]
-use windows::Storage::Streams::IBuffer;
+use crate::{
+    descriptors::client_characteristic_configuration::ClientCharacteristicConfiguration,
+    windows::buffer::{i_buffer_to_vec, vec_to_i_buffer},
+};
 
 #[cfg(target_os = "windows")]
 impl TryFrom<&GattClientCharacteristicConfigurationDescriptorValue>
@@ -20,8 +23,8 @@ impl TryFrom<&GattClientCharacteristicConfigurationDescriptorValue>
     ///
     /// ```
     /// use windows::{
-    /// Devices::Bluetooth::GenericAttributeProfile::GattClientCharacteristicConfigurationDescriptorValue,
-    /// Storage::Streams::DataWriter,
+    ///     Devices::Bluetooth::GenericAttributeProfile::GattClientCharacteristicConfigurationDescriptorValue,
+    ///     Storage::Streams::DataWriter,
     /// };
     ///
     /// use ble_data_struct::descriptors::client_characteristic_configuration::{

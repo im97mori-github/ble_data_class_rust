@@ -1,11 +1,14 @@
 //! Characteristic User Description (Attribute Type: 0x2901) module for windows.
-#[cfg(target_os = "windows")]
-use crate::descriptors::characteristic_user_description::CharacteristicUserDescription;
-#[cfg(target_os = "windows")]
-use crate::windows::buffer::{i_buffer_to_vec, vec_to_i_buffer};
-
+//!
+//!
 #[cfg(target_os = "windows")]
 use windows::Storage::Streams::IBuffer;
+
+#[cfg(target_os = "windows")]
+use crate::{
+    descriptors::characteristic_user_description::CharacteristicUserDescription,
+    windows::buffer::{i_buffer_to_vec, vec_to_i_buffer},
+};
 
 #[cfg(target_os = "windows")]
 impl TryFrom<IBuffer> for CharacteristicUserDescription {

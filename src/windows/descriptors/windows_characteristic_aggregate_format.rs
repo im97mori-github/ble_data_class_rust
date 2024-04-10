@@ -1,12 +1,13 @@
 //! Characteristic Aggregate Format (Attribute Type: 0x2905) module for windows.
 
 #[cfg(target_os = "windows")]
-use crate::descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat;
-#[cfg(target_os = "windows")]
-use crate::windows::buffer::{i_buffer_to_vec, vec_to_i_buffer};
+use windows::Storage::Streams::IBuffer;
 
 #[cfg(target_os = "windows")]
-use windows::Storage::Streams::IBuffer;
+use crate::{
+    descriptors::characteristic_aggregate_format::CharacteristicAggregateFormat,
+    windows::buffer::{i_buffer_to_vec, vec_to_i_buffer},
+};
 
 #[cfg(target_os = "windows")]
 impl TryFrom<IBuffer> for CharacteristicAggregateFormat {

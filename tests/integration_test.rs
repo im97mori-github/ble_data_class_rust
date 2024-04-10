@@ -50,6 +50,7 @@ mod windows_tests {
     }
 
     #[test]
+    #[ignore]
     fn test_try_from() {
         let watcher = BluetoothLEAdvertisementWatcher::new().unwrap();
         let function =

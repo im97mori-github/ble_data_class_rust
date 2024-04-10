@@ -1,30 +1,30 @@
 //! Characteristic Presentation Format (Attribute Type: 0x2904) module for windows.
-use crate::Uuid16bit;
 
-/// Characteristic Presentation Format.
-#[derive(Debug, PartialEq, Clone)]
-pub struct CharacteristicPresentationFormat {
-    /// Format
-    pub format: u8,
-    /// Exponent
-    pub exponent: i8,
-    /// Unit
-    pub unit: u16,
-    /// Name Space
-    pub name_space: u8,
-    /// Description
-    pub description: u16,
-}
+#[cfg(target_os = "windows")]
+use windows::{
+    Devices::Bluetooth::GenericAttributeProfile::GattPresentationFormat, Storage::Streams::IBuffer,
+};
 
-impl CharacteristicPresentationFormat {
-    /// Create [`CharacteristicPresentationFormat`] from `Format`, `Exponent`, `Unit`, `Exponent`, `Name Space`, `Description`.
+#[cfg(target_os = "windows")]
+use crate::{
+    descriptors::characteristic_presentation_format::CharacteristicPresentationFormat,
+    windows::buffer::{i_buffer_to_vec, vec_to_i_buffer},
+};
+
+#[cfg(target_os = "windows")]
+impl TryFrom<&GattPresentationFormat> for CharacteristicPresentationFormat {
+    type Error = String;
+    /// Create [`CharacteristicPresentationFormat`] from [`GattPresentationFormat`].
     ///
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::descriptors::characteristic_presentation_format::{
-    ///     CharacteristicPresentationFormat,
+    /// use windows::{
+    ///     Devices::Bluetooth::GenericAttributeProfile::GattPresentationFormat,
+    ///     Storage::Streams::DataWriter,
     /// };
+    ///
+    /// use ble_data_struct::descriptors::characteristic_presentation_format::CharacteristicPresentationFormat;
     ///
     /// let format = 0x01u8;
     /// let exponent = 0x02i8;
@@ -32,85 +32,68 @@ impl CharacteristicPresentationFormat {
     /// let name_space = 0x05u8;
     /// let description = 0x0706u16;
     ///
-    /// let result =
-    ///     CharacteristicPresentationFormat::new(format, exponent, unit, name_space, description);
-    /// assert_eq!(format, result.format);
-    /// assert_eq!(exponent, result.exponent);
-    /// assert_eq!(unit, result.unit);
-    /// assert_eq!(name_space, result.name_space);
-    /// assert_eq!(description, result.description);
+    /// let gatt_presentation_format = GattPresentationFormat::FromParts(
+    ///     format,
+    ///     exponent.try_into().unwrap(),
+    ///     unit,
+    ///     name_space,
+    ///     description,
+    /// )
+    /// .unwrap();
+    /// let result = CharacteristicPresentationFormat::try_from(&gatt_presentation_format);
+    /// assert!(result.is_ok());
+    /// let value = result.unwrap();
+    /// assert_eq!(format, value.format);
+    /// assert_eq!(exponent, value.exponent);
+    /// assert_eq!(unit, value.unit);
+    /// assert_eq!(name_space, value.name_space);
+    /// assert_eq!(description, value.description);
     /// ```
-    pub fn new(format: u8, exponent: i8, unit: u16, name_space: u8, description: u16) -> Self {
-        Self {
+    fn try_from(value: &GattPresentationFormat) -> Result<Self, String> {
+        let format = match value.FormatType() {
+            Ok(format) => format,
+            Err(e) => return Err(e.message()),
+        };
+        let exponent: i8 = match value.Exponent() {
+            Ok(exponent) => exponent.try_into().unwrap(),
+            Err(e) => return Err(e.message()),
+        };
+        let unit = match value.Unit() {
+            Ok(unit) => unit,
+            Err(e) => return Err(e.message()),
+        };
+        let name_space = match value.Namespace() {
+            Ok(name_space) => name_space,
+            Err(e) => return Err(e.message()),
+        };
+        let description = match value.Description() {
+            Ok(description) => description,
+            Err(e) => return Err(e.message()),
+        };
+        Ok(Self {
             format,
             exponent,
             unit,
             name_space,
             description,
-        }
-    }
-}
-
-impl TryFrom<&Vec<u8>> for CharacteristicPresentationFormat {
-    type Error = String;
-    /// Create [`CharacteristicPresentationFormat`] from [`Vec<u8>`].
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use ble_data_struct::descriptors::characteristic_presentation_format::{
-    ///     CharacteristicPresentationFormat,
-    /// };
-    ///
-    /// let format = 0x01u8;
-    /// let exponent = 0x02i8;
-    /// let unit = 0x0403u16;
-    /// let name_space = 0x05u8;
-    /// let description = 0x0706u16;
-    ///
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(format);
-    /// data.push(exponent as u8);
-    /// data.append(&mut unit.to_le_bytes().to_vec());
-    /// data.push(name_space);
-    /// data.append(&mut description.to_le_bytes().to_vec());
-    /// let result = CharacteristicPresentationFormat::try_from(&data);
-    /// assert!(result.is_ok());
-    /// let descriptor = result.unwrap();
-    /// assert_eq!(format, descriptor.format);
-    /// assert_eq!(exponent, descriptor.exponent);
-    /// assert_eq!(unit, descriptor.unit);
-    /// assert_eq!(name_space, descriptor.name_space);
-    /// assert_eq!(description, descriptor.description);
-    ///
-    /// let data = Vec::new();
-    /// let result = CharacteristicPresentationFormat::try_from(&data);
-    /// assert!(!result.is_ok());
-    /// ```
-    fn try_from(value: &Vec<u8>) -> Result<Self, String> {
-        let len = value.len();
-        if len != 7 {
-            return Err(format!("Invalid data size :{}", len).to_string());
-        }
-        Ok(Self {
-            format: value[0],
-            exponent: value[1] as i8,
-            unit: u16::from_le_bytes(value[2..4].try_into().unwrap()),
-            name_space: value[4],
-            description: u16::from_le_bytes(value[5..7].try_into().unwrap()),
         })
     }
 }
 
-impl Into<Vec<u8>> for CharacteristicPresentationFormat {
-    /// Create [`Vec<u8>`] from [`CharacteristicPresentationFormat`].
+#[cfg(target_os = "windows")]
+impl TryFrom<IBuffer> for CharacteristicPresentationFormat {
+    type Error = String;
+    /// Create [`CharacteristicPresentationFormat`] from [`IBuffer`].
     ///
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::descriptors::characteristic_presentation_format::{
-    ///     CharacteristicPresentationFormat,
+    /// use windows::{
+    ///     Devices::Bluetooth::GenericAttributeProfile::GattPresentationFormat,
+    ///     Storage::Streams::DataWriter,
     /// };
+    ///
+    /// use ble_data_struct::descriptors::characteristic_presentation_format::CharacteristicPresentationFormat;
     ///
     /// let format = 0x01u8;
     /// let exponent = 0x02i8;
@@ -118,118 +101,199 @@ impl Into<Vec<u8>> for CharacteristicPresentationFormat {
     /// let name_space = 0x05u8;
     /// let description = 0x0706u16;
     ///
-    /// let result =
+    /// let characteristic_presentation_format =
     ///     CharacteristicPresentationFormat::new(format, exponent, unit, name_space, description);
-    /// let mut data: Vec<u8> = Vec::new();
-    /// data.push(format);
-    /// data.push(exponent as u8);
-    /// data.append(&mut unit.to_le_bytes().to_vec());
-    /// data.push(name_space);
-    /// data.append(&mut description.to_le_bytes().to_vec());
-    /// let into_data: Vec<u8> = result.into();
-    /// assert_eq!(data, into_data);
+    /// let data_writer = DataWriter::new().unwrap();
+    /// let ble_packet: Vec<u8> = characteristic_presentation_format.into();
+    /// data_writer.WriteBytes(&ble_packet).unwrap();
+    /// let buffer = data_writer.DetachBuffer().unwrap();
+    ///
+    /// let result = CharacteristicPresentationFormat::try_from(buffer);
+    /// assert!(result.is_ok());
+    /// let value = result.unwrap();
+    /// assert_eq!(format, value.format);
+    /// assert_eq!(exponent, value.exponent);
+    /// assert_eq!(unit, value.unit);
+    /// assert_eq!(name_space, value.name_space);
+    /// assert_eq!(description, value.description);
     /// ```
-    fn into(self) -> Vec<u8> {
-        let mut data: Vec<u8> = Vec::new();
-        data.push(self.format);
-        data.push(self.exponent as u8);
-        data.append(&mut self.unit.to_le_bytes().to_vec());
-        data.push(self.name_space);
-        data.append(&mut self.description.to_le_bytes().to_vec());
-        return data;
+    fn try_from(value: IBuffer) -> Result<Self, String> {
+        let vec = i_buffer_to_vec(value).unwrap();
+        Self::try_from(&vec)
     }
 }
 
-impl Uuid16bit for CharacteristicPresentationFormat {
-    /// return `0x2904`.
+#[cfg(target_os = "windows")]
+impl Into<GattPresentationFormat> for CharacteristicPresentationFormat {
+    /// Create [`GattPresentationFormat`] from [`CharacteristicPresentationFormat`].
     ///
     /// # Examples
     ///
     /// ```
-    /// use ble_data_struct::Uuid16bit;
+    /// use windows::{
+    ///     Devices::Bluetooth::GenericAttributeProfile::GattPresentationFormat,
+    ///     Storage::Streams::DataWriter,
+    /// };
+    ///
     /// use ble_data_struct::descriptors::characteristic_presentation_format::CharacteristicPresentationFormat;
     ///
-    /// assert_eq!(0x2904, CharacteristicPresentationFormat::uuid_16bit());
+    /// let format = 0x01u8;
+    /// let exponent = 0x02i8;
+    /// let unit = 0x0403u16;
+    /// let name_space = 0x05u8;
+    /// let description = 0x0706u16;
+    /// 
+    /// let value: GattPresentationFormat =
+    ///     CharacteristicPresentationFormat::new(format, exponent, unit, name_space, description)
+    ///         .into();
+    /// 
+    /// assert_eq!(format, value.FormatType().unwrap());
+    /// assert_eq!(exponent, value.Exponent().unwrap().try_into().unwrap());
+    /// assert_eq!(unit, value.Unit().unwrap());
+    /// assert_eq!(name_space, value.Namespace().unwrap());
+    /// assert_eq!(description, value.Description().unwrap());
     /// ```
-    fn uuid_16bit() -> u16 {
-        0x2904
+    fn into(self) -> GattPresentationFormat {
+        GattPresentationFormat::FromParts(
+            self.format,
+            self.exponent.try_into().unwrap(),
+            self.unit,
+            self.name_space,
+            self.description,
+        )
+        .unwrap()
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl Into<IBuffer> for CharacteristicPresentationFormat {
+    /// Create [`IBuffer`] from [`CharacteristicPresentationFormat`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use windows::{
+    ///     Devices::Bluetooth::GenericAttributeProfile::GattPresentationFormat,
+    ///     Storage::Streams::{DataWriter, IBuffer},
+    /// };
+    ///
+    /// use ble_data_struct::{
+    ///     descriptors::characteristic_presentation_format::CharacteristicPresentationFormat,
+    ///     windows::buffer::i_buffer_to_vec,
+    /// };
+    ///
+    /// let format = 0x01u8;
+    /// let exponent = 0x02i8;
+    /// let unit = 0x0403u16;
+    /// let name_space = 0x05u8;
+    /// let description = 0x0706u16;
+    /// 
+    /// let value =
+    ///     CharacteristicPresentationFormat::new(format, exponent, unit, name_space, description);
+    /// let buffer: IBuffer = value.clone().into();
+    /// let vec: Vec<u8> = value.into();
+    /// assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
+    /// ```
+    fn into(self) -> IBuffer {
+        let vec: Vec<u8> = self.into();
+        vec_to_i_buffer(&vec).unwrap()
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use windows::{
+        Devices::Bluetooth::GenericAttributeProfile::GattPresentationFormat,
+        Storage::Streams::{DataWriter, IBuffer},
+    };
+
     use crate::{
         descriptors::characteristic_presentation_format::CharacteristicPresentationFormat,
-        Uuid16bit,
+        windows::buffer::i_buffer_to_vec,
     };
 
     #[test]
-    fn test_new() {
+    fn test_try_from_gatt_presentation_format() {
         let format = 0x01u8;
         let exponent = 0x02i8;
         let unit = 0x0403u16;
         let name_space = 0x05u8;
         let description = 0x0706u16;
 
-        let result =
-            CharacteristicPresentationFormat::new(format, exponent, unit, name_space, description);
-        assert_eq!(format, result.format);
-        assert_eq!(exponent, result.exponent);
-        assert_eq!(unit, result.unit);
-        assert_eq!(name_space, result.name_space);
-        assert_eq!(description, result.description);
-    }
-
-    #[test]
-    fn test_try_from() {
-        let format = 0x01u8;
-        let exponent = 0x02i8;
-        let unit = 0x0403u16;
-        let name_space = 0x05u8;
-        let description = 0x0706u16;
-
-        let mut data: Vec<u8> = Vec::new();
-        data.push(format);
-        data.push(exponent as u8);
-        data.append(&mut unit.to_le_bytes().to_vec());
-        data.push(name_space);
-        data.append(&mut description.to_le_bytes().to_vec());
-        let result = CharacteristicPresentationFormat::try_from(&data);
+        let gatt_presentation_format = GattPresentationFormat::FromParts(
+            format,
+            exponent.try_into().unwrap(),
+            unit,
+            name_space,
+            description,
+        )
+        .unwrap();
+        let result = CharacteristicPresentationFormat::try_from(&gatt_presentation_format);
         assert!(result.is_ok());
-        let descriptor = result.unwrap();
-        assert_eq!(format, descriptor.format);
-        assert_eq!(exponent, descriptor.exponent);
-        assert_eq!(unit, descriptor.unit);
-        assert_eq!(name_space, descriptor.name_space);
-        assert_eq!(description, descriptor.description);
-
-        let data = Vec::new();
-        let result = CharacteristicPresentationFormat::try_from(&data);
-        assert!(!result.is_ok());
+        let value = result.unwrap();
+        assert_eq!(format, value.format);
+        assert_eq!(exponent, value.exponent);
+        assert_eq!(unit, value.unit);
+        assert_eq!(name_space, value.name_space);
+        assert_eq!(description, value.description);
     }
 
     #[test]
-    fn test_into() {
+    fn test_try_from_i_buffer() {
         let format = 0x01u8;
         let exponent = 0x02i8;
         let unit = 0x0403u16;
         let name_space = 0x05u8;
         let description = 0x0706u16;
 
-        let result =
+        let characteristic_presentation_format =
             CharacteristicPresentationFormat::new(format, exponent, unit, name_space, description);
-        let mut data: Vec<u8> = Vec::new();
-        data.push(format);
-        data.push(exponent as u8);
-        data.append(&mut unit.to_le_bytes().to_vec());
-        data.push(name_space);
-        data.append(&mut description.to_le_bytes().to_vec());
-        let into_data: Vec<u8> = result.into();
-        assert_eq!(data, into_data);
+        let data_writer = DataWriter::new().unwrap();
+        let ble_packet: Vec<u8> = characteristic_presentation_format.into();
+        data_writer.WriteBytes(&ble_packet).unwrap();
+        let buffer = data_writer.DetachBuffer().unwrap();
+
+        let result = CharacteristicPresentationFormat::try_from(buffer);
+        assert!(result.is_ok());
+        let value = result.unwrap();
+        assert_eq!(format, value.format);
+        assert_eq!(exponent, value.exponent);
+        assert_eq!(unit, value.unit);
+        assert_eq!(name_space, value.name_space);
+        assert_eq!(description, value.description);
     }
 
     #[test]
-    fn test_uuid_16bit() {
-        assert_eq!(0x2904, CharacteristicPresentationFormat::uuid_16bit());
+    fn test_into_gatt_presentation_format() {
+        let format = 0x01u8;
+        let exponent = 0x02i8;
+        let unit = 0x0403u16;
+        let name_space = 0x05u8;
+        let description = 0x0706u16;
+
+        let value: GattPresentationFormat =
+            CharacteristicPresentationFormat::new(format, exponent, unit, name_space, description)
+                .into();
+
+        assert_eq!(format, value.FormatType().unwrap());
+        assert_eq!(exponent, value.Exponent().unwrap().try_into().unwrap());
+        assert_eq!(unit, value.Unit().unwrap());
+        assert_eq!(name_space, value.Namespace().unwrap());
+        assert_eq!(description, value.Description().unwrap());
+    }
+
+    #[test]
+    fn test_into_i_buffer() {
+        let format = 0x01u8;
+        let exponent = 0x02i8;
+        let unit = 0x0403u16;
+        let name_space = 0x05u8;
+        let description = 0x0706u16;
+
+        let value =
+            CharacteristicPresentationFormat::new(format, exponent, unit, name_space, description);
+        let buffer: IBuffer = value.clone().into();
+        let vec: Vec<u8> = value.into();
+        assert_eq!(vec, i_buffer_to_vec(buffer).unwrap());
     }
 }
